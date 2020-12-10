@@ -1,0 +1,27 @@
+# Joseph N. Squeo
+# 4-30-2020
+
+How to use Cantera from the terminal of a Mac:
+1. conda activate Cantera
+
+
+
+How to use Python3:
+1. python3
+
+
+How to convert a chemkin folder to a .cti file for Cantera (without being in the Cantera env):
+1. python3 -m cantera.ck2cti --input=chem.inp --thermo=therm.dat --transport=tran.dat
+
+
+Run scripts using Cantera from terminal:
+1. Make sure script has .py extension
+2. Python script should import cantera at the top of the script
+3. In the command line (terminal), run:     python3 nameofmyscript.py
+
+
+Use igniteFlame.py:
+1. In Openfoam case, run:     foamToVTK
+2. Move VTK file to this directory and change paths in igniteFlame.py
+3. Run the cantera script using:    python3 igniteFlame.py
+4. Run Matlab2OF in Matlab, after creating the time folder

@@ -1,0 +1,14202 @@
+      SUBROUTINE SKWYP  (P, T, Y, ICKWRK, RCKWRK, WDOT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION Y(*),WDOT(*),ICKWRK(*),RCKWRK(*)
+      DIMENSION RF(206),RB(206),RKLOW(21),C(32)
+C
+      CALL SKYTCP(P, T, Y, C)
+      CALL SKRATT(T, RF, RB, RKLOW)
+      CALL SKRATX(T, C, RF, RB, RKLOW)
+      CALL SKWDOT(RF, RB, WDOT)
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKWYR  (RHO, T, Y, ICKWRK, RCKWRK, WDOT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION Y(*),WDOT(*),ICKWRK(*),RCKWRK(*)
+      DIMENSION RF(206),RB(206),RKLOW(21),C(32)
+C
+      CALL SKYTCR(RHO, T, Y, C)
+      CALL SKRATT(T, RF, RB, RKLOW)
+      CALL SKRATX(T, C, RF, RB, RKLOW)
+      CALL SKWDOT(RF, RB, WDOT)
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKYTCP (P, T, Y, C)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION Y(*), C(*)
+C
+      C(1) = Y(1)/2.015939950942993D0
+      C(2) = Y(2)/1.007969975471497D0
+      C(3) = Y(3)/1.599940013885498D1
+      C(4) = Y(4)/3.199880027770996D1
+      C(5) = Y(5)/1.700737011432648D1
+      C(6) = Y(6)/1.801534008979797D1
+      C(7) = Y(7)/3.300677025318146D1
+      C(8) = Y(8)/3.401474022865295D1
+      C(9) = Y(9)/1.301912033557892D1
+      C(10) = Y(10)/1.402709031105042D1
+      C(11) = Y(11)/1.402709031105042D1
+      C(12) = Y(12)/1.503506028652191D1
+      C(13) = Y(13)/1.604303026199341D1
+      C(14) = Y(14)/2.80105504989624D1
+      C(15) = Y(15)/4.400995063781738D1
+      C(16) = Y(16)/2.90185204744339D1
+      C(17) = Y(17)/3.00264904499054D1
+      C(18) = Y(18)/3.103446042537689D1
+      C(19) = Y(19)/2.603824067115784D1
+      C(20) = Y(20)/2.603824067115784D1
+      C(21) = Y(21)/2.704621064662933D1
+      C(22) = Y(22)/2.805418062210083D1
+      C(23) = Y(23)/2.906215059757233D1
+      C(24) = Y(24)/3.007012057304382D1
+      C(25) = Y(25)/4.102967083454132D1
+      C(26) = Y(26)/4.203764081001282D1
+      C(27) = Y(27)/4.304561078548431D1
+      C(28) = Y(28)/4.405358076095581D1
+      C(29) = Y(29)/4.107330095767975D1
+      C(30) = Y(30)/4.208127093315125D1
+      C(31) = Y(31)/4.308924090862274D1
+      C(32) = Y(32)/2.801339912414551D1
+C
+      SUM = 0D0
+      DO K = 1, 32
+         SUM = SUM + C(K)
+      ENDDO
+      SUM = P/(SUM*T*8.314510D7)
+C
+      DO K = 1, 32
+         C(K) = C(K)*SUM
+      ENDDO
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKYTCR (RHO, T, Y, C)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION Y(*), C(*)
+C
+      C(1) = Y(1)/2.015939950942993D0
+      C(2) = Y(2)/1.007969975471497D0
+      C(3) = Y(3)/1.599940013885498D1
+      C(4) = Y(4)/3.199880027770996D1
+      C(5) = Y(5)/1.700737011432648D1
+      C(6) = Y(6)/1.801534008979797D1
+      C(7) = Y(7)/3.300677025318146D1
+      C(8) = Y(8)/3.401474022865295D1
+      C(9) = Y(9)/1.301912033557892D1
+      C(10) = Y(10)/1.402709031105042D1
+      C(11) = Y(11)/1.402709031105042D1
+      C(12) = Y(12)/1.503506028652191D1
+      C(13) = Y(13)/1.604303026199341D1
+      C(14) = Y(14)/2.80105504989624D1
+      C(15) = Y(15)/4.400995063781738D1
+      C(16) = Y(16)/2.90185204744339D1
+      C(17) = Y(17)/3.00264904499054D1
+      C(18) = Y(18)/3.103446042537689D1
+      C(19) = Y(19)/2.603824067115784D1
+      C(20) = Y(20)/2.603824067115784D1
+      C(21) = Y(21)/2.704621064662933D1
+      C(22) = Y(22)/2.805418062210083D1
+      C(23) = Y(23)/2.906215059757233D1
+      C(24) = Y(24)/3.007012057304382D1
+      C(25) = Y(25)/4.102967083454132D1
+      C(26) = Y(26)/4.203764081001282D1
+      C(27) = Y(27)/4.304561078548431D1
+      C(28) = Y(28)/4.405358076095581D1
+      C(29) = Y(29)/4.107330095767975D1
+      C(30) = Y(30)/4.208127093315125D1
+      C(31) = Y(31)/4.308924090862274D1
+      C(32) = Y(32)/2.801339912414551D1
+C
+      DO K = 1, 32
+         C(K) = RHO * C(K)
+      ENDDO
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKRATT (T, RF, RB, RKLOW)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (RU=8.31451D7, SMALL=1.D-200, PATM=1.01325D6)
+      DIMENSION RF(*), RB(*), RKLOW(*)
+      DIMENSION SMH(31), EG(31)
+C
+      ALOGT = LOG(T)
+      TI = 1D0/T
+      TI2 = TI*TI
+C
+      CALL SKSMH (T, SMH)
+      EG(1) = EXP(SMH(1))
+      EG(2) = EXP(SMH(2))
+      EG(3) = EXP(SMH(3))
+      EG(4) = EXP(SMH(4))
+      EG(5) = EXP(SMH(5))
+      EG(6) = EXP(SMH(6))
+      EG(7) = EXP(SMH(7))
+      EG(8) = EXP(SMH(8))
+      EG(9) = EXP(SMH(9))
+      EG(10) = EXP(SMH(10))
+      EG(11) = EXP(SMH(11))
+      EG(12) = EXP(SMH(12))
+      EG(13) = EXP(SMH(13))
+      EG(14) = EXP(SMH(14))
+      EG(15) = EXP(SMH(15))
+      EG(16) = EXP(SMH(16))
+      EG(17) = EXP(SMH(17))
+      EG(18) = EXP(SMH(18))
+      EG(19) = EXP(SMH(19))
+      EG(20) = EXP(SMH(20))
+      EG(21) = EXP(SMH(21))
+      EG(22) = EXP(SMH(22))
+      EG(23) = EXP(SMH(23))
+      EG(24) = EXP(SMH(24))
+      EG(25) = EXP(SMH(25))
+      EG(26) = EXP(SMH(26))
+      EG(27) = EXP(SMH(27))
+      EG(28) = EXP(SMH(28))
+      EG(29) = EXP(SMH(29))
+      EG(30) = EXP(SMH(30))
+      EG(31) = EXP(SMH(31))
+      PFAC1 = PATM / (RU*T)
+      PFAC2 = PFAC1*PFAC1
+      PFAC3 = PFAC2*PFAC1
+C
+C
+C     R1: H + O2 = O + OH
+      RF(1) = EXP(3.204986172372514D1 -7.252861830694163D3*TI)
+      EQK = EG(3)*EG(5)/EG(2)/EG(4)
+      RB(1) = RF(1) / MAX(EQK, SMALL)
+C     R2: H2 + O = H + OH
+      RF(2) = EXP(1.081977828441028D1 +2.67D0*ALOGT
+     * -3.165232839455095D3*TI)
+      EQK = EG(2)*EG(5)/EG(1)/EG(3)
+      RB(2) = RF(2) / MAX(EQK, SMALL)
+C     R3: H2 + OH = H + H2O
+      RF(3) = EXP(1.919078896564844D1 +1.51D0*ALOGT
+     * -1.726033170004924D3*TI)
+      EQK = EG(2)*EG(6)/EG(1)/EG(5)
+      RB(3) = RF(3) / MAX(EQK, SMALL)
+C     R4: 2OH = O + H2O
+      RF(4) = EXP(1.048290596776773D1 +2.4D0*ALOGT
+     * +1.061787168720231D3*TI)
+      EQK = EG(3)*EG(6)/EG(5)/EG(5)
+      RB(4) = RF(4) / MAX(EQK, SMALL)
+C     R5: 2H = H2
+      RF(5) = EXP(4.144653167389282D1 -1.D0*ALOGT)
+      EQK = EG(1)/EG(2)/EG(2)/PFAC1
+      RB(5) = RF(5) / MAX(EQK, SMALL)
+C     R6: H2 + 2H = 2H2
+      RF(6) = EXP(3.903858606524095D1 -6.D-1*ALOGT)
+      EQK = EG(1)/EG(2)/EG(2)/PFAC1
+      RB(6) = RF(6) / MAX(EQK, SMALL)
+C     R7: 2H + H2O = H2 + H2O
+      RF(7) = EXP(4.554087623611493D1 -1.25D0*ALOGT)
+      EQK = EG(1)/EG(2)/EG(2)/PFAC1
+      RB(7) = RF(7) / MAX(EQK, SMALL)
+C     R8: 2H + CO2 = H2 + CO2
+      RF(8) = EXP(4.775644995211934D1 -2.D0*ALOGT)
+      EQK = EG(1)/EG(2)/EG(2)/PFAC1
+      RB(8) = RF(8) / MAX(EQK, SMALL)
+C     R9: H + OH = H2O
+      RF(9) = 4.D1*RF(8)
+      EQK = EG(6)/EG(2)/EG(5)/PFAC1
+      RB(9) = RF(9) / MAX(EQK, SMALL)
+C     R10: H + O = OH
+      RF(10) = 5.D-1*RF(5)
+      EQK = EG(5)/EG(2)/EG(3)/PFAC1
+      RB(10) = RF(10) / MAX(EQK, SMALL)
+C     R11: 2O = O2
+      RF(11) = 1.2D-1*RF(5)
+      EQK = EG(4)/EG(3)/EG(3)/PFAC1
+      RB(11) = RF(11) / MAX(EQK, SMALL)
+C     R12: H + O2 = HO2
+      RF(12) = EXP(4.247615109107398D1 -8.6D-1*ALOGT)
+      EQK = EG(7)/EG(2)/EG(4)/PFAC1
+      RB(12) = RF(12) / MAX(EQK, SMALL)
+C     R13: H + 2O2 = O2 + HO2
+      RF(13) = EXP(4.715031414854902D1 -1.72D0*ALOGT)
+      EQK = EG(7)/EG(2)/EG(4)/PFAC1
+      RB(13) = RF(13) / MAX(EQK, SMALL)
+C     R14: H + O2 + H2O = H2O + HO2
+      RF(14) = EXP(4.425110344198566D1 -7.6D-1*ALOGT)
+      EQK = EG(7)/EG(2)/EG(4)/PFAC1
+      RB(14) = RF(14) / MAX(EQK, SMALL)
+C     R15: H + O2 + N2 = HO2 + N2
+      RF(15) = EXP(4.47046282119143D1 -1.24D0*ALOGT)
+      EQK = EG(7)/EG(2)/EG(4)/PFAC1
+      RB(15) = RF(15) / MAX(EQK, SMALL)
+C     R16: 2OH = H2O2
+      RF(16) = EXP(3.193508620913272D1 -3.7D-1*ALOGT)
+      EQK = EG(8)/EG(5)/EG(5)/PFAC1
+      RB(16) = RF(16) / MAX(EQK, SMALL)
+C     R17: H + HO2 = O + H2O
+      RF(17) = EXP(2.900978721062765D1 -3.376583839863861D2*TI)
+      EQK = EG(3)*EG(6)/EG(2)/EG(7)
+      RB(17) = RF(17) / MAX(EQK, SMALL)
+C     R18: H + HO2 = H2 + O2
+      RF(18) = EXP(3.044042381129104D1 -4.126376674647341D2*TI)
+      EQK = EG(1)*EG(4)/EG(2)/EG(7)
+      RB(18) = RF(18) / MAX(EQK, SMALL)
+C     R19: H + HO2 = 2OH
+      RF(19) = EXP(3.189088011662822D1 -1.509650002919759D2*TI)
+      EQK = EG(5)*EG(5)/EG(2)/EG(7)
+      RB(19) = RF(19) / MAX(EQK, SMALL)
+C     R20: O + HO2 = O2 + OH
+      RF(20) = 2.D13
+      EQK = EG(4)*EG(5)/EG(3)/EG(7)
+      RB(20) = RF(20) / MAX(EQK, SMALL)
+C     R21: OH + HO2 = O2 + H2O
+      RF(21) = EXP(3.146832057516076D1 +2.516083338199599D2*TI)
+      EQK = EG(4)*EG(6)/EG(5)/EG(7)
+      RB(21) = RF(21) / MAX(EQK, SMALL)
+C     R22: 2HO2 = O2 + H2O2
+      RF(22) = EXP(2.559080028740199D1 +8.20243168253069D2*TI)
+      EQK = EG(4)*EG(8)/EG(7)/EG(7)
+      RB(22) = RF(22) / MAX(EQK, SMALL)
+C     R23: 2HO2 = O2 + H2O2
+      RF(23) = EXP(3.367127582720596D1 -6.038600011679037D3*TI)
+      EQK = EG(4)*EG(8)/EG(7)/EG(7)
+      RB(23) = RF(23) / MAX(EQK, SMALL)
+C     R24: H + H2O2 = H2 + HO2
+      RF(24) = EXP(1.630871601056697D1 +2.D0*ALOGT
+     * -2.616726671727583D3*TI)
+      EQK = EG(1)*EG(7)/EG(2)/EG(8)
+      RB(24) = RF(24) / MAX(EQK, SMALL)
+C     R25: H + H2O2 = OH + H2O
+      RF(25) = EXP(2.993360620892259D1 -1.811580003503711D3*TI)
+      EQK = EG(5)*EG(6)/EG(2)/EG(8)
+      RB(25) = RF(25) / MAX(EQK, SMALL)
+C     R26: O + H2O2 = OH + HO2
+      RF(26) = EXP(1.608039378377431D1 +2.D0*ALOGT
+     * -2.012866670559679D3*TI)
+      EQK = EG(5)*EG(7)/EG(3)/EG(8)
+      RB(26) = RF(26) / MAX(EQK, SMALL)
+C     R27: OH + H2O2 = H2O + HO2
+      RF(27) = EXP(2.819063690386397D1 -1.610293336447743D2*TI)
+      EQK = EG(6)*EG(7)/EG(5)/EG(8)
+      RB(27) = RF(27) / MAX(EQK, SMALL)
+C     R28: OH + H2O2 = H2O + HO2
+      RF(28) = EXP(3.399404921946901D1 -4.810751342637632D3*TI)
+      EQK = EG(6)*EG(7)/EG(5)/EG(8)
+      RB(28) = RF(28) / MAX(EQK, SMALL)
+C     R29: O + CO = CO2
+      RF(29) = EXP(3.403127856123737D1 -1.509650002919759D3*TI)
+      EQK = EG(15)/EG(3)/EG(14)/PFAC1
+      RB(29) = RF(29) / MAX(EQK, SMALL)
+C     R30: OH + CO = H + CO2
+      RF(30) = EXP(1.767834331920165D1 +1.228D0*ALOGT
+     * -3.522516673479438D1*TI)
+      EQK = EG(2)*EG(15)/EG(5)/EG(14)
+      RB(30) = RF(30) / MAX(EQK, SMALL)
+C     R31: H2 + CO = CH2O
+      RF(31) = EXP(1.757671067365784D1 +1.5D0*ALOGT
+     * -4.005604674413761D4*TI)
+      EQK = EG(17)/EG(1)/EG(14)/PFAC1
+      RB(31) = RF(31) / MAX(EQK, SMALL)
+C     R32: O2 + CO = O + CO2
+      RF(32) = EXP(2.85473118478027D1 -2.405375671318816D4*TI)
+      EQK = EG(3)*EG(15)/EG(4)/EG(14)
+      RB(32) = RF(32) / MAX(EQK, SMALL)
+C     R33: HO2 + CO = OH + CO2
+      RF(33) = EXP(3.26416564100248D1 -1.18759133563021D4*TI)
+      EQK = EG(5)*EG(15)/EG(7)/EG(14)
+      RB(33) = RF(33) / MAX(EQK, SMALL)
+C     R34: O + CH = H + CO
+      RF(34) = 5.7D13
+      EQK = EG(2)*EG(14)/EG(3)/EG(9)
+      RB(34) = RF(34) / MAX(EQK, SMALL)
+C     R35: OH + CH = H + HCO
+      RF(35) = 3.D13
+      EQK = EG(2)*EG(16)/EG(5)/EG(9)
+      RB(35) = RF(35) / MAX(EQK, SMALL)
+C     R36: H2 + CH = H + CH2
+      RF(36) = EXP(1.852233439767887D1 +1.79D0*ALOGT
+     * -8.40371834958666D2*TI)
+      EQK = EG(2)*EG(10)/EG(1)/EG(9)
+      RB(36) = RF(36) / MAX(EQK, SMALL)
+C     R37: H2O + CH = H + CH2O
+      RF(37) = EXP(2.937324013959647D1 +3.799285840681393D2*TI)
+      EQK = EG(2)*EG(17)/EG(6)/EG(9)
+      RB(37) = RF(37) / MAX(EQK, SMALL)
+C     R38: O2 + CH = O + HCO
+      RF(38) = 3.3D13
+      EQK = EG(3)*EG(16)/EG(4)/EG(9)
+      RB(38) = RF(38) / MAX(EQK, SMALL)
+C     R39: CH + CO = HCCO
+      RF(39) = 5.D13
+      EQK = EG(25)/EG(9)/EG(14)/PFAC1
+      RB(39) = RF(39) / MAX(EQK, SMALL)
+C     R40: CH + CO2 = CO + HCO
+      RF(40) = EXP(2.885479654755066D1 -3.472195006715446D2*TI)
+      EQK = EG(14)*EG(16)/EG(9)/EG(15)
+      RB(40) = RF(40) / MAX(EQK, SMALL)
+C     R41: H + HCO = CH2O
+      RF(41) = EXP(2.77171988121696D1 +4.8D-1*ALOGT
+     * +1.308363335863791D2*TI)
+      EQK = EG(17)/EG(2)/EG(16)/PFAC1
+      RB(41) = RF(41) / MAX(EQK, SMALL)
+C     R42: H + HCO = H2 + CO
+      RF(42) = 7.34D13
+      EQK = EG(1)*EG(14)/EG(2)/EG(16)
+      RB(42) = RF(42) / MAX(EQK, SMALL)
+C     R43: O + HCO = OH + CO
+      RF(43) = 3.D13
+      EQK = EG(5)*EG(14)/EG(3)/EG(16)
+      RB(43) = RF(43) / MAX(EQK, SMALL)
+C     R44: O + HCO = H + CO2
+      RF(44) = 3.D13
+      EQK = EG(2)*EG(15)/EG(3)/EG(16)
+      RB(44) = RF(44) / MAX(EQK, SMALL)
+C     R45: OH + HCO = H2O + CO
+      RF(45) = 5.D13
+      EQK = EG(6)*EG(14)/EG(5)/EG(16)
+      RB(45) = RF(45) / MAX(EQK, SMALL)
+C     R46: HCO = H + CO
+      RF(46) = EXP(3.976988501176528D1 -1.D0*ALOGT
+     * -8.554683349878635D3*TI)
+      EQK = EG(2)*EG(14)/EG(16)*PFAC1
+      RB(46) = RF(46) / MAX(EQK, SMALL)
+C     R47: O2 + HCO = HO2 + CO
+      RF(47) = EXP(2.965916936322083D1 -2.012866670559679D2*TI)
+      EQK = EG(7)*EG(14)/EG(4)/EG(16)
+      RB(47) = RF(47) / MAX(EQK, SMALL)
+C     R48: H + CH2 = CH3
+      RF(48) = EXP(3.775765221977888D1 -8.D-1*ALOGT)
+      EQK = EG(12)/EG(2)/EG(10)/PFAC1
+      RB(48) = RF(48) / MAX(EQK, SMALL)
+C     R49: H2 + CH2 = H + CH3
+      RF(49) = EXP(1.312236337740433D1 +2.D0*ALOGT
+     * -3.63825650703662D3*TI)
+      EQK = EG(2)*EG(12)/EG(1)/EG(10)
+      RB(49) = RF(49) / MAX(EQK, SMALL)
+C     R50: O + CH2 = H + HCO
+      RF(50) = 8.D13
+      EQK = EG(2)*EG(16)/EG(3)/EG(10)
+      RB(50) = RF(50) / MAX(EQK, SMALL)
+C     R51: O2 + CH2 = OH + HCO
+      RF(51) = EXP(2.998809439420666D1 -7.548250014598796D2*TI)
+      EQK = EG(5)*EG(16)/EG(4)/EG(10)
+      RB(51) = RF(51) / MAX(EQK, SMALL)
+C     R52: O2 + CH2 = 2H + CO2
+      RF(52) = 2.5D-1*RF(51)
+      EQK = EG(2)*EG(2)*EG(15)/EG(4)/EG(10)*PFAC1
+      RB(52) = RF(52) / MAX(EQK, SMALL)
+C     R53: OH + CH2 = H + CH2O
+      RF(53) = 2.D13
+      EQK = EG(2)*EG(17)/EG(5)/EG(10)
+      RB(53) = RF(53) / MAX(EQK, SMALL)
+C     R54: OH + CH2 = H2O + CH
+      RF(54) = EXP(1.624031328368257D1 +2.D0*ALOGT
+     * -1.509650002919759D3*TI)
+      EQK = EG(6)*EG(9)/EG(5)/EG(10)
+      RB(54) = RF(54) / MAX(EQK, SMALL)
+C     R55: HO2 + CH2 = OH + CH2O
+      RF(55) = 2.D13
+      EQK = EG(5)*EG(17)/EG(7)/EG(10)
+      RB(55) = RF(55) / MAX(EQK, SMALL)
+C     R56: CH2 + CO = CH2CO
+      RF(56) = EXP(2.74203000846129D1 +5.D-1*ALOGT
+     * -2.269507171056038D3*TI)
+      EQK = EG(26)/EG(10)/EG(14)/PFAC1
+      RB(56) = RF(56) / MAX(EQK, SMALL)
+C     R57: CH + CH2 = H + C2H2
+      RF(57) = 4.D13
+      EQK = EG(2)*EG(19)/EG(9)/EG(10)
+      RB(57) = RF(57) / MAX(EQK, SMALL)
+C     R58: 2CH2 = H2 + C2H2
+      RF(58) = 3.2D13
+      EQK = EG(1)*EG(19)/EG(10)/EG(10)
+      RB(58) = RF(58) / MAX(EQK, SMALL)
+C     R59: CH2* + N2 = CH2 + N2
+      RF(59) = EXP(3.033907131703076D1 -3.019300005839518D2*TI)
+      EQK = EG(10)/EG(11)
+      RB(59) = RF(59) / MAX(EQK, SMALL)
+C     R60: H + CH2* = H2 + CH
+      RF(60) = 3.D13
+      EQK = EG(1)*EG(9)/EG(2)/EG(11)
+      RB(60) = RF(60) / MAX(EQK, SMALL)
+C     R61: O + CH2* = H2 + CO
+      RF(61) = 1.5D13
+      EQK = EG(1)*EG(14)/EG(3)/EG(11)
+      RB(61) = RF(61) / MAX(EQK, SMALL)
+C     R62: O + CH2* = H + HCO
+      RF(62) = 1.5D13
+      EQK = EG(2)*EG(16)/EG(3)/EG(11)
+      RB(62) = RF(62) / MAX(EQK, SMALL)
+C     R63: OH + CH2* = H + CH2O
+      RF(63) = 3.D13
+      EQK = EG(2)*EG(17)/EG(5)/EG(11)
+      RB(63) = RF(63) / MAX(EQK, SMALL)
+C     R64: H2 + CH2* = H + CH3
+      RF(64) = 7.D13
+      EQK = EG(2)*EG(12)/EG(1)/EG(11)
+      RB(64) = RF(64) / MAX(EQK, SMALL)
+C     R65: O2 + CH2* = H + OH + CO
+      RF(65) = 2.8D13
+      EQK = EG(2)*EG(5)*EG(14)/EG(4)/EG(11)*PFAC1
+      RB(65) = RF(65) / MAX(EQK, SMALL)
+C     R66: O2 + CH2* = H2O + CO
+      RF(66) = 1.2D13
+      EQK = EG(6)*EG(14)/EG(4)/EG(11)
+      RB(66) = RF(66) / MAX(EQK, SMALL)
+C     R67: H2O + CH2* = H2O + CH2
+      RF(67) = 3.D13
+      EQK = EG(10)/EG(11)
+      RB(67) = RF(67) / MAX(EQK, SMALL)
+C     R68: CH2* + CO = CH2 + CO
+      RF(68) = 9.D12
+      EQK = EG(10)/EG(11)
+      RB(68) = RF(68) / MAX(EQK, SMALL)
+C     R69: CH2* + CO2 = CH2 + CO2
+      RF(69) = 7.D12
+      EQK = EG(10)/EG(11)
+      RB(69) = RF(69) / MAX(EQK, SMALL)
+C     R70: CH2* + CO2 = CO + CH2O
+      RF(70) = 1.4D13
+      EQK = EG(14)*EG(17)/EG(11)/EG(15)
+      RB(70) = RF(70) / MAX(EQK, SMALL)
+C     R71: H + CH2O = CH3O
+      RF(71) = EXP(2.701483497650473D1 +4.54D-1*ALOGT
+     * -1.308363335863791D3*TI)
+      EQK = EG(18)/EG(2)/EG(17)/PFAC1
+      RB(71) = RF(71) / MAX(EQK, SMALL)
+C     R72: H + CH2O = H2 + HCO
+      RF(72) = EXP(2.385876005287556D1 +1.05D0*ALOGT
+     * -1.648034586520737D3*TI)
+      EQK = EG(1)*EG(16)/EG(2)/EG(17)
+      RB(72) = RF(72) / MAX(EQK, SMALL)
+C     R73: O + CH2O = OH + HCO
+      RF(73) = EXP(3.129458276205819D1 -1.781387003445316D3*TI)
+      EQK = EG(5)*EG(16)/EG(3)/EG(17)
+      RB(73) = RF(73) / MAX(EQK, SMALL)
+C     R74: OH + CH2O = H2O + HCO
+      RF(74) = EXP(2.195582609812426D1 +1.18D0*ALOGT
+     * +2.249378504350441D2*TI)
+      EQK = EG(6)*EG(16)/EG(5)/EG(17)
+      RB(74) = RF(74) / MAX(EQK, SMALL)
+C     R75: O2 + CH2O = HO2 + HCO
+      RF(75) = EXP(3.223619130191664D1 -2.012866670559679D4*TI)
+      EQK = EG(7)*EG(16)/EG(4)/EG(17)
+      RB(75) = RF(75) / MAX(EQK, SMALL)
+C     R76: HO2 + CH2O = H2O2 + HCO
+      RF(76) = EXP(2.763102111592855D1 -4.025733341119358D3*TI)
+      EQK = EG(8)*EG(16)/EG(7)/EG(17)
+      RB(76) = RF(76) / MAX(EQK, SMALL)
+C     R77: CH + CH2O = H + CH2CO
+      RF(77) = EXP(3.218067859198638D1 +2.591565838345587D2*TI)
+      EQK = EG(2)*EG(26)/EG(9)/EG(17)
+      RB(77) = RF(77) / MAX(EQK, SMALL)
+C     R78: H + CH3 = CH4
+      RF(78) = EXP(3.708037838837523D1 -6.3D-1*ALOGT
+     * -1.927319837060892D2*TI)
+      EQK = EG(13)/EG(2)/EG(12)/PFAC1
+      RB(78) = RF(78) / MAX(EQK, SMALL)
+C     R79: O + CH3 = H + CH2O
+      RF(79) = 8.43D13
+      EQK = EG(2)*EG(17)/EG(3)/EG(12)
+      RB(79) = RF(79) / MAX(EQK, SMALL)
+C     R80: OH + CH3 = H2O + CH2
+      RF(80) = EXP(1.784086224869942D1 +1.6D0*ALOGT
+     * -2.727434338608365D3*TI)
+      EQK = EG(6)*EG(10)/EG(5)/EG(12)
+      RB(80) = RF(80) / MAX(EQK, SMALL)
+C     R81: OH + CH3 = H2O + CH2*
+      RF(81) = 2.501D13
+      EQK = EG(6)*EG(11)/EG(5)/EG(12)
+      RB(81) = RF(81) / MAX(EQK, SMALL)
+C     R82: O2 + CH3 = O + CH3O
+      RF(82) = EXP(3.105950935782661D1 -1.449264002802969D4*TI)
+      EQK = EG(3)*EG(18)/EG(4)/EG(12)
+      RB(82) = RF(82) / MAX(EQK, SMALL)
+C     R83: O2 + CH3 = OH + CH2O
+      RF(83) = EXP(2.430678477540252D1 -4.498757008700882D3*TI)
+      EQK = EG(5)*EG(17)/EG(4)/EG(12)
+      RB(83) = RF(83) / MAX(EQK, SMALL)
+C     R84: HO2 + CH3 = O2 + CH4
+      RF(84) = 1.D12
+      EQK = EG(4)*EG(13)/EG(7)/EG(12)
+      RB(84) = RF(84) / MAX(EQK, SMALL)
+C     R85: HO2 + CH3 = OH + CH3O
+      RF(85) = 1.34D13
+      EQK = EG(5)*EG(18)/EG(7)/EG(12)
+      RB(85) = RF(85) / MAX(EQK, SMALL)
+C     R86: H2O2 + CH3 = HO2 + CH4
+      RF(86) = EXP(1.010642839653282D1 +2.47D0*ALOGT
+     * -2.606662338374784D3*TI)
+      EQK = EG(7)*EG(13)/EG(8)/EG(12)
+      RB(86) = RF(86) / MAX(EQK, SMALL)
+C     R87: CH + CH3 = H + C2H3
+      RF(87) = 3.D13
+      EQK = EG(2)*EG(21)/EG(9)/EG(12)
+      RB(87) = RF(87) / MAX(EQK, SMALL)
+C     R88: CH3 + HCO = CH4 + CO
+      RF(88) = 8.48D12
+      EQK = EG(13)*EG(14)/EG(12)/EG(16)
+      RB(88) = RF(88) / MAX(EQK, SMALL)
+C     R89: CH3 + HCO = CH3CHO
+      RF(89) = 1.8D13
+      EQK = EG(28)/EG(12)/EG(16)/PFAC1
+      RB(89) = RF(89) / MAX(EQK, SMALL)
+C     R90: CH3 + CH2O = CH4 + HCO
+      RF(90) = EXP(8.107720061910534D0 +2.81D0*ALOGT
+     * -2.94884967236993D3*TI)
+      EQK = EG(13)*EG(16)/EG(12)/EG(17)
+      RB(90) = RF(90) / MAX(EQK, SMALL)
+C     R91: CH2 + CH3 = H + C2H4
+      RF(91) = 4.D13
+      EQK = EG(2)*EG(22)/EG(10)/EG(12)
+      RB(91) = RF(91) / MAX(EQK, SMALL)
+C     R92: CH2* + CH3 = H + C2H4
+      RF(92) = EXP(3.011592776571655D1 +2.868335005547542D2*TI)
+      EQK = EG(2)*EG(22)/EG(11)/EG(12)
+      RB(92) = RF(92) / MAX(EQK, SMALL)
+C     R93: 2CH3 = C2H6
+      RF(93) = EXP(3.759277757658865D1 -9.7D-1*ALOGT
+     * -3.119943339367502D2*TI)
+      EQK = EG(24)/EG(12)/EG(12)/PFAC1
+      RB(93) = RF(93) / MAX(EQK, SMALL)
+C     R94: 2CH3 = H + C2H5
+      RF(94) = EXP(2.923845702569198D1 +1.D-1*ALOGT
+     * -5.334096676983148D3*TI)
+      EQK = EG(2)*EG(23)/EG(12)/EG(12)
+      RB(94) = RF(94) / MAX(EQK, SMALL)
+C     R95: CH3 + HCCO = CO + C2H4
+      RF(95) = 5.D13
+      EQK = EG(14)*EG(22)/EG(12)/EG(25)
+      RB(95) = RF(95) / MAX(EQK, SMALL)
+C     R96: H + CH3O = H2 + CH2O
+      RF(96) = 2.D13
+      EQK = EG(1)*EG(17)/EG(2)/EG(18)
+      RB(96) = RF(96) / MAX(EQK, SMALL)
+C     R97: H + CH3O = OH + CH3
+      RF(97) = 3.2D13
+      EQK = EG(5)*EG(12)/EG(2)/EG(18)
+      RB(97) = RF(97) / MAX(EQK, SMALL)
+C     R98: H + CH3O = H2O + CH2*
+      RF(98) = 1.6D13
+      EQK = EG(6)*EG(11)/EG(2)/EG(18)
+      RB(98) = RF(98) / MAX(EQK, SMALL)
+C     R99: O + CH3O = OH + CH2O
+      RF(99) = 1.D13
+      EQK = EG(5)*EG(17)/EG(3)/EG(18)
+      RB(99) = RF(99) / MAX(EQK, SMALL)
+C     R100: OH + CH3O = H2O + CH2O
+      RF(100) = 5.D12
+      EQK = EG(6)*EG(17)/EG(5)/EG(18)
+      RB(100) = RF(100) / MAX(EQK, SMALL)
+C     R101: O2 + CH3O = HO2 + CH2O
+      RF(101) = EXP(-2.847965319932889D1 +7.6D0*ALOGT
+     * +1.776354836768916D3*TI)
+      EQK = EG(7)*EG(17)/EG(4)/EG(18)
+      RB(101) = RF(101) / MAX(EQK, SMALL)
+C     R102: H + CH4 = H2 + CH3
+      RF(102) = EXP(2.030775039298474D1 +1.62D0*ALOGT
+     * -5.454868677216729D3*TI)
+      EQK = EG(1)*EG(12)/EG(2)/EG(13)
+      RB(102) = RF(102) / MAX(EQK, SMALL)
+C     R103: O + CH4 = OH + CH3
+      RF(103) = EXP(2.074306846424259D1 +1.5D0*ALOGT
+     * -4.327663341703309D3*TI)
+      EQK = EG(5)*EG(12)/EG(3)/EG(13)
+      RB(103) = RF(103) / MAX(EQK, SMALL)
+C     R104: OH + CH4 = H2O + CH3
+      RF(104) = EXP(1.842068074395237D1 +1.6D0*ALOGT
+     * -1.570036003036549D3*TI)
+      EQK = EG(6)*EG(12)/EG(5)/EG(13)
+      RB(104) = RF(104) / MAX(EQK, SMALL)
+C     R105: CH + CH4 = H + C2H4
+      RF(105) = 6.D13
+      EQK = EG(2)*EG(22)/EG(9)/EG(13)
+      RB(105) = RF(105) / MAX(EQK, SMALL)
+C     R106: CH2 + CH4 = 2CH3
+      RF(106) = EXP(1.471567190790855D1 +2.D0*ALOGT
+     * -4.161601841382136D3*TI)
+      EQK = EG(12)*EG(12)/EG(10)/EG(13)
+      RB(106) = RF(106) / MAX(EQK, SMALL)
+C     R107: CH2* + CH4 = 2CH3
+      RF(107) = 1.333333333333333D0*RF(92)
+      EQK = EG(12)*EG(12)/EG(11)/EG(13)
+      RB(107) = RF(107) / MAX(EQK, SMALL)
+C     R108: H + HCCO = CH2* + CO
+      RF(108) = 1.D14
+      EQK = EG(11)*EG(14)/EG(2)/EG(25)
+      RB(108) = RF(108) / MAX(EQK, SMALL)
+C     R109: O + HCCO = H + 2CO
+      RF(109) = 1.D14
+      EQK = EG(2)*EG(14)*EG(14)/EG(3)/EG(25)*PFAC1
+      RB(109) = RF(109) / MAX(EQK, SMALL)
+C     R110: O2 + HCCO = OH + 2CO
+      RF(110) = EXP(2.810102474517428D1 -4.297470341644914D2*TI)
+      EQK = EG(5)*EG(14)*EG(14)/EG(4)/EG(25)*PFAC1
+      RB(110) = RF(110) / MAX(EQK, SMALL)
+C     R111: CH + HCCO = CO + C2H2
+      RF(111) = 5.D13
+      EQK = EG(14)*EG(19)/EG(9)/EG(25)
+      RB(111) = RF(111) / MAX(EQK, SMALL)
+C     R112: CH2 + HCCO = CO + C2H3
+      RF(112) = 3.D13
+      EQK = EG(14)*EG(21)/EG(10)/EG(25)
+      RB(112) = RF(112) / MAX(EQK, SMALL)
+C     R113: 2HCCO = 2CO + C2H2
+      RF(113) = 1.D13
+      EQK = EG(14)*EG(14)*EG(19)/EG(25)/EG(25)*PFAC1
+      RB(113) = RF(113) / MAX(EQK, SMALL)
+C     R114: C2H2 = H2CC
+      RF(114) = EXP(3.431563284359648D1 -5.2D-1*ALOGT
+     * -2.553824588272593D4*TI)
+      EQK = EG(20)/EG(19)
+      RB(114) = RF(114) / MAX(EQK, SMALL)
+C     R115: C2H3 = H + C2H2
+      RF(115) = EXP(1.977134792742911D1 +1.62D0*ALOGT
+     * -1.864328181039063D4*TI)
+      EQK = EG(2)*EG(19)/EG(21)*PFAC1
+      RB(115) = RF(115) / MAX(EQK, SMALL)
+C     R116: O + C2H2 = H + HCCO
+      RF(116) = EXP(1.660790190750024D1 +2.D0*ALOGT
+     * -9.561116685158474D2*TI)
+      EQK = EG(2)*EG(25)/EG(3)/EG(19)
+      RB(116) = RF(116) / MAX(EQK, SMALL)
+C     R117: O + C2H2 = CH2 + CO
+      RF(117) = 2.5D-1*RF(116)
+      EQK = EG(10)*EG(14)/EG(3)/EG(19)
+      RB(117) = RF(117) / MAX(EQK, SMALL)
+C     R118: OH + C2H2 = H + CH2CO
+      RF(118) = EXP(-8.431015495175185D0 +4.5D0*ALOGT
+     * +5.032166676399197D2*TI)
+      EQK = EG(2)*EG(26)/EG(5)/EG(19)
+      RB(118) = RF(118) / MAX(EQK, SMALL)
+C     R119: OH + C2H2 = CH3 + CO
+      RF(119) = EXP(-7.635493904311701D0 +4.D0*ALOGT
+     * +1.006433335279839D3*TI)
+      EQK = EG(12)*EG(14)/EG(5)/EG(19)
+      RB(119) = RF(119) / MAX(EQK, SMALL)
+C     R120: HCO + C2H2 = CO + C2H3
+      RF(120) = EXP(1.611809565095832D1 +2.D0*ALOGT
+     * -3.019300005839518D3*TI)
+      EQK = EG(14)*EG(21)/EG(16)/EG(19)
+      RB(120) = RF(120) / MAX(EQK, SMALL)
+C     R121: CH3 + C2H2 = aC3H5
+      RF(121) = EXP(1.274306374750368D2 -1.182D1*ALOGT
+     * -1.797993153477433D4*TI)
+      EQK = EG(29)/EG(12)/EG(19)/PFAC1
+      RB(121) = RF(121) / MAX(EQK, SMALL)
+C     R122: H + H2CC = H + C2H2
+      RF(122) = 1.D14
+      EQK = EG(19)/EG(20)
+      RB(122) = RF(122) / MAX(EQK, SMALL)
+C     R123: O + H2CC = CH2 + CO
+      RF(123) = 1.D14
+      EQK = EG(10)*EG(14)/EG(3)/EG(20)
+      RB(123) = RF(123) / MAX(EQK, SMALL)
+C     R124: OH + H2CC = H + CH2CO
+      RF(124) = 2.D13
+      EQK = EG(2)*EG(26)/EG(5)/EG(20)
+      RB(124) = RF(124) / MAX(EQK, SMALL)
+C     R125: O2 + H2CC = CH2 + CO2
+      RF(125) = 1.D13
+      EQK = EG(10)*EG(15)/EG(4)/EG(20)
+      RB(125) = RF(125) / MAX(EQK, SMALL)
+C     R126: H + CH2CO = CH2CHO
+      RF(126) = EXP(3.343011377038908D1 -6.D-2*ALOGT
+     * -4.277341674939317D3*TI)
+      EQK = EG(27)/EG(2)/EG(26)/PFAC1
+      RB(126) = RF(126) / MAX(EQK, SMALL)
+C     R127: H + CH2CO = H2 + HCCO
+      RF(127) = 5.D1*RF(76)
+      EQK = EG(1)*EG(25)/EG(2)/EG(26)
+      RB(127) = RF(127) / MAX(EQK, SMALL)
+C     R128: H + CH2CO = CH3 + CO
+      RF(128) = EXP(2.112873094505457D1 +1.43D0*ALOGT
+     * -1.353652835951384D3*TI)
+      EQK = EG(12)*EG(14)/EG(2)/EG(26)
+      RB(128) = RF(128) / MAX(EQK, SMALL)
+C     R129: O + CH2CO = OH + HCCO
+      RF(129) = 1.D1*RF(76)
+      EQK = EG(5)*EG(25)/EG(3)/EG(26)
+      RB(129) = RF(129) / MAX(EQK, SMALL)
+C     R130: O + CH2CO = CH2 + CO2
+      RF(130) = EXP(2.819063690386397D1 -6.793425013138916D2*TI)
+      EQK = EG(10)*EG(15)/EG(3)/EG(26)
+      RB(130) = RF(130) / MAX(EQK, SMALL)
+C     R131: OH + CH2CO = H2O + HCCO
+      RF(131) = EXP(2.964592413647081D1 -1.006433335279839D3*TI)
+      EQK = EG(6)*EG(25)/EG(5)/EG(26)
+      RB(131) = RF(131) / MAX(EQK, SMALL)
+C     R132: H + C2H3 = C2H4
+      RF(132) = EXP(2.943602581190662D1 +2.7D-1*ALOGT
+     * -1.409006669391775D2*TI)
+      EQK = EG(22)/EG(2)/EG(21)/PFAC1
+      RB(132) = RF(132) / MAX(EQK, SMALL)
+C     R133: H + C2H3 = H2 + C2H2
+      RF(133) = 3.D13
+      EQK = EG(1)*EG(19)/EG(2)/EG(21)
+      RB(133) = RF(133) / MAX(EQK, SMALL)
+C     R134: H + C2H3 = H2 + H2CC
+      RF(134) = 6.D13
+      EQK = EG(1)*EG(20)/EG(2)/EG(21)
+      RB(134) = RF(134) / MAX(EQK, SMALL)
+C     R135: O + C2H3 = H + CH2CO
+      RF(135) = 4.8D13
+      EQK = EG(2)*EG(26)/EG(3)/EG(21)
+      RB(135) = RF(135) / MAX(EQK, SMALL)
+C     R136: O + C2H3 = CH3 + CO
+      RF(136) = 4.8D13
+      EQK = EG(12)*EG(14)/EG(3)/EG(21)
+      RB(136) = RF(136) / MAX(EQK, SMALL)
+C     R137: OH + C2H3 = H2O + C2H2
+      RF(137) = 3.011D13
+      EQK = EG(6)*EG(19)/EG(5)/EG(21)
+      RB(137) = RF(137) / MAX(EQK, SMALL)
+C     R138: O2 + C2H3 = HO2 + C2H2
+      RF(138) = EXP(1.410818017192709D1 +1.61D0*ALOGT
+     * +1.929332703731452D2*TI)
+      EQK = EG(7)*EG(19)/EG(4)/EG(21)
+      RB(138) = RF(138) / MAX(EQK, SMALL)
+C     R139: O2 + C2H3 = O + CH2CHO
+      RF(139) = EXP(2.642704831160261D1 +2.9D-1*ALOGT
+     * -5.535383344039117D0*TI)
+      EQK = EG(3)*EG(27)/EG(4)/EG(21)
+      RB(139) = RF(139) / MAX(EQK, SMALL)
+C     R140: O2 + C2H3 = HCO + CH2O
+      RF(140) = EXP(3.836741779139978D1 -1.39D0*ALOGT
+     * -5.082488343163189D2*TI)
+      EQK = EG(16)*EG(17)/EG(4)/EG(21)
+      RB(140) = RF(140) / MAX(EQK, SMALL)
+C     R141: HO2 + C2H3 = OH + CH2CHO
+      RF(141) = 1.D13
+      EQK = EG(5)*EG(27)/EG(7)/EG(21)
+      RB(141) = RF(141) / MAX(EQK, SMALL)
+C     R142: H2O2 + C2H3 = HO2 + C2H4
+      RF(142) = EXP(2.321647128954911D1 +2.999171339133922D2*TI)
+      EQK = EG(7)*EG(22)/EG(8)/EG(21)
+      RB(142) = RF(142) / MAX(EQK, SMALL)
+C     R143: HCO + C2H3 = CO + C2H4
+      RF(143) = 9.033D13
+      EQK = EG(14)*EG(22)/EG(16)/EG(21)
+      RB(143) = RF(143) / MAX(EQK, SMALL)
+C     R144: CH3 + C2H3 = CH4 + C2H2
+      RF(144) = 3.92D11
+      EQK = EG(13)*EG(19)/EG(12)/EG(21)
+      RB(144) = RF(144) / MAX(EQK, SMALL)
+C     R145: CH3 + C2H3 = C3H6
+      RF(145) = 2.5D13
+      EQK = EG(30)/EG(12)/EG(21)/PFAC1
+      RB(145) = RF(145) / MAX(EQK, SMALL)
+C     R146: CH3 + C2H3 = H + aC3H5
+      RF(146) = EXP(5.566750733996526D1 -2.83D0*ALOGT
+     * -9.368887918120025D3*TI)
+      EQK = EG(2)*EG(29)/EG(12)/EG(21)
+      RB(146) = RF(146) / MAX(EQK, SMALL)
+C     R147: CH2CHO = CH3 + CO
+      RF(147) = EXP(9.64601125464514D1 -9.147D0*ALOGT
+     * -2.360086171231223D4*TI)
+      EQK = EG(12)*EG(14)/EG(27)*PFAC1
+      RB(147) = RF(147) / MAX(EQK, SMALL)
+C     R148: H + CH2CHO = CH3CHO
+      RF(148) = 1.D14
+      EQK = EG(28)/EG(2)/EG(27)/PFAC1
+      RB(148) = RF(148) / MAX(EQK, SMALL)
+C     R149: H + CH2CHO = CH3 + HCO
+      RF(149) = 9.D13
+      EQK = EG(12)*EG(16)/EG(2)/EG(27)
+      RB(149) = RF(149) / MAX(EQK, SMALL)
+C     R150: H + CH2CHO = H2 + CH2CO
+      RF(150) = EXP(3.062675338948254D1 -2.012866670559679D3*TI)
+      EQK = EG(1)*EG(26)/EG(2)/EG(27)
+      RB(150) = RF(150) / MAX(EQK, SMALL)
+C     R151: O + CH2CHO = OH + CH2CO
+      RF(151) = RF(150)
+      EQK = EG(5)*EG(26)/EG(3)/EG(27)
+      RB(151) = RF(151) / MAX(EQK, SMALL)
+C     R152: OH + CH2CHO = H2O + CH2CO
+      RF(152) = 1.333333333333333D0*RF(131)
+      EQK = EG(6)*EG(26)/EG(5)/EG(27)
+      RB(152) = RF(152) / MAX(EQK, SMALL)
+C     R153: O2 + CH2CHO = HO2 + CH2CO
+      RF(153) = 1.4D11
+      EQK = EG(7)*EG(26)/EG(4)/EG(27)
+      RB(153) = RF(153) / MAX(EQK, SMALL)
+C     R154: O2 + CH2CHO = OH + CO + CH2O
+      RF(154) = 1.8D10
+      EQK = EG(5)*EG(14)*EG(17)/EG(4)/EG(27)*PFAC1
+      RB(154) = RF(154) / MAX(EQK, SMALL)
+C     R155: C2H4 = H2 + H2CC
+      RF(155) = EXP(2.971046265760839D1 +4.4D-1*ALOGT
+     * -4.467054358639567D4*TI)
+      EQK = EG(1)*EG(20)/EG(22)*PFAC1
+      RB(155) = RF(155) / MAX(EQK, SMALL)
+C     R156: H + C2H4 = C2H5
+      RF(156) = EXP(2.770798215706468D1 +4.54D-1*ALOGT
+     * -9.158543351046538D2*TI)
+      EQK = EG(23)/EG(2)/EG(22)/PFAC1
+      RB(156) = RF(156) / MAX(EQK, SMALL)
+C     R157: H + C2H4 = H2 + C2H3
+      RF(157) = EXP(1.774143646856141D1 +1.93D0*ALOGT
+     * -6.51665584593696D3*TI)
+      EQK = EG(1)*EG(21)/EG(2)/EG(22)
+      RB(157) = RF(157) / MAX(EQK, SMALL)
+C     R158: O + C2H4 = OH + C2H3
+      RF(158) = EXP(1.653020530178515D1 +1.91D0*ALOGT
+     * -1.8820303369733D3*TI)
+      EQK = EG(5)*EG(21)/EG(3)/EG(22)
+      RB(158) = RF(158) / MAX(EQK, SMALL)
+C     R159: O + C2H4 = CH3 + HCO
+      RF(159) = EXP(1.677042083699801D1 +1.83D0*ALOGT
+     * -1.107076668807823D2*TI)
+      EQK = EG(12)*EG(16)/EG(3)/EG(22)
+      RB(159) = RF(159) / MAX(EQK, SMALL)
+C     R160: O + C2H4 = CH2 + CH2O
+      RF(160) = 2.D-2*RF(159)
+      EQK = EG(10)*EG(17)/EG(3)/EG(22)
+      RB(160) = RF(160) / MAX(EQK, SMALL)
+C     R161: OH + C2H4 = H2O + C2H3
+      RF(161) = EXP(1.509644440342634D1 +2.D0*ALOGT
+     * -1.258041669099799D3*TI)
+      EQK = EG(6)*EG(21)/EG(5)/EG(22)
+      RB(161) = RF(161) / MAX(EQK, SMALL)
+C     R162: O2 + C2H4 = HO2 + C2H3
+      RF(162) = EXP(3.137344133697052D1 -3.059557339250712D4*TI)
+      EQK = EG(7)*EG(21)/EG(4)/EG(22)
+      RB(162) = RF(162) / MAX(EQK, SMALL)
+C     R163: HO2 + C2H4 = OH + CH3CHO
+      RF(163) = EXP(2.832416829648849D1 -7.045033346958876D3*TI)
+      EQK = EG(5)*EG(28)/EG(7)/EG(22)
+      RB(163) = RF(163) / MAX(EQK, SMALL)
+C     R164: HCO + C2H4 = CO + C2H5
+      RF(164) = EXP(1.611809565095832D1 +2.D0*ALOGT
+     * -4.025733341119358D3*TI)
+      EQK = EG(14)*EG(23)/EG(16)/EG(22)
+      RB(164) = RF(164) / MAX(EQK, SMALL)
+C     R165: CH2 + C2H4 = H + aC3H5
+      RF(165) = EXP(3.062675338948254D1 -3.019300005839518D3*TI)
+      EQK = EG(2)*EG(29)/EG(10)/EG(22)
+      RB(165) = RF(165) / MAX(EQK, SMALL)
+C     R166: CH2* + C2H4 = CH4 + H2CC
+      RF(166) = 5.D13
+      EQK = EG(13)*EG(20)/EG(11)/EG(22)
+      RB(166) = RF(166) / MAX(EQK, SMALL)
+C     R167: CH2* + C2H4 = H + aC3H5
+      RF(167) = 5.D13
+      EQK = EG(2)*EG(29)/EG(11)/EG(22)
+      RB(167) = RF(167) / MAX(EQK, SMALL)
+C     R168: CH3 + C2H4 = CH4 + C2H3
+      RF(168) = EXP(1.233270529646354D1 +2.D0*ALOGT
+     * -4.629593342287261D3*TI)
+      EQK = EG(13)*EG(21)/EG(12)/EG(22)
+      RB(168) = RF(168) / MAX(EQK, SMALL)
+C     R169: CH3 + C2H4 = nC3H7
+      RF(169) = EXP(2.652235849140694D1 -3.874768340827382D3*TI)
+      EQK = EG(31)/EG(12)/EG(22)/PFAC1
+      RB(169) = RF(169) / MAX(EQK, SMALL)
+C     R170: H + C2H5 = C2H6
+      RF(170) = EXP(4.079452643666405D1 -9.9D-1*ALOGT
+     * -7.95082334871073D2*TI)
+      EQK = EG(24)/EG(2)/EG(23)/PFAC1
+      RB(170) = RF(170) / MAX(EQK, SMALL)
+C     R171: H + C2H5 = H2 + C2H4
+      RF(171) = 2.D12
+      EQK = EG(1)*EG(22)/EG(2)/EG(23)
+      RB(171) = RF(171) / MAX(EQK, SMALL)
+C     R172: O + C2H5 = CH3 + CH2O
+      RF(172) = 1.604D13
+      EQK = EG(12)*EG(17)/EG(3)/EG(23)
+      RB(172) = RF(172) / MAX(EQK, SMALL)
+C     R173: O + C2H5 = H + CH3CHO
+      RF(173) = 8.02D13
+      EQK = EG(2)*EG(28)/EG(3)/EG(23)
+      RB(173) = RF(173) / MAX(EQK, SMALL)
+C     R174: O2 + C2H5 = HO2 + C2H4
+      RF(174) = 2.D10
+      EQK = EG(7)*EG(22)/EG(4)/EG(23)
+      RB(174) = RF(174) / MAX(EQK, SMALL)
+C     R175: HO2 + C2H5 = O2 + C2H6
+      RF(175) = 3.D11
+      EQK = EG(4)*EG(24)/EG(7)/EG(23)
+      RB(175) = RF(175) / MAX(EQK, SMALL)
+C     R176: HO2 + C2H5 = H2O2 + C2H4
+      RF(176) = 3.D11
+      EQK = EG(8)*EG(22)/EG(7)/EG(23)
+      RB(176) = RF(176) / MAX(EQK, SMALL)
+C     R177: HO2 + C2H5 = OH + CH3 + CH2O
+      RF(177) = 2.4D13
+      EQK = EG(5)*EG(12)*EG(17)/EG(7)/EG(23)*PFAC1
+      RB(177) = RF(177) / MAX(EQK, SMALL)
+C     R178: H2O2 + C2H5 = HO2 + C2H6
+      RF(178) = EXP(2.288658886260695D1 -4.901330342812818D2*TI)
+      EQK = EG(7)*EG(24)/EG(8)/EG(23)
+      RB(178) = RF(178) / MAX(EQK, SMALL)
+C     R179: HCO + C2H5 = CO + C2H6
+      RF(179) = 1.2D14
+      EQK = EG(14)*EG(24)/EG(16)/EG(23)
+      RB(179) = RF(179) / MAX(EQK, SMALL)
+C     R180: H + C2H6 = H2 + C2H5
+      RF(180) = EXP(1.856044268632752D1 +1.9D0*ALOGT
+     * -3.789221507328595D3*TI)
+      EQK = EG(1)*EG(23)/EG(2)/EG(24)
+      RB(180) = RF(180) / MAX(EQK, SMALL)
+C     R181: O + C2H6 = OH + C2H5
+      RF(181) = EXP(1.831309553327243D1 +1.92D0*ALOGT
+     * -2.863302838871143D3*TI)
+      EQK = EG(5)*EG(23)/EG(3)/EG(24)
+      RB(181) = RF(181) / MAX(EQK, SMALL)
+C     R182: OH + C2H6 = H2O + C2H5
+      RF(182) = EXP(1.507963728510996D1 +2.12D0*ALOGT
+     * -4.377985008467301D2*TI)
+      EQK = EG(6)*EG(23)/EG(5)/EG(24)
+      RB(182) = RF(182) / MAX(EQK, SMALL)
+C     R183: CH2* + C2H6 = CH3 + C2H5
+      RF(183) = EXP(3.131990057004249D1 +2.767691672019558D2*TI)
+      EQK = EG(12)*EG(23)/EG(11)/EG(24)
+      RB(183) = RF(183) / MAX(EQK, SMALL)
+C     R184: CH3 + C2H6 = CH4 + C2H5
+      RF(184) = EXP(1.563033530012333D1 +1.74D0*ALOGT
+     * -5.258614176837161D3*TI)
+      EQK = EG(13)*EG(23)/EG(12)/EG(24)
+      RB(184) = RF(184) / MAX(EQK, SMALL)
+C     R185: H + aC3H5 = C3H6
+      RF(185) = 2.D14
+      EQK = EG(30)/EG(2)/EG(29)/PFAC1
+      RB(185) = RF(185) / MAX(EQK, SMALL)
+C     R186: H + aC3H5 = CH4 + H2CC
+      RF(186) = 2.666666666666667D0*RF(131)
+      EQK = EG(13)*EG(20)/EG(2)/EG(29)
+      RB(186) = RF(186) / MAX(EQK, SMALL)
+C     R187: HO2 + aC3H5 = O2 + C3H6
+      RF(187) = 2.66D12
+      EQK = EG(4)*EG(30)/EG(7)/EG(29)
+      RB(187) = RF(187) / MAX(EQK, SMALL)
+C     R188: HO2 + aC3H5 = OH + CH2O + C2H3
+      RF(188) = 6.6D12
+      EQK = EG(5)*EG(17)*EG(21)/EG(7)/EG(29)*PFAC1
+      RB(188) = RF(188) / MAX(EQK, SMALL)
+C     R189: HCO + aC3H5 = CO + C3H6
+      RF(189) = 6.D13
+      EQK = EG(14)*EG(30)/EG(16)/EG(29)
+      RB(189) = RF(189) / MAX(EQK, SMALL)
+C     R190: H + C3H6 = nC3H7
+      RF(190) = EXP(3.021878515115626D1 -1.640838588173486D3*TI)
+      EQK = EG(31)/EG(2)/EG(30)/PFAC1
+      RB(190) = RF(190) / MAX(EQK, SMALL)
+C     R191: H + C3H6 = CH3 + C2H4
+      RF(191) = EXP(5.112687567511474D1 -2.39D0*ALOGT
+     * -5.625962344214302D3*TI)
+      EQK = EG(12)*EG(22)/EG(2)/EG(30)
+      RB(191) = RF(191) / MAX(EQK, SMALL)
+C     R192: H + C3H6 = H2 + aC3H5
+      RF(192) = EXP(1.20435537160324D1 +2.5D0*ALOGT
+     * -1.2530095024234D3*TI)
+      EQK = EG(1)*EG(29)/EG(2)/EG(30)
+      RB(192) = RF(192) / MAX(EQK, SMALL)
+C     R193: O + C3H6 = H + CH3 + CH2CO
+      RF(193) = EXP(1.860300230074632D1 +1.65D0*ALOGT
+     * -1.645518503182537D2*TI)
+      EQK = EG(2)*EG(12)*EG(26)/EG(3)/EG(30)*PFAC1
+      RB(193) = RF(193) / MAX(EQK, SMALL)
+C     R194: O + C3H6 = HCO + C2H5
+      RF(194) = EXP(1.737085861945369D1 +1.65D0*ALOGT
+     * +4.891266009460019D2*TI)
+      EQK = EG(16)*EG(23)/EG(3)/EG(30)
+      RB(194) = RF(194) / MAX(EQK, SMALL)
+C     R195: O + C3H6 = OH + aC3H5
+      RF(195) = EXP(2.591622268783662D1 +7.D-1*ALOGT
+     * -2.958914005722728D3*TI)
+      EQK = EG(5)*EG(29)/EG(3)/EG(30)
+      RB(195) = RF(195) / MAX(EQK, SMALL)
+C     R196: OH + C3H6 = H2O + aC3H5
+      RF(196) = EXP(1.494691266945537D1 +2.D0*ALOGT
+     * +1.499585669566961D2*TI)
+      EQK = EG(6)*EG(29)/EG(5)/EG(30)
+      RB(196) = RF(196) / MAX(EQK, SMALL)
+C     R197: HO2 + C3H6 = H2O2 + aC3H5
+      RF(197) = EXP(9.169518377455928D0 +2.6D0*ALOGT
+     * -6.999743846871283D3*TI)
+      EQK = EG(8)*EG(29)/EG(7)/EG(30)
+      RB(197) = RF(197) / MAX(EQK, SMALL)
+C     R198: CH3 + C3H6 = CH4 + aC3H5
+      RF(198) = EXP(7.884573603642703D-1 +3.5D0*ALOGT
+     * -2.855754588856544D3*TI)
+      EQK = EG(13)*EG(29)/EG(12)/EG(30)
+      RB(198) = RF(198) / MAX(EQK, SMALL)
+C     R199: H + nC3H7 = CH3 + C2H5
+      RF(199) = EXP(5.657037505150728D1 -2.92D0*ALOGT
+     * -6.292724428837196D3*TI)
+      EQK = EG(12)*EG(23)/EG(2)/EG(31)
+      RB(199) = RF(199) / MAX(EQK, SMALL)
+C     R200: H + nC3H7 = H2 + C3H6
+      RF(200) = 1.8D12
+      EQK = EG(1)*EG(30)/EG(2)/EG(31)
+      RB(200) = RF(200) / MAX(EQK, SMALL)
+C     R201: O + nC3H7 = CH2O + C2H5
+      RF(201) = 9.6D13
+      EQK = EG(17)*EG(23)/EG(3)/EG(31)
+      RB(201) = RF(201) / MAX(EQK, SMALL)
+C     R202: OH + nC3H7 = H2O + C3H6
+      RF(202) = 2.4D13
+      EQK = EG(6)*EG(30)/EG(5)/EG(31)
+      RB(202) = RF(202) / MAX(EQK, SMALL)
+C     R203: O2 + nC3H7 = HO2 + C3H6
+      RF(203) = 9.D10
+      EQK = EG(7)*EG(30)/EG(4)/EG(31)
+      RB(203) = RF(203) / MAX(EQK, SMALL)
+C     R204: HO2 + nC3H7 = OH + CH2O + C2H5
+      RF(204) = 2.4D13
+      EQK = EG(5)*EG(17)*EG(23)/EG(7)/EG(31)*PFAC1
+      RB(204) = RF(204) / MAX(EQK, SMALL)
+C     R205: CH3 + nC3H7 = CH4 + C3H6
+      RF(205) = 1.1D13
+      EQK = EG(13)*EG(30)/EG(12)/EG(31)
+      RB(205) = RF(205) / MAX(EQK, SMALL)
+C     R206: C2H3 + C2H5 = CH3 + aC3H5
+      RF(206) = EXP(7.504369952894507D1 -5.22D0*ALOGT
+     * -9.937019535885494D3*TI)
+      EQK = EG(12)*EG(29)/EG(21)/EG(23)
+      RB(206) = RF(206) / MAX(EQK, SMALL)
+C
+      RKLOW(1) = EXP(4.227944079682793D1 -9.D-1*ALOGT
+     * +8.554683349878635D2*TI)
+      RKLOW(2) = EXP(6.379313832844233D1 -3.42D0*ALOGT
+     * -4.244632591542722D4*TI)
+      RKLOW(3) = EXP(6.546192379744703D1 -3.74D0*ALOGT
+     * -9.742274685508845D2*TI)
+      RKLOW(4) = EXP(5.556214682430743D1 -2.57D0*ALOGT
+     * -7.170837513868855D2*TI)
+      RKLOW(5) = EXP(6.333294832064492D1 -3.14D0*ALOGT
+     * -6.189565011971013D2*TI)
+      RKLOW(6) = EXP(7.697484926241725D1 -5.11D0*ALOGT
+     * -3.57032225690523D3*TI)
+      RKLOW(7) = EXP(6.986601015018565D1 -4.8D0*ALOGT
+     * -2.797884672077953D3*TI)
+      RKLOW(8) = EXP(7.689235621931073D1 -4.76D0*ALOGT
+     * -1.227848669041404D3*TI)
+      RKLOW(9) = EXP(1.113125418240785D2 -9.588D0*ALOGT
+     * -2.56640500496359D3*TI)
+      RKLOW(10) = EXP(1.15700234196288D2 -9.67D0*ALOGT
+     * -3.1300076727203D3*TI)
+      RKLOW(11) = EXP(3.543486441946732D1 -6.4D-1*ALOGT
+     * -2.500986838170401D4*TI)
+      RKLOW(12) = EXP(6.311175598946197D1 -3.4D0*ALOGT
+     * -1.801451258417455D4*TI)
+      RKLOW(13) = EXP(9.574098987948821D1 -7.64D0*ALOGT
+     * -5.988278344915044D3*TI)
+      RKLOW(14) = EXP(6.941402502644259D1 -3.86D0*ALOGT
+     * -1.670679336564533D3*TI)
+      RKLOW(15) = EXP(1.350015492208952D2 -1.194D1*ALOGT
+     * -4.916326199508487D3*TI)
+      RKLOW(16) = EXP(9.144947725235516D1 -7.297D0*ALOGT
+     * -2.365118337907622D3*TI)
+      RKLOW(17) = EXP(1.170751647987576D2 -9.31D0*ALOGT
+     * -5.025121643052238D4*TI)
+      RKLOW(18) = EXP(9.689089546254387D1 -7.62D0*ALOGT
+     * -3.50742017345024D3*TI)
+      RKLOW(19) = EXP(9.509412345149228D1 -7.08D0*ALOGT
+     * -3.364003423172863D3*TI)
+      RKLOW(20) = EXP(1.384402845218764D2 -1.2D1*ALOGT
+     * -3.003096429141513D3*TI)
+      RKLOW(21) = EXP(8.933241371888576D1 -6.66D0*ALOGT
+     * -3.522516673479438D3*TI)
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKSMH  (T, SMH)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION SMH(*), TN(5)
+C
+      TLOG = LOG(T)
+      TI = 1D0/T
+C
+      TN(1) = TLOG - 1D0
+      TN(2) = T
+      TN(3) = TN(2)*T
+      TN(4) = TN(3)*T
+      TN(5) = TN(4)*T
+C H2
+      IF (T .GT. 1000) THEN
+      SMH(1) = -3.20502331D0 +9.50158922D2*TI +3.3372792D0*TN(1)
+     * -2.470123655D-5*TN(2) +8.324279633333333D-8*TN(3)
+     * -1.496386616666667D-11*TN(4) +1.00127688D-15*TN(5)
+      ELSE
+      SMH(1) = 6.83010238D-1 +9.17935173D2*TI +2.34433112D0*TN(1)
+     * +3.990260375D-3*TN(2) -3.2463585D-6*TN(3) +1.67976745D-9*TN(4)
+     * -3.688058805D-13*TN(5)
+      ENDIF
+C H
+      IF (T .GT. 1000) THEN
+      SMH(2) = -4.46682914D-1 -2.54736599D4*TI +2.50000001D0*TN(1)
+     * -1.154214865D-11*TN(2) +2.692699133333334D-15*TN(3)
+     * -3.945960291666667D-19*TN(4) +2.490986785D-23*TN(5)
+      ELSE
+      SMH(2) = -4.46682853D-1 -2.54736599D4*TI +2.5D0*TN(1)
+     * +3.526664095D-13*TN(2) -3.326532733333333D-16*TN(3)
+     * +1.917346933333333D-19*TN(4) -4.63866166D-23*TN(5)
+      ENDIF
+C O
+      IF (T .GT. 1000) THEN
+      SMH(3) = 4.78433864D0 -2.92175791D4*TI +2.56942078D0*TN(1)
+     * -4.298705685D-5*TN(2) +6.991409816666667D-9*TN(3)
+     * -8.348149916666666D-13*TN(4) +6.14168455D-17*TN(5)
+      ELSE
+      SMH(3) = 2.05193346D0 -2.91222592D4*TI +3.1682671D0*TN(1)
+     * -1.63965942D-3*TN(2) +1.107177326666667D-6*TN(3)
+     * -5.106721866666666D-10*TN(4) +1.056329855D-13*TN(5)
+      ENDIF
+C O2
+      IF (T .GT. 1000) THEN
+      SMH(4) = 5.45323129D0 +1.08845772D3*TI +3.28253784D0*TN(1)
+     * +7.4154377D-4*TN(2) -1.263277781666667D-7*TN(3)
+     * +1.745587958333333D-11*TN(4) -1.08358897D-15*TN(5)
+      ELSE
+      SMH(4) = 3.65767573D0 +1.06394356D3*TI +3.78245636D0*TN(1)
+     * -1.49836708D-3*TN(2) +1.641217001666667D-6*TN(3)
+     * -8.067745908333334D-10*TN(4) +1.621864185D-13*TN(5)
+      ENDIF
+C OH
+      IF (T .GT. 1000) THEN
+      SMH(5) = 4.4766961D0 -3.858657D3*TI +3.09288767D0*TN(1)
+     * +2.74214858D-4*TN(2) +2.108420466666667D-8*TN(3)
+     * -7.3288463D-12*TN(4) +5.8706188D-16*TN(5)
+      ELSE
+      SMH(5) = -1.03925458D-1 -3.61508056D3*TI +3.99201543D0*TN(1)
+     * -1.20065876D-3*TN(2) +7.696564016666666D-7*TN(3)
+     * -3.234277775D-10*TN(4) +6.8205735D-14*TN(5)
+      ENDIF
+C H2O
+      IF (T .GT. 1000) THEN
+      SMH(6) = 4.9667701D0 +3.00042971D4*TI +3.03399249D0*TN(1)
+     * +1.08845902D-3*TN(2) -2.734541966666666D-8*TN(3)
+     * -8.086832250000001D-12*TN(4) +8.4100496D-16*TN(5)
+      ELSE
+      SMH(6) = -8.49032208D-1 +3.02937267D4*TI +4.19864056D0*TN(1)
+     * -1.01821705D-3*TN(2) +1.086733685D-6*TN(3) -4.57330885D-10*TN(4)
+     * +8.85989085D-14*TN(5)
+      ENDIF
+C HO2
+      IF (T .GT. 1000) THEN
+      SMH(7) = 3.78510215D0 -1.11856713D2*TI +4.0172109D0*TN(1)
+     * +1.119910065D-3*TN(2) -1.056096916666667D-7*TN(3)
+     * +9.520530833333334D-12*TN(4) -5.39542675D-16*TN(5)
+      ELSE
+      SMH(7) = 3.71666245D0 -2.9480804D2*TI +4.30179801D0*TN(1)
+     * -2.374560255D-3*TN(2) +3.526381516666666D-6*TN(3)
+     * -2.02303245D-9*TN(4) +4.64612562D-13*TN(5)
+      ENDIF
+C H2O2
+      IF (T .GT. 1000) THEN
+      SMH(8) = 2.91615662D0 +1.78617877D4*TI +4.16500285D0*TN(1)
+     * +2.45415847D-3*TN(2) -3.168987083333333D-7*TN(3)
+     * +3.09321655D-11*TN(4) -1.439541525D-15*TN(5)
+      ELSE
+      SMH(8) = 3.43505074D0 +1.77025821D4*TI +4.27611269D0*TN(1)
+     * -2.714112085D-4*TN(2) +2.78892835D-6*TN(3)
+     * -1.798090108333333D-9*TN(4) +4.312271815D-13*TN(5)
+      ENDIF
+C CH
+      IF (T .GT. 1000) THEN
+      SMH(9) = 5.48497999D0 -7.10124364D4*TI +2.87846473D0*TN(1)
+     * +4.854568405D-4*TN(2) +2.407427583333333D-8*TN(3)
+     * -1.089065408333333D-11*TN(4) +8.80396915D-16*TN(5)
+      ELSE
+      SMH(9) = 2.08401108D0 -7.07972934D4*TI +3.48981665D0*TN(1)
+     * +1.619177705D-4*TN(2) -2.814984416666667D-7*TN(3)
+     * +2.635144391666666D-10*TN(4) -7.03045335D-14*TN(5)
+      ENDIF
+C CH2
+      IF (T .GT. 1000) THEN
+      SMH(10) = 6.17119324D0 -4.6263604D4*TI +2.87410113D0*TN(1)
+     * +1.82819646D-3*TN(2) -2.348243283333333D-7*TN(3)
+     * +2.168162908333333D-11*TN(4) -9.38637835D-16*TN(5)
+      ELSE
+      SMH(10) = 1.56253185D0 -4.60040401D4*TI +3.76267867D0*TN(1)
+     * +4.844360715D-4*TN(2) +4.658164016666667D-7*TN(3)
+     * -3.209092941666667D-10*TN(4) +8.43708595D-14*TN(5)
+      ENDIF
+C CH2*
+      IF (T .GT. 1000) THEN
+      SMH(11) = 8.62650169D0 -5.09259997D4*TI +2.29203842D0*TN(1)
+     * +2.327943185D-3*TN(2) -3.353199116666667D-7*TN(3)
+     * +3.48255D-11*TN(4) -1.698581825D-15*TN(5)
+      ELSE
+      SMH(11) = -7.69118967D-1 -5.04968163D4*TI +4.19860411D0*TN(1)
+     * -1.183307095D-3*TN(2) +1.372160366666667D-6*TN(3)
+     * -5.573466508333334D-10*TN(4) +9.71573685D-14*TN(5)
+      ENDIF
+C CH3
+      IF (T .GT. 1000) THEN
+      SMH(12) = 8.48007179D0 -1.67755843D4*TI +2.28571772D0*TN(1)
+     * +3.619950185D-3*TN(2) -4.978572466666667D-7*TN(3)
+     * +4.9640387D-11*TN(4) -2.33577197D-15*TN(5)
+      ELSE
+      SMH(12) = 1.60456433D0 -1.64449988D4*TI +3.6735904D0*TN(1)
+     * +1.005475875D-3*TN(2) +9.550364266666668D-7*TN(3)
+     * -5.725978541666666D-10*TN(4) +1.27192867D-13*TN(5)
+      ENDIF
+C CH4
+      IF (T .GT. 1000) THEN
+      SMH(13) = 1.8437318D1 +9.46834459D3*TI +7.4851495D-2*TN(1)
+     * +6.69547335D-3*TN(2) -9.554763483333334D-7*TN(3)
+     * +1.019104458333333D-10*TN(4) -5.0907615D-15*TN(5)
+      ELSE
+      SMH(13) = -4.64130376D0 +1.02466476D4*TI +5.14987613D0*TN(1)
+     * -6.8354894D-3*TN(2) +8.196676650000001D-6*TN(3)
+     * -4.039525216666667D-9*TN(4) +8.3346978D-13*TN(5)
+      ENDIF
+C CO
+      IF (T .GT. 1000) THEN
+      SMH(14) = 7.81868772D0 +1.41518724D4*TI +2.71518561D0*TN(1)
+     * +1.031263715D-3*TN(2) -1.664709618333334D-7*TN(3)
+     * +1.9171084D-11*TN(4) -1.01823858D-15*TN(5)
+      ELSE
+      SMH(14) = 3.50840928D0 +1.4344086D4*TI +3.57953347D0*TN(1)
+     * -3.0517684D-4*TN(2) +1.69469055D-7*TN(3)
+     * +7.558382366666667D-11*TN(4) -4.522122495D-14*TN(5)
+      ENDIF
+C CO2
+      IF (T .GT. 1000) THEN
+      SMH(15) = 2.27163806D0 +4.8759166D4*TI +3.85746029D0*TN(1)
+     * +2.20718513D-3*TN(2) -3.691356733333334D-7*TN(3)
+     * +4.362418233333334D-11*TN(4) -2.36042082D-15*TN(5)
+      ELSE
+      SMH(15) = 9.90105222D0 +4.83719697D4*TI +2.35677352D0*TN(1)
+     * +4.492298385D-3*TN(2) -1.187260448333333D-6*TN(3)
+     * +2.049325183333333D-10*TN(4) -7.1849774D-15*TN(5)
+      ENDIF
+C HCO
+      IF (T .GT. 1000) THEN
+      SMH(16) = 9.79834492D0 -4.01191815D3*TI +2.77217438D0*TN(1)
+     * +2.47847763D-3*TN(2) -4.140760216666667D-7*TN(3)
+     * +4.909681483333334D-11*TN(4) -2.667543555D-15*TN(5)
+      ELSE
+      SMH(16) = 3.39437243D0 -3.83956496D3*TI +4.22118584D0*TN(1)
+     * -1.62196266D-3*TN(2) +2.296657433333333D-6*TN(3)
+     * -1.109534108333333D-9*TN(4) +2.168844325D-13*TN(5)
+      ENDIF
+C CH2O
+      IF (T .GT. 1000) THEN
+      SMH(17) = 1.3656323D1 +1.39958323D4*TI +1.76069008D0*TN(1)
+     * +4.60000041D-3*TN(2) -7.370980216666666D-7*TN(3)
+     * +8.386767666666666D-11*TN(4) -4.4192782D-15*TN(5)
+      ELSE
+      SMH(17) = 6.028129D-1 +1.43089567D4*TI +4.79372315D0*TN(1)
+     * -4.954166845D-3*TN(2) +6.220333466666666D-6*TN(3)
+     * -3.160710508333333D-9*TN(4) +6.5886326D-13*TN(5)
+      ENDIF
+C CH3O
+      IF (T .GT. 1000) THEN
+      SMH(18) = 2.929575D0 -1.2783252D2*TI +3.770799D0*TN(1)
+     * +3.9357485D-3*TN(2) -4.427306666666667D-7*TN(3)
+     * +3.287025833333333D-11*TN(4) -1.056308D-15*TN(5)
+      ELSE
+      SMH(18) = 1.3152177D1 -9.786011D2*TI +2.106204D0*TN(1)
+     * +3.6082975D-3*TN(2) +8.897453333333335D-7*TN(3)
+     * -6.14803D-10*TN(4) +1.037805D-13*TN(5)
+      ENDIF
+C C2H2
+      IF (T .GT. 1000) THEN
+      SMH(19) = -1.23028121D0 -2.59359992D4*TI +4.14756964D0*TN(1)
+     * +2.98083332D-3*TN(2) -3.9549142D-7*TN(3) +3.895101425D-11*TN(4)
+     * -1.806176065D-15*TN(5)
+      ELSE
+      SMH(19) = 1.39397051D1 -2.64289807D4*TI +8.08681094D-1*TN(1)
+     * +1.168078145D-2*TN(2) -5.91953025D-6*TN(3)
+     * +2.334603641666667D-9*TN(4) -4.25036487D-13*TN(5)
+      ENDIF
+C H2CC
+      IF (T .GT. 1000) THEN
+      SMH(20) = 6.4023701D-1 -4.8316688D4*TI +4.278034D0*TN(1)
+     * +2.3781402D-3*TN(2) -2.716834833333333D-7*TN(3)
+     * +2.1219005D-11*TN(4) -7.4431895D-16*TN(5)
+      ELSE
+      SMH(20) = 5.920391D0 -4.8621794D4*TI +3.2815483D0*TN(1)
+     * +3.48823955D-3*TN(2) -3.975874D-7*TN(3)
+     * -1.008702666666667D-10*TN(4) +4.90947725D-14*TN(5)
+      ENDIF
+C C2H3
+      IF (T .GT. 1000) THEN
+      SMH(21) = 7.78732378D0 -3.46128739D4*TI +3.016724D0*TN(1)
+     * +5.1651146D-3*TN(2) -7.801372483333333D-7*TN(3)
+     * +8.480274D-11*TN(4) -4.313035205D-15*TN(5)
+      ELSE
+      SMH(21) = 8.51054025D0 -3.48598468D4*TI +3.21246645D0*TN(1)
+     * +7.5739581D-4*TN(2) +4.320156866666666D-6*TN(3)
+     * -2.980482058333333D-9*TN(4) +7.35754365D-13*TN(5)
+      ENDIF
+C C2H4
+      IF (T .GT. 1000) THEN
+      SMH(22) = 1.03053693D1 -4.93988614D3*TI +2.03611116D0*TN(1)
+     * +7.32270755D-3*TN(2) -1.118463191666667D-6*TN(3)
+     * +1.226857691666667D-10*TN(4) -6.28530305D-15*TN(5)
+      ELSE
+      SMH(22) = 4.09733096D0 -5.08977593D3*TI +3.95920148D0*TN(1)
+     * -3.785261235D-3*TN(2) +9.516504866666667D-6*TN(3)
+     * -5.763239608333333D-9*TN(4) +1.349421865D-12*TN(5)
+      ENDIF
+C C2H5
+      IF (T .GT. 1000) THEN
+      SMH(23) = 1.34624343D1 -1.285752D4*TI +1.95465642D0*TN(1)
+     * +8.6986361D-3*TN(2) -1.330344446666667D-6*TN(3)
+     * +1.460147408333333D-10*TN(4) -7.4820788D-15*TN(5)
+      ELSE
+      SMH(23) = 4.70720924D0 -1.28416265D4*TI +4.30646568D0*TN(1)
+     * -2.09329446D-3*TN(2) +8.285713449999999D-6*TN(3)
+     * -4.992721716666666D-9*TN(4) +1.15254502D-12*TN(5)
+      ENDIF
+C C2H6
+      IF (T .GT. 1000) THEN
+      SMH(24) = 1.51156107D1 +1.14263932D4*TI +1.0718815D0*TN(1)
+     * +1.084263385D-2*TN(2) -1.67093445D-6*TN(3)
+     * +1.845100008333333D-10*TN(4) -9.5001445D-15*TN(5)
+      ELSE
+      SMH(24) = 2.66682316D0 +1.15222055D4*TI +4.29142492D0*TN(1)
+     * -2.75077135D-3*TN(2) +9.990638133333334D-6*TN(3)
+     * -5.903885708333334D-9*TN(4) +1.343428855D-12*TN(5)
+      ENDIF
+C HCCO
+      IF (T .GT. 1000) THEN
+      SMH(25) = -3.9302595D0 -1.9327215D4*TI +5.6282058D0*TN(1)
+     * +2.04267005D-3*TN(2) -2.655757833333333D-7*TN(3)
+     * +2.385504333333333D-11*TN(4) -9.703916D-16*TN(5)
+      ELSE
+      SMH(25) = 1.2490417D1 -2.0059449D4*TI +2.2517214D0*TN(1)
+     * +8.8275105D-3*TN(2) -3.954850166666667D-6*TN(3)
+     * +1.439646583333334D-9*TN(4) -2.53324055D-13*TN(5)
+      ENDIF
+C CH2CO
+      IF (T .GT. 1000) THEN
+      SMH(26) = 6.32247205D-1 +7.55105311D3*TI +4.51129732D0*TN(1)
+     * +4.501798725D-3*TN(2) -6.948993916666666D-7*TN(3)
+     * +7.694549016666667D-11*TN(4) -3.974191005D-15*TN(5)
+      ELSE
+      SMH(26) = 1.2215648D1 +7.04291804D3*TI +2.1358363D0*TN(1)
+     * +9.05943605D-3*TN(2) -2.899124566666667D-6*TN(3)
+     * +7.7866464D-10*TN(4) -1.007288075D-13*TN(5)
+      ENDIF
+C CH2CHO
+      IF (T .GT. 1000) THEN
+      SMH(27) = -5.0320879D0 -4.9032178D2*TI +5.9756699D0*TN(1)
+     * +4.0652957D-3*TN(2) -4.5727075D-7*TN(3)
+     * +3.391920083333333D-11*TN(4) -1.08800855D-15*TN(5)
+      ELSE
+      SMH(27) = 9.5714535D0 -1.5214766D3*TI +3.4090624D0*TN(1)
+     * +5.369287D-3*TN(2) +3.1524875D-7*TN(3)
+     * +5.965485916666667D-10*TN(4) +1.43369255D-13*TN(5)
+      ENDIF
+C CH3CHO
+      IF (T .GT. 1000) THEN
+      SMH(28) = -3.4807917D0 +2.2593122D4*TI +5.4041108D0*TN(1)
+     * +5.8615295D-3*TN(2) -7.043856166666666D-7*TN(3)
+     * +5.69770425D-11*TN(4) -2.04924315D-15*TN(5)
+      ELSE
+      SMH(28) = 4.1030159D0 +2.1572878D4*TI +4.7294595D0*TN(1)
+     * -1.5966429D-3*TN(2) +7.922486833333334D-6*TN(3)
+     * -4.788217583333333D-9*TN(4) +1.0965556D-12*TN(5)
+      ENDIF
+C aC3H5
+      IF (T .GT. 1000) THEN
+      SMH(29) = -1.124305D1 -1.7482449D4*TI +6.5007877D0*TN(1)
+     * +7.1623655D-3*TN(2) -9.463605333333332D-7*TN(3)
+     * +9.234000833333333D-11*TN(4) -4.51819435D-15*TN(5)
+      ELSE
+      SMH(29) = 1.7173214D1 -1.9245629D4*TI +1.3631835D0*TN(1)
+     * +9.9069105D-3*TN(2) +2.082843333333334D-6*TN(3)
+     * -2.779629583333333D-9*TN(4) +7.9232855D-13*TN(5)
+      ENDIF
+C C3H6
+      IF (T .GT. 1000) THEN
+      SMH(30) = -1.331335D1 +9.235703D2*TI +6.732257D0*TN(1)
+     * +7.45417D-3*TN(2) -8.249831666666665D-7*TN(3)
+     * +6.010018333333334D-11*TN(4) -1.883102D-15*TN(5)
+      ELSE
+      SMH(30) = 1.614534D1 -1.074826D3*TI +1.493307D0*TN(1)
+     * +1.046259D-2*TN(2) +7.47799D-7*TN(3) -1.39076D-9*TN(4)
+     * +3.579073D-13*TN(5)
+      ENDIF
+C nC3H7
+      IF (T .GT. 1000) THEN
+      SMH(31) = -1.5515297D1 -7.9762236D3*TI +7.7097479D0*TN(1)
+     * +8.0157425D-3*TN(2) -8.786706333333331D-7*TN(3)
+     * +6.324029333333334D-11*TN(4) -1.94313595D-15*TN(5)
+      ELSE
+      SMH(31) = 2.1136034D1 -1.0312346D4*TI +1.0491173D0*TN(1)
+     * +1.30044865D-2*TN(2) +3.923752666666667D-7*TN(3)
+     * -1.632927666666667D-9*TN(4) +4.68601035D-13*TN(5)
+      ENDIF
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKRATX (T, C, RF, RB, RKLOW)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (SMALL = 1D-200)
+      DIMENSION C(*), RF(*), RB(*), RKLOW(*)
+C
+      ALOGT = LOG(T)
+      CTOT = 0.0
+      DO K = 1, 32
+         CTOT = CTOT + C(K)
+      ENDDO
+C
+C     R1: H + O2 = O + OH
+      RF(1) = RF(1)*C(2)*C(4)
+      RB(1) = RB(1)*C(3)*C(5)
+C     R2: H2 + O = H + OH
+      RF(2) = RF(2)*C(1)*C(3)
+      RB(2) = RB(2)*C(2)*C(5)
+C     R3: H2 + OH = H + H2O
+      RF(3) = RF(3)*C(1)*C(5)
+      RB(3) = RB(3)*C(2)*C(6)
+C     R4: 2OH = O + H2O
+      RF(4) = RF(4)*C(5)*C(5)
+      RB(4) = RB(4)*C(3)*C(6)
+C     R5: 2H = H2
+C     have third body
+      CTB = CTOT -C(1) -C(6) +C(13) -C(15) +2.D0*C(19) +2.D0*C(22)
+     * +2.D0*C(24)
+      RF(5) = RF(5)*CTB*C(2)*C(2)
+      RB(5) = RB(5)*CTB*C(1)
+C     R6: H2 + 2H = 2H2
+      RF(6) = RF(6)*C(1)*C(2)*C(2)
+      RB(6) = RB(6)*C(1)*C(1)
+C     R7: 2H + H2O = H2 + H2O
+      RF(7) = RF(7)*C(2)*C(2)*C(6)
+      RB(7) = RB(7)*C(1)*C(6)
+C     R8: 2H + CO2 = H2 + CO2
+      RF(8) = RF(8)*C(2)*C(2)*C(15)
+      RB(8) = RB(8)*C(1)*C(15)
+C     R9: H + OH = H2O
+C     have third body
+      CTB = CTOT -2.7D-1*C(1) +2.65D0*C(6) +C(13) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      RF(9) = RF(9)*CTB*C(2)*C(5)
+      RB(9) = RB(9)*CTB*C(6)
+C     R10: H + O = OH
+C     have third body
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      RF(10) = RF(10)*CTB*C(2)*C(3)
+      RB(10) = RB(10)*CTB*C(5)
+C     R11: 2O = O2
+C     have third body
+      CTB = CTOT +1.4D0*C(1) +1.44D1*C(6) +C(13) +7.5D-1*C(14)
+     * +2.6D0*C(15) +2.D0*C(19) +2.D0*C(22) +2.D0*C(24)
+      RF(11) = RF(11)*CTB*C(3)*C(3)
+      RB(11) = RB(11)*CTB*C(4)
+C     R12: H + O2 = HO2
+C     have third body
+      CTB = CTOT -C(4) -C(6) -2.5D-1*C(14) +5.D-1*C(15) +2.D0*C(19)
+     * +2.D0*C(22) +5.D-1*C(24) -C(32)
+      RF(12) = RF(12)*CTB*C(2)*C(4)
+      RB(12) = RB(12)*CTB*C(7)
+C     R13: H + 2O2 = O2 + HO2
+      RF(13) = RF(13)*C(2)*C(4)*C(4)
+      RB(13) = RB(13)*C(4)*C(7)
+C     R14: H + O2 + H2O = H2O + HO2
+      RF(14) = RF(14)*C(2)*C(4)*C(6)
+      RB(14) = RB(14)*C(6)*C(7)
+C     R15: H + O2 + N2 = HO2 + N2
+      RF(15) = RF(15)*C(2)*C(4)*C(32)
+      RB(15) = RB(15)*C(7)*C(32)
+C     R16: 2OH = H2O2
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(1) * CTB / RF(16)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.654D-1*EXP(-T/9.4D1) +7.346D-1*EXP(-T/1.756D3)
+     * +EXP(-5.182D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(16) = RF(16) * PCOR
+      RB(16) = RB(16) * PCOR
+      RF(16) = RF(16)*C(5)*C(5)
+      RB(16) = RB(16)*C(8)
+C     R17: H + HO2 = O + H2O
+      RF(17) = RF(17)*C(2)*C(7)
+      RB(17) = RB(17)*C(3)*C(6)
+C     R18: H + HO2 = H2 + O2
+      RF(18) = RF(18)*C(2)*C(7)
+      RB(18) = RB(18)*C(1)*C(4)
+C     R19: H + HO2 = 2OH
+      RF(19) = RF(19)*C(2)*C(7)
+      RB(19) = RB(19)*C(5)*C(5)
+C     R20: O + HO2 = O2 + OH
+      RF(20) = RF(20)*C(3)*C(7)
+      RB(20) = RB(20)*C(4)*C(5)
+C     R21: OH + HO2 = O2 + H2O
+      RF(21) = RF(21)*C(5)*C(7)
+      RB(21) = RB(21)*C(4)*C(6)
+C     R22: 2HO2 = O2 + H2O2
+      RF(22) = RF(22)*C(7)*C(7)
+      RB(22) = RB(22)*C(4)*C(8)
+C     R23: 2HO2 = O2 + H2O2
+      RF(23) = RF(23)*C(7)*C(7)
+      RB(23) = RB(23)*C(4)*C(8)
+C     R24: H + H2O2 = H2 + HO2
+      RF(24) = RF(24)*C(2)*C(8)
+      RB(24) = RB(24)*C(1)*C(7)
+C     R25: H + H2O2 = OH + H2O
+      RF(25) = RF(25)*C(2)*C(8)
+      RB(25) = RB(25)*C(5)*C(6)
+C     R26: O + H2O2 = OH + HO2
+      RF(26) = RF(26)*C(3)*C(8)
+      RB(26) = RB(26)*C(5)*C(7)
+C     R27: OH + H2O2 = H2O + HO2
+      RF(27) = RF(27)*C(5)*C(8)
+      RB(27) = RB(27)*C(6)*C(7)
+C     R28: OH + H2O2 = H2O + HO2
+      RF(28) = RF(28)*C(5)*C(8)
+      RB(28) = RB(28)*C(6)*C(7)
+C     R29: O + CO = CO2
+C     have third body
+      CTB = CTOT +C(1) +5.D0*C(4) +5.D0*C(6) +C(13) +5.D-1*C(14)
+     * +2.5D0*C(15) +2.D0*C(19) +2.D0*C(22) +2.D0*C(24)
+      RF(29) = RF(29)*CTB*C(3)*C(14)
+      RB(29) = RB(29)*CTB*C(15)
+C     R30: OH + CO = H + CO2
+      RF(30) = RF(30)*C(5)*C(14)
+      RB(30) = RB(30)*C(2)*C(15)
+C     R31: H2 + CO = CH2O
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(2) * CTB / RF(31)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 6.8D-2*EXP(-T/1.97D2) +9.32D-1*EXP(-T/1.54D3)
+     * +EXP(-1.03D4/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(31) = RF(31) * PCOR
+      RB(31) = RB(31) * PCOR
+      RF(31) = RF(31)*C(1)*C(14)
+      RB(31) = RB(31)*C(17)
+C     R32: O2 + CO = O + CO2
+      RF(32) = RF(32)*C(4)*C(14)
+      RB(32) = RB(32)*C(3)*C(15)
+C     R33: HO2 + CO = OH + CO2
+      RF(33) = RF(33)*C(7)*C(14)
+      RB(33) = RB(33)*C(5)*C(15)
+C     R34: O + CH = H + CO
+      RF(34) = RF(34)*C(3)*C(9)
+      RB(34) = RB(34)*C(2)*C(14)
+C     R35: OH + CH = H + HCO
+      RF(35) = RF(35)*C(5)*C(9)
+      RB(35) = RB(35)*C(2)*C(16)
+C     R36: H2 + CH = H + CH2
+      RF(36) = RF(36)*C(1)*C(9)
+      RB(36) = RB(36)*C(2)*C(10)
+C     R37: H2O + CH = H + CH2O
+      RF(37) = RF(37)*C(6)*C(9)
+      RB(37) = RB(37)*C(2)*C(17)
+C     R38: O2 + CH = O + HCO
+      RF(38) = RF(38)*C(4)*C(9)
+      RB(38) = RB(38)*C(3)*C(16)
+C     R39: CH + CO = HCCO
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(3) * CTB / RF(39)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 4.243D-1*EXP(-T/2.37D2) +5.757D-1*EXP(-T/1.652D3)
+     * +EXP(-5.069D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(39) = RF(39) * PCOR
+      RB(39) = RB(39) * PCOR
+      RF(39) = RF(39)*C(9)*C(14)
+      RB(39) = RB(39)*C(25)
+C     R40: CH + CO2 = CO + HCO
+      RF(40) = RF(40)*C(9)*C(15)
+      RB(40) = RB(40)*C(14)*C(16)
+C     R41: H + HCO = CH2O
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(4) * CTB / RF(41)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.176D-1*EXP(-T/2.71D2) +7.824D-1*EXP(-T/2.755D3)
+     * +EXP(-6.57D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(41) = RF(41) * PCOR
+      RB(41) = RB(41) * PCOR
+      RF(41) = RF(41)*C(2)*C(16)
+      RB(41) = RB(41)*C(17)
+C     R42: H + HCO = H2 + CO
+      RF(42) = RF(42)*C(2)*C(16)
+      RB(42) = RB(42)*C(1)*C(14)
+C     R43: O + HCO = OH + CO
+      RF(43) = RF(43)*C(3)*C(16)
+      RB(43) = RB(43)*C(5)*C(14)
+C     R44: O + HCO = H + CO2
+      RF(44) = RF(44)*C(3)*C(16)
+      RB(44) = RB(44)*C(2)*C(15)
+C     R45: OH + HCO = H2O + CO
+      RF(45) = RF(45)*C(5)*C(16)
+      RB(45) = RB(45)*C(6)*C(14)
+C     R46: HCO = H + CO
+C     have third body
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      RF(46) = RF(46)*CTB*C(16)
+      RB(46) = RB(46)*CTB*C(2)*C(14)
+C     R47: O2 + HCO = HO2 + CO
+      RF(47) = RF(47)*C(4)*C(16)
+      RB(47) = RB(47)*C(7)*C(14)
+C     R48: H + CH2 = CH3
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(5) * CTB / RF(48)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 3.2D-1*EXP(-T/7.8D1) +6.8D-1*EXP(-T/1.995D3)
+     * +EXP(-5.59D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(48) = RF(48) * PCOR
+      RB(48) = RB(48) * PCOR
+      RF(48) = RF(48)*C(2)*C(10)
+      RB(48) = RB(48)*C(12)
+C     R49: H2 + CH2 = H + CH3
+      RF(49) = RF(49)*C(1)*C(10)
+      RB(49) = RB(49)*C(2)*C(12)
+C     R50: O + CH2 = H + HCO
+      RF(50) = RF(50)*C(3)*C(10)
+      RB(50) = RB(50)*C(2)*C(16)
+C     R51: O2 + CH2 = OH + HCO
+      RF(51) = RF(51)*C(4)*C(10)
+      RB(51) = RB(51)*C(5)*C(16)
+C     R52: O2 + CH2 = 2H + CO2
+      RF(52) = RF(52)*C(4)*C(10)
+      RB(52) = RB(52)*C(2)*C(2)*C(15)
+C     R53: OH + CH2 = H + CH2O
+      RF(53) = RF(53)*C(5)*C(10)
+      RB(53) = RB(53)*C(2)*C(17)
+C     R54: OH + CH2 = H2O + CH
+      RF(54) = RF(54)*C(5)*C(10)
+      RB(54) = RB(54)*C(6)*C(9)
+C     R55: HO2 + CH2 = OH + CH2O
+      RF(55) = RF(55)*C(7)*C(10)
+      RB(55) = RB(55)*C(5)*C(17)
+C     R56: CH2 + CO = CH2CO
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(6) * CTB / RF(56)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 4.093D-1*EXP(-T/2.75D2) +5.907D-1*EXP(-T/1.226D3)
+     * +EXP(-5.185D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(56) = RF(56) * PCOR
+      RB(56) = RB(56) * PCOR
+      RF(56) = RF(56)*C(10)*C(14)
+      RB(56) = RB(56)*C(26)
+C     R57: CH + CH2 = H + C2H2
+      RF(57) = RF(57)*C(9)*C(10)
+      RB(57) = RB(57)*C(2)*C(19)
+C     R58: 2CH2 = H2 + C2H2
+      RF(58) = RF(58)*C(10)*C(10)
+      RB(58) = RB(58)*C(1)*C(19)
+C     R59: CH2* + N2 = CH2 + N2
+      RF(59) = RF(59)*C(11)*C(32)
+      RB(59) = RB(59)*C(10)*C(32)
+C     R60: H + CH2* = H2 + CH
+      RF(60) = RF(60)*C(2)*C(11)
+      RB(60) = RB(60)*C(1)*C(9)
+C     R61: O + CH2* = H2 + CO
+      RF(61) = RF(61)*C(3)*C(11)
+      RB(61) = RB(61)*C(1)*C(14)
+C     R62: O + CH2* = H + HCO
+      RF(62) = RF(62)*C(3)*C(11)
+      RB(62) = RB(62)*C(2)*C(16)
+C     R63: OH + CH2* = H + CH2O
+      RF(63) = RF(63)*C(5)*C(11)
+      RB(63) = RB(63)*C(2)*C(17)
+C     R64: H2 + CH2* = H + CH3
+      RF(64) = RF(64)*C(1)*C(11)
+      RB(64) = RB(64)*C(2)*C(12)
+C     R65: O2 + CH2* = H + OH + CO
+      RF(65) = RF(65)*C(4)*C(11)
+      RB(65) = RB(65)*C(2)*C(5)*C(14)
+C     R66: O2 + CH2* = H2O + CO
+      RF(66) = RF(66)*C(4)*C(11)
+      RB(66) = RB(66)*C(6)*C(14)
+C     R67: H2O + CH2* = H2O + CH2
+      RF(67) = RF(67)*C(6)*C(11)
+      RB(67) = RB(67)*C(6)*C(10)
+C     R68: CH2* + CO = CH2 + CO
+      RF(68) = RF(68)*C(11)*C(14)
+      RB(68) = RB(68)*C(10)*C(14)
+C     R69: CH2* + CO2 = CH2 + CO2
+      RF(69) = RF(69)*C(11)*C(15)
+      RB(69) = RB(69)*C(10)*C(15)
+C     R70: CH2* + CO2 = CO + CH2O
+      RF(70) = RF(70)*C(11)*C(15)
+      RB(70) = RB(70)*C(14)*C(17)
+C     R71: H + CH2O = CH3O
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(7) * CTB / RF(71)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.42D-1*EXP(-T/9.4D1) +7.58D-1*EXP(-T/1.555D3)
+     * +EXP(-4.2D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(71) = RF(71) * PCOR
+      RB(71) = RB(71) * PCOR
+      RF(71) = RF(71)*C(2)*C(17)
+      RB(71) = RB(71)*C(18)
+C     R72: H + CH2O = H2 + HCO
+      RF(72) = RF(72)*C(2)*C(17)
+      RB(72) = RB(72)*C(1)*C(16)
+C     R73: O + CH2O = OH + HCO
+      RF(73) = RF(73)*C(3)*C(17)
+      RB(73) = RB(73)*C(5)*C(16)
+C     R74: OH + CH2O = H2O + HCO
+      RF(74) = RF(74)*C(5)*C(17)
+      RB(74) = RB(74)*C(6)*C(16)
+C     R75: O2 + CH2O = HO2 + HCO
+      RF(75) = RF(75)*C(4)*C(17)
+      RB(75) = RB(75)*C(7)*C(16)
+C     R76: HO2 + CH2O = H2O2 + HCO
+      RF(76) = RF(76)*C(7)*C(17)
+      RB(76) = RB(76)*C(8)*C(16)
+C     R77: CH + CH2O = H + CH2CO
+      RF(77) = RF(77)*C(9)*C(17)
+      RB(77) = RB(77)*C(2)*C(26)
+C     R78: H + CH3 = CH4
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(8) * CTB / RF(78)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.17D-1*EXP(-T/7.4D1) +7.83D-1*EXP(-T/2.941D3)
+     * +EXP(-6.964D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(78) = RF(78) * PCOR
+      RB(78) = RB(78) * PCOR
+      RF(78) = RF(78)*C(2)*C(12)
+      RB(78) = RB(78)*C(13)
+C     R79: O + CH3 = H + CH2O
+      RF(79) = RF(79)*C(3)*C(12)
+      RB(79) = RB(79)*C(2)*C(17)
+C     R80: OH + CH3 = H2O + CH2
+      RF(80) = RF(80)*C(5)*C(12)
+      RB(80) = RB(80)*C(6)*C(10)
+C     R81: OH + CH3 = H2O + CH2*
+      RF(81) = RF(81)*C(5)*C(12)
+      RB(81) = RB(81)*C(6)*C(11)
+C     R82: O2 + CH3 = O + CH3O
+      RF(82) = RF(82)*C(4)*C(12)
+      RB(82) = RB(82)*C(3)*C(18)
+C     R83: O2 + CH3 = OH + CH2O
+      RF(83) = RF(83)*C(4)*C(12)
+      RB(83) = RB(83)*C(5)*C(17)
+C     R84: HO2 + CH3 = O2 + CH4
+      RF(84) = RF(84)*C(7)*C(12)
+      RB(84) = RB(84)*C(4)*C(13)
+C     R85: HO2 + CH3 = OH + CH3O
+      RF(85) = RF(85)*C(7)*C(12)
+      RB(85) = RB(85)*C(5)*C(18)
+C     R86: H2O2 + CH3 = HO2 + CH4
+      RF(86) = RF(86)*C(8)*C(12)
+      RB(86) = RB(86)*C(7)*C(13)
+C     R87: CH + CH3 = H + C2H3
+      RF(87) = RF(87)*C(9)*C(12)
+      RB(87) = RB(87)*C(2)*C(21)
+C     R88: CH3 + HCO = CH4 + CO
+      RF(88) = RF(88)*C(12)*C(16)
+      RB(88) = RB(88)*C(13)*C(14)
+C     R89: CH3 + HCO = CH3CHO
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(9) * CTB / RF(89)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 3.827D-1*EXP(-T/1.3076D1) +6.173D-1*EXP(-T/2.078D3)
+     * +EXP(-5.093D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(89) = RF(89) * PCOR
+      RB(89) = RB(89) * PCOR
+      RF(89) = RF(89)*C(12)*C(16)
+      RB(89) = RB(89)*C(28)
+C     R90: CH3 + CH2O = CH4 + HCO
+      RF(90) = RF(90)*C(12)*C(17)
+      RB(90) = RB(90)*C(13)*C(16)
+C     R91: CH2 + CH3 = H + C2H4
+      RF(91) = RF(91)*C(10)*C(12)
+      RB(91) = RB(91)*C(2)*C(22)
+C     R92: CH2* + CH3 = H + C2H4
+      RF(92) = RF(92)*C(11)*C(12)
+      RB(92) = RB(92)*C(2)*C(22)
+C     R93: 2CH3 = C2H6
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(10) * CTB / RF(93)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 4.675D-1*EXP(-T/1.51D2) +5.325D-1*EXP(-T/1.038D3)
+     * +EXP(-4.97D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(93) = RF(93) * PCOR
+      RB(93) = RB(93) * PCOR
+      RF(93) = RF(93)*C(12)*C(12)
+      RB(93) = RB(93)*C(24)
+C     R94: 2CH3 = H + C2H5
+      RF(94) = RF(94)*C(12)*C(12)
+      RB(94) = RB(94)*C(2)*C(23)
+C     R95: CH3 + HCCO = CO + C2H4
+      RF(95) = RF(95)*C(12)*C(25)
+      RB(95) = RB(95)*C(14)*C(22)
+C     R96: H + CH3O = H2 + CH2O
+      RF(96) = RF(96)*C(2)*C(18)
+      RB(96) = RB(96)*C(1)*C(17)
+C     R97: H + CH3O = OH + CH3
+      RF(97) = RF(97)*C(2)*C(18)
+      RB(97) = RB(97)*C(5)*C(12)
+C     R98: H + CH3O = H2O + CH2*
+      RF(98) = RF(98)*C(2)*C(18)
+      RB(98) = RB(98)*C(6)*C(11)
+C     R99: O + CH3O = OH + CH2O
+      RF(99) = RF(99)*C(3)*C(18)
+      RB(99) = RB(99)*C(5)*C(17)
+C     R100: OH + CH3O = H2O + CH2O
+      RF(100) = RF(100)*C(5)*C(18)
+      RB(100) = RB(100)*C(6)*C(17)
+C     R101: O2 + CH3O = HO2 + CH2O
+      RF(101) = RF(101)*C(4)*C(18)
+      RB(101) = RB(101)*C(7)*C(17)
+C     R102: H + CH4 = H2 + CH3
+      RF(102) = RF(102)*C(2)*C(13)
+      RB(102) = RB(102)*C(1)*C(12)
+C     R103: O + CH4 = OH + CH3
+      RF(103) = RF(103)*C(3)*C(13)
+      RB(103) = RB(103)*C(5)*C(12)
+C     R104: OH + CH4 = H2O + CH3
+      RF(104) = RF(104)*C(5)*C(13)
+      RB(104) = RB(104)*C(6)*C(12)
+C     R105: CH + CH4 = H + C2H4
+      RF(105) = RF(105)*C(9)*C(13)
+      RB(105) = RB(105)*C(2)*C(22)
+C     R106: CH2 + CH4 = 2CH3
+      RF(106) = RF(106)*C(10)*C(13)
+      RB(106) = RB(106)*C(12)*C(12)
+C     R107: CH2* + CH4 = 2CH3
+      RF(107) = RF(107)*C(11)*C(13)
+      RB(107) = RB(107)*C(12)*C(12)
+C     R108: H + HCCO = CH2* + CO
+      RF(108) = RF(108)*C(2)*C(25)
+      RB(108) = RB(108)*C(11)*C(14)
+C     R109: O + HCCO = H + 2CO
+      RF(109) = RF(109)*C(3)*C(25)
+      RB(109) = RB(109)*C(2)*C(14)*C(14)
+C     R110: O2 + HCCO = OH + 2CO
+      RF(110) = RF(110)*C(4)*C(25)
+      RB(110) = RB(110)*C(5)*C(14)*C(14)
+C     R111: CH + HCCO = CO + C2H2
+      RF(111) = RF(111)*C(9)*C(25)
+      RB(111) = RB(111)*C(14)*C(19)
+C     R112: CH2 + HCCO = CO + C2H3
+      RF(112) = RF(112)*C(10)*C(25)
+      RB(112) = RB(112)*C(14)*C(21)
+C     R113: 2HCCO = 2CO + C2H2
+      RF(113) = RF(113)*C(25)*C(25)
+      RB(113) = RB(113)*C(14)*C(14)*C(19)
+C     R114: C2H2 = H2CC
+C     have third body
+C     falloff: Lindemann
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15)
+     * +1.5D0*C(19) +1.5D0*C(22) +2.D0*C(24)
+      PR = RKLOW(11) * CTB / RF(114)
+      PCOR = PR / (1.0 + PR)
+      RF(114) = RF(114) * PCOR
+      RB(114) = RB(114) * PCOR
+      RF(114) = RF(114)*C(19)
+      RB(114) = RB(114)*C(20)
+C     R115: C2H3 = H + C2H2
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(12) * CTB / RF(115)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = -9.816D-1*EXP(-T/5.3837D3) +1.9816D0*EXP(-T/4.2932D0)
+     * +EXP(7.95D-2/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(115) = RF(115) * PCOR
+      RB(115) = RB(115) * PCOR
+      RF(115) = RF(115)*C(21)
+      RB(115) = RB(115)*C(2)*C(19)
+C     R116: O + C2H2 = H + HCCO
+      RF(116) = RF(116)*C(3)*C(19)
+      RB(116) = RB(116)*C(2)*C(25)
+C     R117: O + C2H2 = CH2 + CO
+      RF(117) = RF(117)*C(3)*C(19)
+      RB(117) = RB(117)*C(10)*C(14)
+C     R118: OH + C2H2 = H + CH2CO
+      RF(118) = RF(118)*C(5)*C(19)
+      RB(118) = RB(118)*C(2)*C(26)
+C     R119: OH + C2H2 = CH3 + CO
+      RF(119) = RF(119)*C(5)*C(19)
+      RB(119) = RB(119)*C(12)*C(14)
+C     R120: HCO + C2H2 = CO + C2H3
+      RF(120) = RF(120)*C(16)*C(19)
+      RB(120) = RB(120)*C(14)*C(21)
+C     R121: CH3 + C2H2 = aC3H5
+C     have third body
+      CTB = CTOT
+      RF(121) = RF(121)*CTB*C(12)*C(19)
+      RB(121) = RB(121)*CTB*C(29)
+C     R122: H + H2CC = H + C2H2
+      RF(122) = RF(122)*C(2)*C(20)
+      RB(122) = RB(122)*C(2)*C(19)
+C     R123: O + H2CC = CH2 + CO
+      RF(123) = RF(123)*C(3)*C(20)
+      RB(123) = RB(123)*C(10)*C(14)
+C     R124: OH + H2CC = H + CH2CO
+      RF(124) = RF(124)*C(5)*C(20)
+      RB(124) = RB(124)*C(2)*C(26)
+C     R125: O2 + H2CC = CH2 + CO2
+      RF(125) = RF(125)*C(4)*C(20)
+      RB(125) = RB(125)*C(10)*C(15)
+C     R126: H + CH2CO = CH2CHO
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(13) * CTB / RF(126)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 6.63D-1*EXP(-T/1.707D3) +3.37D-1*EXP(-T/3.2D3)
+     * +EXP(-4.131D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(126) = RF(126) * PCOR
+      RB(126) = RB(126) * PCOR
+      RF(126) = RF(126)*C(2)*C(26)
+      RB(126) = RB(126)*C(27)
+C     R127: H + CH2CO = H2 + HCCO
+      RF(127) = RF(127)*C(2)*C(26)
+      RB(127) = RB(127)*C(1)*C(25)
+C     R128: H + CH2CO = CH3 + CO
+      RF(128) = RF(128)*C(2)*C(26)
+      RB(128) = RB(128)*C(12)*C(14)
+C     R129: O + CH2CO = OH + HCCO
+      RF(129) = RF(129)*C(3)*C(26)
+      RB(129) = RB(129)*C(5)*C(25)
+C     R130: O + CH2CO = CH2 + CO2
+      RF(130) = RF(130)*C(3)*C(26)
+      RB(130) = RB(130)*C(10)*C(15)
+C     R131: OH + CH2CO = H2O + HCCO
+      RF(131) = RF(131)*C(5)*C(26)
+      RB(131) = RB(131)*C(6)*C(25)
+C     R132: H + C2H3 = C2H4
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(14) * CTB / RF(132)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.18D-1*EXP(-T/2.075D2) +7.82D-1*EXP(-T/2.663D3)
+     * +EXP(-6.095D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(132) = RF(132) * PCOR
+      RB(132) = RB(132) * PCOR
+      RF(132) = RF(132)*C(2)*C(21)
+      RB(132) = RB(132)*C(22)
+C     R133: H + C2H3 = H2 + C2H2
+      RF(133) = RF(133)*C(2)*C(21)
+      RB(133) = RB(133)*C(1)*C(19)
+C     R134: H + C2H3 = H2 + H2CC
+      RF(134) = RF(134)*C(2)*C(21)
+      RB(134) = RB(134)*C(1)*C(20)
+C     R135: O + C2H3 = H + CH2CO
+      RF(135) = RF(135)*C(3)*C(21)
+      RB(135) = RB(135)*C(2)*C(26)
+C     R136: O + C2H3 = CH3 + CO
+      RF(136) = RF(136)*C(3)*C(21)
+      RB(136) = RB(136)*C(12)*C(14)
+C     R137: OH + C2H3 = H2O + C2H2
+      RF(137) = RF(137)*C(5)*C(21)
+      RB(137) = RB(137)*C(6)*C(19)
+C     R138: O2 + C2H3 = HO2 + C2H2
+      RF(138) = RF(138)*C(4)*C(21)
+      RB(138) = RB(138)*C(7)*C(19)
+C     R139: O2 + C2H3 = O + CH2CHO
+      RF(139) = RF(139)*C(4)*C(21)
+      RB(139) = RB(139)*C(3)*C(27)
+C     R140: O2 + C2H3 = HCO + CH2O
+      RF(140) = RF(140)*C(4)*C(21)
+      RB(140) = RB(140)*C(16)*C(17)
+C     R141: HO2 + C2H3 = OH + CH2CHO
+      RF(141) = RF(141)*C(7)*C(21)
+      RB(141) = RB(141)*C(5)*C(27)
+C     R142: H2O2 + C2H3 = HO2 + C2H4
+      RF(142) = RF(142)*C(8)*C(21)
+      RB(142) = RB(142)*C(7)*C(22)
+C     R143: HCO + C2H3 = CO + C2H4
+      RF(143) = RF(143)*C(16)*C(21)
+      RB(143) = RB(143)*C(14)*C(22)
+C     R144: CH3 + C2H3 = CH4 + C2H2
+      RF(144) = RF(144)*C(12)*C(21)
+      RB(144) = RB(144)*C(13)*C(19)
+C     R145: CH3 + C2H3 = C3H6
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(15) * CTB / RF(145)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 8.25D-1*EXP(-T/1.3406D3) +1.75D-1*EXP(-T/6.D4)
+     * +EXP(-1.01398D4/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(145) = RF(145) * PCOR
+      RB(145) = RB(145) * PCOR
+      RF(145) = RF(145)*C(12)*C(21)
+      RB(145) = RB(145)*C(30)
+C     R146: CH3 + C2H3 = H + aC3H5
+      RF(146) = RF(146)*C(12)*C(21)
+      RB(146) = RB(146)*C(2)*C(29)
+C     R147: CH2CHO = CH3 + CO
+      RF(147) = RF(147)*C(27)
+      RB(147) = RB(147)*C(12)*C(14)
+C     R148: H + CH2CHO = CH3CHO
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(16) * CTB / RF(148)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 4.5D-1*EXP(-T/8.9D3) +5.5D-1*EXP(-T/4.35D3)
+     * +EXP(-7.244D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(148) = RF(148) * PCOR
+      RB(148) = RB(148) * PCOR
+      RF(148) = RF(148)*C(2)*C(27)
+      RB(148) = RB(148)*C(28)
+C     R149: H + CH2CHO = CH3 + HCO
+      RF(149) = RF(149)*C(2)*C(27)
+      RB(149) = RB(149)*C(12)*C(16)
+C     R150: H + CH2CHO = H2 + CH2CO
+      RF(150) = RF(150)*C(2)*C(27)
+      RB(150) = RB(150)*C(1)*C(26)
+C     R151: O + CH2CHO = OH + CH2CO
+      RF(151) = RF(151)*C(3)*C(27)
+      RB(151) = RB(151)*C(5)*C(26)
+C     R152: OH + CH2CHO = H2O + CH2CO
+      RF(152) = RF(152)*C(5)*C(27)
+      RB(152) = RB(152)*C(6)*C(26)
+C     R153: O2 + CH2CHO = HO2 + CH2CO
+      RF(153) = RF(153)*C(4)*C(27)
+      RB(153) = RB(153)*C(7)*C(26)
+C     R154: O2 + CH2CHO = OH + CO + CH2O
+      RF(154) = RF(154)*C(4)*C(27)
+      RB(154) = RB(154)*C(5)*C(14)*C(17)
+C     R155: C2H4 = H2 + H2CC
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(17) * CTB / RF(155)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.655D-1*EXP(-T/1.8D2) +7.345D-1*EXP(-T/1.035D3)
+     * +EXP(-5.417D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(155) = RF(155) * PCOR
+      RB(155) = RB(155) * PCOR
+      RF(155) = RF(155)*C(22)
+      RB(155) = RB(155)*C(1)*C(20)
+C     R156: H + C2H4 = C2H5
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(18) * CTB / RF(156)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 2.47D-2*EXP(-T/2.1D2) +9.753D-1*EXP(-T/9.84D2)
+     * +EXP(-4.374D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(156) = RF(156) * PCOR
+      RB(156) = RB(156) * PCOR
+      RF(156) = RF(156)*C(2)*C(22)
+      RB(156) = RB(156)*C(23)
+C     R157: H + C2H4 = H2 + C2H3
+      RF(157) = RF(157)*C(2)*C(22)
+      RB(157) = RB(157)*C(1)*C(21)
+C     R158: O + C2H4 = OH + C2H3
+      RF(158) = RF(158)*C(3)*C(22)
+      RB(158) = RB(158)*C(5)*C(21)
+C     R159: O + C2H4 = CH3 + HCO
+      RF(159) = RF(159)*C(3)*C(22)
+      RB(159) = RB(159)*C(12)*C(16)
+C     R160: O + C2H4 = CH2 + CH2O
+      RF(160) = RF(160)*C(3)*C(22)
+      RB(160) = RB(160)*C(10)*C(17)
+C     R161: OH + C2H4 = H2O + C2H3
+      RF(161) = RF(161)*C(5)*C(22)
+      RB(161) = RB(161)*C(6)*C(21)
+C     R162: O2 + C2H4 = HO2 + C2H3
+      RF(162) = RF(162)*C(4)*C(22)
+      RB(162) = RB(162)*C(7)*C(21)
+C     R163: HO2 + C2H4 = OH + CH3CHO
+      RF(163) = RF(163)*C(7)*C(22)
+      RB(163) = RB(163)*C(5)*C(28)
+C     R164: HCO + C2H4 = CO + C2H5
+      RF(164) = RF(164)*C(16)*C(22)
+      RB(164) = RB(164)*C(14)*C(23)
+C     R165: CH2 + C2H4 = H + aC3H5
+      RF(165) = RF(165)*C(10)*C(22)
+      RB(165) = RB(165)*C(2)*C(29)
+C     R166: CH2* + C2H4 = CH4 + H2CC
+      RF(166) = RF(166)*C(11)*C(22)
+      RB(166) = RB(166)*C(13)*C(20)
+C     R167: CH2* + C2H4 = H + aC3H5
+      RF(167) = RF(167)*C(11)*C(22)
+      RB(167) = RB(167)*C(2)*C(29)
+C     R168: CH3 + C2H4 = CH4 + C2H3
+      RF(168) = RF(168)*C(12)*C(22)
+      RB(168) = RB(168)*C(13)*C(21)
+C     R169: CH3 + C2H4 = nC3H7
+      RF(169) = RF(169)*C(12)*C(22)
+      RB(169) = RB(169)*C(31)
+C     R170: H + C2H5 = C2H6
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(19) * CTB / RF(170)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 1.578D-1*EXP(-T/1.25D2) +8.422D-1*EXP(-T/2.219D3)
+     * +EXP(-6.882D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(170) = RF(170) * PCOR
+      RB(170) = RB(170) * PCOR
+      RF(170) = RF(170)*C(2)*C(23)
+      RB(170) = RB(170)*C(24)
+C     R171: H + C2H5 = H2 + C2H4
+      RF(171) = RF(171)*C(2)*C(23)
+      RB(171) = RB(171)*C(1)*C(22)
+C     R172: O + C2H5 = CH3 + CH2O
+      RF(172) = RF(172)*C(3)*C(23)
+      RB(172) = RB(172)*C(12)*C(17)
+C     R173: O + C2H5 = H + CH3CHO
+      RF(173) = RF(173)*C(3)*C(23)
+      RB(173) = RB(173)*C(2)*C(28)
+C     R174: O2 + C2H5 = HO2 + C2H4
+      RF(174) = RF(174)*C(4)*C(23)
+      RB(174) = RB(174)*C(7)*C(22)
+C     R175: HO2 + C2H5 = O2 + C2H6
+      RF(175) = RF(175)*C(7)*C(23)
+      RB(175) = RB(175)*C(4)*C(24)
+C     R176: HO2 + C2H5 = H2O2 + C2H4
+      RF(176) = RF(176)*C(7)*C(23)
+      RB(176) = RB(176)*C(8)*C(22)
+C     R177: HO2 + C2H5 = OH + CH3 + CH2O
+      RF(177) = RF(177)*C(7)*C(23)
+      RB(177) = RB(177)*C(5)*C(12)*C(17)
+C     R178: H2O2 + C2H5 = HO2 + C2H6
+      RF(178) = RF(178)*C(8)*C(23)
+      RB(178) = RB(178)*C(7)*C(24)
+C     R179: HCO + C2H5 = CO + C2H6
+      RF(179) = RF(179)*C(16)*C(23)
+      RB(179) = RB(179)*C(14)*C(24)
+C     R180: H + C2H6 = H2 + C2H5
+      RF(180) = RF(180)*C(2)*C(24)
+      RB(180) = RB(180)*C(1)*C(23)
+C     R181: O + C2H6 = OH + C2H5
+      RF(181) = RF(181)*C(3)*C(24)
+      RB(181) = RB(181)*C(5)*C(23)
+C     R182: OH + C2H6 = H2O + C2H5
+      RF(182) = RF(182)*C(5)*C(24)
+      RB(182) = RB(182)*C(6)*C(23)
+C     R183: CH2* + C2H6 = CH3 + C2H5
+      RF(183) = RF(183)*C(11)*C(24)
+      RB(183) = RB(183)*C(12)*C(23)
+C     R184: CH3 + C2H6 = CH4 + C2H5
+      RF(184) = RF(184)*C(12)*C(24)
+      RB(184) = RB(184)*C(13)*C(23)
+C     R185: H + aC3H5 = C3H6
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      PR = RKLOW(20) * CTB / RF(185)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = 9.8D-1*EXP(-T/1.0966D3) +2.D-2*EXP(-T/1.0966D3)
+     * +EXP(-6.8595D3/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(185) = RF(185) * PCOR
+      RB(185) = RB(185) * PCOR
+      RF(185) = RF(185)*C(2)*C(29)
+      RB(185) = RB(185)*C(30)
+C     R186: H + aC3H5 = CH4 + H2CC
+      RF(186) = RF(186)*C(2)*C(29)
+      RB(186) = RB(186)*C(13)*C(20)
+C     R187: HO2 + aC3H5 = O2 + C3H6
+      RF(187) = RF(187)*C(7)*C(29)
+      RB(187) = RB(187)*C(4)*C(30)
+C     R188: HO2 + aC3H5 = OH + CH2O + C2H3
+      RF(188) = RF(188)*C(7)*C(29)
+      RB(188) = RB(188)*C(5)*C(17)*C(21)
+C     R189: HCO + aC3H5 = CO + C3H6
+      RF(189) = RF(189)*C(16)*C(29)
+      RB(189) = RB(189)*C(14)*C(30)
+C     R190: H + C3H6 = nC3H7
+C     have third body
+C     falloff: Troe 7-parameters
+      CTB = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(24)
+      PR = RKLOW(21) * CTB / RF(190)
+      PCOR = PR / (1.0 + PR)
+      PRLOG = LOG10(MAX(PR,SMALL))
+      FCENT = +1.D0*EXP(-T/1.31D3) +EXP(-4.8097D4/T)
+      FCLOG = LOG10(MAX(FCENT,SMALL))
+      XN    = 0.75 - 1.27*FCLOG
+      CPRLOG= PRLOG - (0.4 + 0.67*FCLOG)
+      FLOG = FCLOG/(1.0 + (CPRLOG/(XN-0.14*CPRLOG))**2)
+      FC = 10.0**FLOG
+      PCOR = FC * PCOR
+      RF(190) = RF(190) * PCOR
+      RB(190) = RB(190) * PCOR
+      RF(190) = RF(190)*C(2)*C(30)
+      RB(190) = RB(190)*C(31)
+C     R191: H + C3H6 = CH3 + C2H4
+      RF(191) = RF(191)*C(2)*C(30)
+      RB(191) = RB(191)*C(12)*C(22)
+C     R192: H + C3H6 = H2 + aC3H5
+      RF(192) = RF(192)*C(2)*C(30)
+      RB(192) = RB(192)*C(1)*C(29)
+C     R193: O + C3H6 = H + CH3 + CH2CO
+      RF(193) = RF(193)*C(3)*C(30)
+      RB(193) = RB(193)*C(2)*C(12)*C(26)
+C     R194: O + C3H6 = HCO + C2H5
+      RF(194) = RF(194)*C(3)*C(30)
+      RB(194) = RB(194)*C(16)*C(23)
+C     R195: O + C3H6 = OH + aC3H5
+      RF(195) = RF(195)*C(3)*C(30)
+      RB(195) = RB(195)*C(5)*C(29)
+C     R196: OH + C3H6 = H2O + aC3H5
+      RF(196) = RF(196)*C(5)*C(30)
+      RB(196) = RB(196)*C(6)*C(29)
+C     R197: HO2 + C3H6 = H2O2 + aC3H5
+      RF(197) = RF(197)*C(7)*C(30)
+      RB(197) = RB(197)*C(8)*C(29)
+C     R198: CH3 + C3H6 = CH4 + aC3H5
+      RF(198) = RF(198)*C(12)*C(30)
+      RB(198) = RB(198)*C(13)*C(29)
+C     R199: H + nC3H7 = CH3 + C2H5
+      RF(199) = RF(199)*C(2)*C(31)
+      RB(199) = RB(199)*C(12)*C(23)
+C     R200: H + nC3H7 = H2 + C3H6
+      RF(200) = RF(200)*C(2)*C(31)
+      RB(200) = RB(200)*C(1)*C(30)
+C     R201: O + nC3H7 = CH2O + C2H5
+      RF(201) = RF(201)*C(3)*C(31)
+      RB(201) = RB(201)*C(17)*C(23)
+C     R202: OH + nC3H7 = H2O + C3H6
+      RF(202) = RF(202)*C(5)*C(31)
+      RB(202) = RB(202)*C(6)*C(30)
+C     R203: O2 + nC3H7 = HO2 + C3H6
+      RF(203) = RF(203)*C(4)*C(31)
+      RB(203) = RB(203)*C(7)*C(30)
+C     R204: HO2 + nC3H7 = OH + CH2O + C2H5
+      RF(204) = RF(204)*C(7)*C(31)
+      RB(204) = RB(204)*C(5)*C(17)*C(23)
+C     R205: CH3 + nC3H7 = CH4 + C3H6
+      RF(205) = RF(205)*C(12)*C(31)
+      RB(205) = RB(205)*C(13)*C(30)
+C     R206: C2H3 + C2H5 = CH3 + aC3H5
+      RF(206) = RF(206)*C(21)*C(23)
+      RB(206) = RB(206)*C(12)*C(29)
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKWDOT(RF, RB, WDOT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION RF(*), RB(*), WDOT(*)
+C
+      DO K = 1, 32
+         WDOT(K) = 0D0
+      ENDDO
+C
+      ROP = RF(1)-RB(1)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      ROP = RF(2)-RB(2)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      ROP = RF(3)-RB(3)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      ROP = RF(4)-RB(4)
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(5) = WDOT(5) -2*ROP
+      WDOT(6) = WDOT(6) +ROP
+      ROP = RF(5)-RB(5)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -2*ROP
+      ROP = RF(6)-RB(6)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -2*ROP
+      ROP = RF(7)-RB(7)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -2*ROP
+      ROP = RF(8)-RB(8)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -2*ROP
+      ROP = RF(9)-RB(9)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      ROP = RF(10)-RB(10)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      ROP = RF(11)-RB(11)
+      WDOT(3) = WDOT(3) -2*ROP
+      WDOT(4) = WDOT(4) +ROP
+      ROP = RF(12)-RB(12)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      ROP = RF(13)-RB(13)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      ROP = RF(14)-RB(14)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      ROP = RF(15)-RB(15)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      ROP = RF(16)-RB(16)
+      WDOT(5) = WDOT(5) -2*ROP
+      WDOT(8) = WDOT(8) +ROP
+      ROP = RF(17)-RB(17)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      ROP = RF(18)-RB(18)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      ROP = RF(19)-RB(19)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(5) = WDOT(5) +2*ROP
+      WDOT(7) = WDOT(7) -ROP
+      ROP = RF(20)-RB(20)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      ROP = RF(21)-RB(21)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      ROP = RF(22)-RB(22)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -2*ROP
+      WDOT(8) = WDOT(8) +ROP
+      ROP = RF(23)-RB(23)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -2*ROP
+      WDOT(8) = WDOT(8) +ROP
+      ROP = RF(24)-RB(24)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      ROP = RF(25)-RB(25)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      ROP = RF(26)-RB(26)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      ROP = RF(27)-RB(27)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      ROP = RF(28)-RB(28)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      ROP = RF(29)-RB(29)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      ROP = RF(30)-RB(30)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      ROP = RF(31)-RB(31)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(32)-RB(32)
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      ROP = RF(33)-RB(33)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      ROP = RF(34)-RB(34)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      ROP = RF(35)-RB(35)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(36)-RB(36)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      ROP = RF(37)-RB(37)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(6) = WDOT(6) -ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(38)-RB(38)
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(39)-RB(39)
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(25) = WDOT(25) +ROP
+      ROP = RF(40)-RB(40)
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(15) = WDOT(15) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(41)-RB(41)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(42)-RB(42)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(43)-RB(43)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(44)-RB(44)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(45)-RB(45)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(46)-RB(46)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(47)-RB(47)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(48)-RB(48)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      ROP = RF(49)-RB(49)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      ROP = RF(50)-RB(50)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(51)-RB(51)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(52)-RB(52)
+      WDOT(2) = WDOT(2) +2*ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(15) = WDOT(15) +ROP
+      ROP = RF(53)-RB(53)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(54)-RB(54)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(9) = WDOT(9) +ROP
+      WDOT(10) = WDOT(10) -ROP
+      ROP = RF(55)-RB(55)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(56)-RB(56)
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(14) = WDOT(14) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      ROP = RF(57)-RB(57)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(19) = WDOT(19) +ROP
+      ROP = RF(58)-RB(58)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(10) = WDOT(10) -2*ROP
+      WDOT(19) = WDOT(19) +ROP
+      ROP = RF(59)-RB(59)
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      ROP = RF(60)-RB(60)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(9) = WDOT(9) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      ROP = RF(61)-RB(61)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      ROP = RF(62)-RB(62)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      ROP = RF(63)-RB(63)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(64)-RB(64)
+      WDOT(1) = WDOT(1) -ROP
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      ROP = RF(65)-RB(65)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      ROP = RF(66)-RB(66)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      ROP = RF(67)-RB(67)
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      ROP = RF(68)-RB(68)
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      ROP = RF(69)-RB(69)
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      ROP = RF(70)-RB(70)
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(15) = WDOT(15) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(71)-RB(71)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(17) = WDOT(17) -ROP
+      WDOT(18) = WDOT(18) +ROP
+      ROP = RF(72)-RB(72)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(73)-RB(73)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(74)-RB(74)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(75)-RB(75)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(76)-RB(76)
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(8) = WDOT(8) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(77)-RB(77)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(17) = WDOT(17) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      ROP = RF(78)-RB(78)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      ROP = RF(79)-RB(79)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(80)-RB(80)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(12) = WDOT(12) -ROP
+      ROP = RF(81)-RB(81)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(11) = WDOT(11) +ROP
+      WDOT(12) = WDOT(12) -ROP
+      ROP = RF(82)-RB(82)
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(18) = WDOT(18) +ROP
+      ROP = RF(83)-RB(83)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      ROP = RF(84)-RB(84)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      ROP = RF(85)-RB(85)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(18) = WDOT(18) +ROP
+      ROP = RF(86)-RB(86)
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      ROP = RF(87)-RB(87)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(21) = WDOT(21) +ROP
+      ROP = RF(88)-RB(88)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      ROP = RF(89)-RB(89)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(28) = WDOT(28) +ROP
+      ROP = RF(90)-RB(90)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) -ROP
+      ROP = RF(91)-RB(91)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(92)-RB(92)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(93)-RB(93)
+      WDOT(12) = WDOT(12) -2*ROP
+      WDOT(24) = WDOT(24) +ROP
+      ROP = RF(94)-RB(94)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(12) = WDOT(12) -2*ROP
+      WDOT(23) = WDOT(23) +ROP
+      ROP = RF(95)-RB(95)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(22) = WDOT(22) +ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(96)-RB(96)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(97)-RB(97)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(98)-RB(98)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(11) = WDOT(11) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(99)-RB(99)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(100)-RB(100)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(101)-RB(101)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(18) = WDOT(18) -ROP
+      ROP = RF(102)-RB(102)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(13) = WDOT(13) -ROP
+      ROP = RF(103)-RB(103)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(13) = WDOT(13) -ROP
+      ROP = RF(104)-RB(104)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(13) = WDOT(13) -ROP
+      ROP = RF(105)-RB(105)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(13) = WDOT(13) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(106)-RB(106)
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(12) = WDOT(12) +2*ROP
+      WDOT(13) = WDOT(13) -ROP
+      ROP = RF(107)-RB(107)
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(12) = WDOT(12) +2*ROP
+      WDOT(13) = WDOT(13) -ROP
+      ROP = RF(108)-RB(108)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(11) = WDOT(11) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(109)-RB(109)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(14) = WDOT(14) +2*ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(110)-RB(110)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(14) = WDOT(14) +2*ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(111)-RB(111)
+      WDOT(9) = WDOT(9) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(112)-RB(112)
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(25) = WDOT(25) -ROP
+      ROP = RF(113)-RB(113)
+      WDOT(14) = WDOT(14) +2*ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(25) = WDOT(25) -2*ROP
+      ROP = RF(114)-RB(114)
+      WDOT(19) = WDOT(19) -ROP
+      WDOT(20) = WDOT(20) +ROP
+      ROP = RF(115)-RB(115)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(116)-RB(116)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(19) = WDOT(19) -ROP
+      WDOT(25) = WDOT(25) +ROP
+      ROP = RF(117)-RB(117)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(19) = WDOT(19) -ROP
+      ROP = RF(118)-RB(118)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(19) = WDOT(19) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      ROP = RF(119)-RB(119)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(19) = WDOT(19) -ROP
+      ROP = RF(120)-RB(120)
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(19) = WDOT(19) -ROP
+      WDOT(21) = WDOT(21) +ROP
+      ROP = RF(121)-RB(121)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(19) = WDOT(19) -ROP
+      WDOT(29) = WDOT(29) +ROP
+      ROP = RF(122)-RB(122)
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(20) = WDOT(20) -ROP
+      ROP = RF(123)-RB(123)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(20) = WDOT(20) -ROP
+      ROP = RF(124)-RB(124)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(20) = WDOT(20) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      ROP = RF(125)-RB(125)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(15) = WDOT(15) +ROP
+      WDOT(20) = WDOT(20) -ROP
+      ROP = RF(126)-RB(126)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(26) = WDOT(26) -ROP
+      WDOT(27) = WDOT(27) +ROP
+      ROP = RF(127)-RB(127)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(25) = WDOT(25) +ROP
+      WDOT(26) = WDOT(26) -ROP
+      ROP = RF(128)-RB(128)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(26) = WDOT(26) -ROP
+      ROP = RF(129)-RB(129)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(25) = WDOT(25) +ROP
+      WDOT(26) = WDOT(26) -ROP
+      ROP = RF(130)-RB(130)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(15) = WDOT(15) +ROP
+      WDOT(26) = WDOT(26) -ROP
+      ROP = RF(131)-RB(131)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(25) = WDOT(25) +ROP
+      WDOT(26) = WDOT(26) -ROP
+      ROP = RF(132)-RB(132)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(133)-RB(133)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(134)-RB(134)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(20) = WDOT(20) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(135)-RB(135)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      ROP = RF(136)-RB(136)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(137)-RB(137)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(138)-RB(138)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(139)-RB(139)
+      WDOT(3) = WDOT(3) +ROP
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(27) = WDOT(27) +ROP
+      ROP = RF(140)-RB(140)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(141)-RB(141)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(27) = WDOT(27) +ROP
+      ROP = RF(142)-RB(142)
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(143)-RB(143)
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      ROP = RF(144)-RB(144)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(19) = WDOT(19) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      ROP = RF(145)-RB(145)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(30) = WDOT(30) +ROP
+      ROP = RF(146)-RB(146)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(29) = WDOT(29) +ROP
+      ROP = RF(147)-RB(147)
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(148)-RB(148)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(27) = WDOT(27) -ROP
+      WDOT(28) = WDOT(28) +ROP
+      ROP = RF(149)-RB(149)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(150)-RB(150)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(26) = WDOT(26) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(151)-RB(151)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(26) = WDOT(26) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(152)-RB(152)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(26) = WDOT(26) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(153)-RB(153)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(26) = WDOT(26) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(154)-RB(154)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(27) = WDOT(27) -ROP
+      ROP = RF(155)-RB(155)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(20) = WDOT(20) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(156)-RB(156)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(23) = WDOT(23) +ROP
+      ROP = RF(157)-RB(157)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(158)-RB(158)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(159)-RB(159)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(160)-RB(160)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(10) = WDOT(10) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(161)-RB(161)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(162)-RB(162)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(163)-RB(163)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(28) = WDOT(28) +ROP
+      ROP = RF(164)-RB(164)
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(23) = WDOT(23) +ROP
+      ROP = RF(165)-RB(165)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(10) = WDOT(10) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(29) = WDOT(29) +ROP
+      ROP = RF(166)-RB(166)
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(20) = WDOT(20) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(167)-RB(167)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(29) = WDOT(29) +ROP
+      ROP = RF(168)-RB(168)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(22) = WDOT(22) -ROP
+      ROP = RF(169)-RB(169)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(22) = WDOT(22) -ROP
+      WDOT(31) = WDOT(31) +ROP
+      ROP = RF(170)-RB(170)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(24) = WDOT(24) +ROP
+      ROP = RF(171)-RB(171)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(22) = WDOT(22) +ROP
+      WDOT(23) = WDOT(23) -ROP
+      ROP = RF(172)-RB(172)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(23) = WDOT(23) -ROP
+      ROP = RF(173)-RB(173)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(28) = WDOT(28) +ROP
+      ROP = RF(174)-RB(174)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(22) = WDOT(22) +ROP
+      WDOT(23) = WDOT(23) -ROP
+      ROP = RF(175)-RB(175)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(24) = WDOT(24) +ROP
+      ROP = RF(176)-RB(176)
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(8) = WDOT(8) +ROP
+      WDOT(22) = WDOT(22) +ROP
+      WDOT(23) = WDOT(23) -ROP
+      ROP = RF(177)-RB(177)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(23) = WDOT(23) -ROP
+      ROP = RF(178)-RB(178)
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(8) = WDOT(8) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(24) = WDOT(24) +ROP
+      ROP = RF(179)-RB(179)
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(24) = WDOT(24) +ROP
+      ROP = RF(180)-RB(180)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(24) = WDOT(24) -ROP
+      ROP = RF(181)-RB(181)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(24) = WDOT(24) -ROP
+      ROP = RF(182)-RB(182)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(24) = WDOT(24) -ROP
+      ROP = RF(183)-RB(183)
+      WDOT(11) = WDOT(11) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(24) = WDOT(24) -ROP
+      ROP = RF(184)-RB(184)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(24) = WDOT(24) -ROP
+      ROP = RF(185)-RB(185)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(29) = WDOT(29) -ROP
+      WDOT(30) = WDOT(30) +ROP
+      ROP = RF(186)-RB(186)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(20) = WDOT(20) +ROP
+      WDOT(29) = WDOT(29) -ROP
+      ROP = RF(187)-RB(187)
+      WDOT(4) = WDOT(4) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(29) = WDOT(29) -ROP
+      WDOT(30) = WDOT(30) +ROP
+      ROP = RF(188)-RB(188)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(21) = WDOT(21) +ROP
+      WDOT(29) = WDOT(29) -ROP
+      ROP = RF(189)-RB(189)
+      WDOT(14) = WDOT(14) +ROP
+      WDOT(16) = WDOT(16) -ROP
+      WDOT(29) = WDOT(29) -ROP
+      WDOT(30) = WDOT(30) +ROP
+      ROP = RF(190)-RB(190)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(30) = WDOT(30) -ROP
+      WDOT(31) = WDOT(31) +ROP
+      ROP = RF(191)-RB(191)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(22) = WDOT(22) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(192)-RB(192)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(29) = WDOT(29) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(193)-RB(193)
+      WDOT(2) = WDOT(2) +ROP
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(26) = WDOT(26) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(194)-RB(194)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(16) = WDOT(16) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(195)-RB(195)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(29) = WDOT(29) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(196)-RB(196)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(29) = WDOT(29) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(197)-RB(197)
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(8) = WDOT(8) +ROP
+      WDOT(29) = WDOT(29) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(198)-RB(198)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(29) = WDOT(29) +ROP
+      WDOT(30) = WDOT(30) -ROP
+      ROP = RF(199)-RB(199)
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(200)-RB(200)
+      WDOT(1) = WDOT(1) +ROP
+      WDOT(2) = WDOT(2) -ROP
+      WDOT(30) = WDOT(30) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(201)-RB(201)
+      WDOT(3) = WDOT(3) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(202)-RB(202)
+      WDOT(5) = WDOT(5) -ROP
+      WDOT(6) = WDOT(6) +ROP
+      WDOT(30) = WDOT(30) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(203)-RB(203)
+      WDOT(4) = WDOT(4) -ROP
+      WDOT(7) = WDOT(7) +ROP
+      WDOT(30) = WDOT(30) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(204)-RB(204)
+      WDOT(5) = WDOT(5) +ROP
+      WDOT(7) = WDOT(7) -ROP
+      WDOT(17) = WDOT(17) +ROP
+      WDOT(23) = WDOT(23) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(205)-RB(205)
+      WDOT(12) = WDOT(12) -ROP
+      WDOT(13) = WDOT(13) +ROP
+      WDOT(30) = WDOT(30) +ROP
+      WDOT(31) = WDOT(31) -ROP
+      ROP = RF(206)-RB(206)
+      WDOT(12) = WDOT(12) +ROP
+      WDOT(21) = WDOT(21) -ROP
+      WDOT(23) = WDOT(23) -ROP
+      WDOT(29) = WDOT(29) +ROP
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKWT (ICKWRK, RCKWRK, WT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION ICKWRK(*), RCKWRK(*), WT(*)
+C
+      WT(1) = 2.015939950942993D0
+      WT(2) = 1.007969975471497D0
+      WT(3) = 1.599940013885498D1
+      WT(4) = 3.199880027770996D1
+      WT(5) = 1.700737011432648D1
+      WT(6) = 1.801534008979797D1
+      WT(7) = 3.300677025318146D1
+      WT(8) = 3.401474022865295D1
+      WT(9) = 1.301912033557892D1
+      WT(10) = 1.402709031105042D1
+      WT(11) = 1.402709031105042D1
+      WT(12) = 1.503506028652191D1
+      WT(13) = 1.604303026199341D1
+      WT(14) = 2.80105504989624D1
+      WT(15) = 4.400995063781738D1
+      WT(16) = 2.90185204744339D1
+      WT(17) = 3.00264904499054D1
+      WT(18) = 3.103446042537689D1
+      WT(19) = 2.603824067115784D1
+      WT(20) = 2.603824067115784D1
+      WT(21) = 2.704621064662933D1
+      WT(22) = 2.805418062210083D1
+      WT(23) = 2.906215059757233D1
+      WT(24) = 3.007012057304382D1
+      WT(25) = 4.102967083454132D1
+      WT(26) = 4.203764081001282D1
+      WT(27) = 4.304561078548431D1
+      WT(28) = 4.405358076095581D1
+      WT(29) = 4.107330095767975D1
+      WT(30) = 4.208127093315125D1
+      WT(31) = 4.308924090862274D1
+      WT(32) = 2.801339912414551D1
+C
+      RETURN
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKUML  (T, ICKWRK, RCKWRK, UML)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION UML(*)
+C
+      RUT = T*8.31451D7
+      CALL SKHML (T, ICKWRK, RCKWRK, UML)
+C
+      DO K = 1, 32
+         UML(K) = UML(K) - RUT
+      ENDDO
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKHML  (T, ICKWRK, RCKWRK, HML)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION HML(*), TN(5)
+C
+      TN(1) = T
+      TN(2) = TN(1)*T
+      TN(3) = TN(2)*T
+      TN(4) = TN(3)*T
+      TN(5) = TN(4)*T
+C H2
+      IF (T .GT. 1000) THEN
+      HML(1) = -7.90010585855822D10 +2.7747841281192D8*TN(1)
+     * -2.053786783073405D3*TN(2) +1.384246125082927D1*TN(3)
+     * -3.73251644644235D-3*TN(4) +3.33005065261152D-7*TN(5)
+      ELSE
+      HML(1) = -7.63218117526023D10 +1.94919645405512D8*TN(1)
+     * +3.317705979054125D5*TN(2) -5.398376042367D2*TN(3)
+     * +4.18993297820985D-1*TN(4) -1.226576072590422D-4*TN(5)
+      ENDIF
+C H
+      IF (T .GT. 1000) THEN
+      HML(2) = 2.11800999975149D12 +2.07862750831451D8*TN(1)
+     * -9.59673103719115D-4*TN(2) +4.477694774218267D-7*TN(3)
+     * -9.842617891399627D-11*TN(4) +8.284533813500142D-15*TN(5)
+      ELSE
+      HML(2) = 2.11800999975149D12 +2.0786275D8*TN(1)
+     * +2.932248388451845D-5*TN(2) -5.531697935325466D-8*TN(3)
+     * +4.782540075200799D-11*TN(4) -1.542727950347464D-14*TN(5)
+      ENDIF
+C O
+      IF (T .GT. 1000) THEN
+      HML(3) = 2.42929853602741D12 +2.13634747695178D8*TN(1)
+     * -3.574163140498935D3*TN(2) +1.162602936695463D0*TN(3)
+     * -2.082323278908725D-4*TN(4) +2.04260390431282D-8*TN(5)
+      ELSE
+      HML(3) = 2.42137315340992D12 +2.6342588485621D8*TN(1)
+     * -1.36329646441842D5*TN(2) +1.841127390868653D2*TN(3)
+     * -1.27379670082856D-1*TN(4) +3.51314605707842D-5*TN(5)
+      ENDIF
+C O2
+      IF (T .GT. 1000) THEN
+      HML(4) = -9.049992597517202D10 +2.72926936960584D8*TN(1)
+     * +6.1655730911027D4*TN(2) -2.100707149689064D1*TN(3)
+     * +4.354112560632625D-3*TN(4) -3.60380453078188D-7*TN(5)
+      ELSE
+      HML(4) = -8.8461693690556D10 +3.14492712297836D8*TN(1)
+     * -1.24581880703308D5*TN(2) +2.729183034505504D2*TN(3)
+     * -2.012380620968898D-1*TN(4) +5.39400239392974D-5*TN(5)
+      ENDIF
+C OH
+      IF (T .GT. 1000) THEN
+      HML(5) = 3.208284221307D11 +2.57158454610917D8*TN(1)
+     * +2.27996217898958D4*TN(2) +3.506096610860933D0*TN(3)
+     * -1.82807297549439D-3*TN(4) +1.95245274875152D-7*TN(5)
+      ELSE
+      HML(5) = 3.00576234669256D11 +3.31916522128893D8*TN(1)
+     * -9.9828892666076D4*TN(2) +1.279863169644303D2*TN(3)
+     * -8.067430470904576D-2*TN(4) +2.2683890628594D-5*TN(5)
+      ENDIF
+C H2O
+      IF (T .GT. 1000) THEN
+      HML(6) = -2.49471028280921D12 +2.52261608980299D8*TN(1)
+     * +9.050003406380201D4*TN(2) -4.547275305453933D0*TN(3)
+     * -2.017141428328425D-3*TN(4) +2.79701765998784D-7*TN(5)
+      ELSE
+      HML(6) = -2.51877493584417D12 +3.49096389225256D8*TN(1)
+     * -8.465975844395501D4*TN(2) +1.80713161825387D2*TN(3)
+     * -1.140744664992405D-1*TN(4) +2.94662604284934D-5*TN(5)
+      ENDIF
+C HO2
+      IF (T .GT. 1000) THEN
+      HML(7) = 9.3003375880563D9 +3.3401140200159D8*TN(1)
+     * +9.31150343454315D4*TN(2) -1.756185674918833D1*TN(3)
+     * +2.37475646457175D-3*TN(4) -1.7944131866857D-7*TN(5)
+      ELSE
+      HML(7) = 2.4511843966604D10 +3.57673425721251D8*TN(1)
+     * -1.974330498580005D5*TN(2) +5.864026876828033D2*TN(3)
+     * -5.04615706075485D-1*TN(4) +1.545210317149848D-4*TN(5)
+      ENDIF
+C H2O2
+      IF (T .GT. 1000) THEN
+      HML(8) = -1.48512012449527D12 +3.46299578463535D8*TN(1)
+     * +2.04051251403997D5*TN(2) -5.269714958849167D1*TN(3)
+     * +7.71557398114215D-3*TN(4) -4.7876329620111D-7*TN(5)
+      ELSE
+      HML(8) = -1.47188295896271D12 +3.55537817221319D8*TN(1)
+     * -2.256651207185335D4*TN(2) +4.637714531071701D2*TN(3)
+     * -4.485071455991575D-1*TN(4) +1.434177085141426D-4*TN(5)
+      ENDIF
+C CH
+      IF (T .GT. 1000) THEN
+      HML(9) = 5.904336125721641D12 +2.39330237822323D8*TN(1)
+     * +4.036335754905655D4*TN(2) +4.003316143180166D0*TN(3)
+     * -2.716513568472475D-3*TN(4) +2.92802758149466D-7*TN(5)
+      ELSE
+      HML(9) = 5.88644803947234D12 +2.90161154345915D8*TN(1)
+     * +1.346266921999955D4*TN(2) -4.681043216443833D1*TN(3)
+     * +6.572980318786925D-2*TN(4) -2.33819098732434D-5*TN(5)
+      ENDIF
+C CH2
+      IF (T .GT. 1000) THEN
+      HML(10) = 3.8465919809404D12 +2.38967425863963D8*TN(1)
+     * +1.52005577486346D5*TN(2) -3.904898452341567D1*TN(3)
+     * +5.408163654889974D-3*TN(4) -3.12172546619434D-7*TN(5)
+      ELSE
+      HML(10) = 3.82501051451851D12 +3.12848294285017D8*TN(1)
+     * +4.027848560847465D4*TN(2) +7.746070259643034D1*TN(3)
+     * -8.004610606325077D-2*TN(4) +2.80600942008538D-5*TN(5)
+      ENDIF
+C CH2*
+      IF (T .GT. 1000) THEN
+      HML(11) = 4.23424733765647D12 +1.90571763634742D8*TN(1)
+     * +1.935570689111435D5*TN(2) -5.576041517503233D1*TN(3)
+     * +8.686709040149999D-3*TN(4) -5.649150227912299D-7*TN(5)
+      ELSE
+      HML(11) = 4.19856284094513D12 +3.49093358586361D8*TN(1)
+     * -9.838618674448449D4*TN(2) +2.281768218050733D2*TN(3)
+     * -1.390219290546078D-1*TN(4) +3.23126364786774D-5*TN(5)
+      ENDIF
+C CH3
+      IF (T .GT. 1000) THEN
+      HML(12) = 1.39480763418193D12 +1.90046228401172D8*TN(1)
+     * +3.009811201268435D5*TN(2) -8.278878111964932D1*TN(3)
+     * +1.23820648234611D-2*TN(4) -7.768319760913882D-7*TN(5)
+      ELSE
+      HML(12) = 1.36732106972588D12 +3.0544104116704D8*TN(1)
+     * +8.36003921744625D4*TN(2) +1.588131983976853D2*TN(3)
+     * -1.428261175334188D-1*TN(4) +4.23018545840068D-5*TN(5)
+      ENDIF
+C CH4
+      IF (T .GT. 1000) THEN
+      HML(13) = -7.87246457770009D11 +6.2235350369245D6*TN(1)
+     * +5.56695801233085D5*TN(2) -1.588863530596197D2*TN(3)
+     * +2.542006262957125D-2*TN(4) -1.6930874959746D-6*TN(5)
+      ELSE
+      HML(13) = -8.519585393667599D11 +4.28186965816463D8*TN(1)
+     * -5.6833744971194D5*TN(2) +1.36302699946383D3*TN(3)
+     * -1.007600184276815D0*TN(4) +2.77195712820312D-4*TN(5)
+      ENDIF
+C CO
+      IF (T .GT. 1000) THEN
+      HML(14) = -1.17665884588524D12 +2.25754379062011D8*TN(1)
+     * +8.574452471004651D4*TN(2) -2.768248953745737D1*TN(3)
+     * +4.7819450888652D-3*TN(4) -3.38646194231832D-7*TN(5)
+      ELSE
+      HML(14) = -1.1926404648786D12 +2.97620668316497D8*TN(1)
+     * -2.5373958879484D4*TN(2) +2.8181043049761D1*TN(3)
+     * +1.88532737314421D-2*TN(4) -1.503969308236098D-5*TN(5)
+      ENDIF
+C CO2
+      IF (T .GT. 1000) THEN
+      HML(15) = -4.0540857329866D12 +3.20728921558079D8*TN(1)
+     * +1.83516628352363D5*TN(2) -6.138364494573467D1*TN(3)
+     * +1.08814110075697D-2*TN(4) -7.850297004839281D-7*TN(5)
+      ELSE
+      HML(15) = -4.02189225790347D12 +1.95954169997752D8*TN(1)
+     * +3.735125984506635D5*TN(2) -1.974297774054396D2*TN(3)
+     * +5.11174041902305D-2*TN(4) -2.38958265768296D-6*TN(5)
+      ENDIF
+C HCO
+      IF (T .GT. 1000) THEN
+      HML(16) = 3.33571335773565D11 +2.30492716042538D8*TN(1)
+     * +2.06073270394113D5*TN(2) -6.885678445815434D1*TN(3)
+     * +1.224647873699695D-2*TN(4) -8.87172702539322D-7*TN(5)
+      ELSE
+      HML(16) = 3.19241012555696D11 +3.509709187853841D8*TN(1)
+     * -1.34858247561966D5*TN(2) +3.819116239204867D2*TN(3)
+     * -2.767569731723575D-1*TN(4) +7.2131511314623D-5*TN(5)
+      ENDIF
+C CH2O
+      IF (T .GT. 1000) THEN
+      HML(17) = -1.16368487616673D12 +1.46392752770608D8*TN(1)
+     * +3.82467494089491D5*TN(2) -1.225721774425543D2*TN(3)
+     * +2.0919559089653D-2*TN(4) -1.46976531146728D-6*TN(5)
+      ELSE
+      HML(17) = -1.18971963571717D12 +3.98574590679065D8*TN(1)
+     * -4.119146977442095D5*TN(2) +1.034380496238693D3*TN(3)
+     * -7.883927738592774D-1*TN(4) +2.19125006556104D-4*TN(5)
+      ENDIF
+C CH3O
+      IF (T .GT. 1000) THEN
+      HML(18) = 1.0628647658652D10 +3.135234599349D8*TN(1)
+     * +3.2723820260735D5*TN(2) -7.362177110613334D1*TN(3)
+     * +8.1990027484525D-3*TN(4) -3.513073371632D-7*TN(5)
+      ELSE
+      HML(18) = 8.136588631961001D10 +1.751205422004D8*TN(1)
+     * +3.0001225646725D5*TN(2) +1.479559294290667D2*TN(3)
+     * -1.533535707459D-1*TN(4) +3.451536020219999D-5*TN(5)
+      ENDIF
+C C2H2
+      IF (T .GT. 1000) THEN
+      HML(19) = 2.15645124708392D12 +3.448500924747641D8*TN(1)
+     * +2.47841684474732D5*TN(2) -6.5766347330084D1*TN(3)
+     * +9.715757924753026D-3*TN(4) -6.006987581681261D-7*TN(5)
+      ELSE
+      HML(19) = 2.19744024319957D12 +6.72378704287394D7*TN(1)
+     * +9.711997417383952D5*TN(2) -9.8435986917855D2*TN(3)
+     * +5.823325597402175D-1*TN(4) -1.413588048610548D-4*TN(5)
+      ENDIF
+C H2CC
+      IF (T .GT. 1000) THEN
+      HML(20) = 4.0172958554288D12 +3.556975647334D8*TN(1)
+     * +1.9773070474302D5*TN(2) -4.517830078019667D1*TN(3)
+     * +5.2927688778765D-3*TN(4) -2.4754589411858D-7*TN(5)
+      ELSE
+      HML(20) = 4.0426639243094D12 +2.7284466155833D8*TN(1)
+     * +2.90030026208705D5*TN(2) -6.611488826348D1*TN(3)
+     * -2.516060522708D-2*TN(4) +1.6327959075959D-5*TN(5)
+      ENDIF
+C C2H3
+      IF (T .GT. 1000) THEN
+      HML(21) = 2.87789086170289D12 +2.508258186524D8*TN(1)
+     * +4.2945396992846D5*TN(2) -1.297291790527997D2*TN(3)
+     * +2.1152796892722D-2*TN(4) -1.434430973692982D-6*TN(5)
+      ELSE
+      HML(21) = 2.89842544817068D12 +2.67100844231895D8*TN(1)
+     * +6.2973750362031D4*TN(2) +7.183997493893734D2*TN(3)
+     * -7.434374363649925D-1*TN(4) +2.44697481013446D-4*TN(5)
+      ENDIF
+C C2H4
+      IF (T .GT. 1000) THEN
+      HML(22) = 4.107273270989139D11 +1.69292666009316D8*TN(1)
+     * +6.08847251515505D5*TN(2) -1.859894678348884D2*TN(3)
+     * +3.060216163781825D-2*TN(4) -2.09036860249022D-6*TN(5)
+      ELSE
+      HML(22) = 4.23189928677443D11 +3.29188202974748D8*TN(1)
+     * -3.147259239101985D5*TN(2) +1.582501497578973D3*TN(3)
+     * -1.437555400676507D0*TN(4) +4.48791263630446D-4*TN(5)
+      ENDIF
+C C2H5
+      IF (T .GT. 1000) THEN
+      HML(23) = 1.069039786152D12 +1.62520103506542D8*TN(1)
+     * +7.2324896839811D5*TN(2) -2.212232441050893D2*TN(3)
+     * +3.642123068418475D-2*TN(4) -2.48839276013552D-6*TN(5)
+      ELSE
+      HML(23) = 1.06771831950515D12 +3.58061519610168D8*TN(1)
+     * -1.74047177206146D5*TN(2) +1.37783294674319D3*TN(3)
+     * -1.245361039213265D0*TN(4) +3.83313883769608D-4*TN(5)
+      ENDIF
+C C2H6
+      IF (T .GT. 1000) THEN
+      HML(24) = -9.500486052533201D11 +8.912169450565001D7*TN(1)
+     * +9.015118757216349D5*TN(2) -2.7786002387739D2*TN(3)
+     * +4.602330741086275D-2*TN(4) -3.1595618578678D-6*TN(5)
+      ELSE
+      HML(24) = -9.5801492851805D11 +3.56810954115892D8*TN(1)
+     * -2.28713158972885D5*TN(2) +1.661345213319627D3*TN(3)
+     * -1.472637502823837D0*TN(4) +4.46798105967442D-4*TN(5)
+      ENDIF
+C HCCO
+      IF (T .GT. 1000) THEN
+      HML(25) = 1.6069632238965D12 +4.6795773406158D8*TN(1)
+     * +1.69838005574255D5*TN(2) -4.416265012565668D1*TN(3)
+     * +5.950289890363D-3*TN(4) -3.2273322648464D-7*TN(5)
+      ELSE
+      HML(25) = 1.6678448930499D12 +1.8721960097514D8*TN(1)
+     * +7.3396424327355D5*TN(2) -6.576528251850333D2*TN(3)
+     * +3.590986774077251D-1*TN(4) -8.425061554152199D-5*TN(5)
+      ENDIF
+C CH2CO
+      IF (T .GT. 1000) THEN
+      HML(26) = -6.27833065936261D11 +3.75092266801132D8*TN(1)
+     * +3.743025051699975D5*TN(2) -1.155549588201283D2*TN(3)
+     * +1.919292142336955D-2*TN(4) -1.321738034119302D-6*TN(5)
+      ELSE
+      HML(26) = -5.85584124727604D11 +1.7758432274713D8*TN(1)
+     * +7.53247716320855D5*TN(2) -4.820960040159134D2*TN(3)
+     * +1.94226448077792D-1*TN(4) -3.3500427089873D-5*TN(5)
+      ENDIF
+C CH2CHO
+      IF (T .GT. 1000) THEN
+      HML(27) = 4.0767853430278D10 +4.9684767140249D8*TN(1)
+     * +3.3800941750607D5*TN(2) -7.603964447164999D1*TN(3)
+     * +8.46064603562275D-3*TN(4) -3.6185031876242D-7*TN(5)
+      ELSE
+      HML(27) = 1.2650332405466D11 +2.8344683415424D8*TN(1)
+     * +4.464299045437001D5*TN(2) +5.242277768725D1*TN(3)
+     * +1.488002769269525D-1*TN(4) +4.7681804175602D-5*TN(5)
+      ENDIF
+C CH3CHO
+      IF (T .GT. 1000) THEN
+      HML(28) = -1.8785073880022D12 +4.4932533287708D8*TN(1)
+     * +4.8735745643045D5*TN(2) -1.171324250726233D2*TN(3)
+     * +1.421208568910025D-2*TN(4) -6.815381065242599D-7*TN(5)
+      ELSE
+      HML(28) = -1.7936790985978D12 +3.9323138307345D8*TN(1)
+     * -1.3275303358479D5*TN(2) +1.317431920012367D3*TN(3)
+     * -1.194350489364025D0*TN(4) +3.6469290007024D-4*TN(5)
+      ENDIF
+C aC3H5
+      IF (T .GT. 1000) THEN
+      HML(29) = 1.4535799703499D12 +5.4050864339527D8*TN(1)
+     * +5.9551559573405D5*TN(2) -1.573704823601067D2*TN(3)
+     * +2.30328576806275D-2*TN(4) -1.50266288420074D-6*TN(5)
+      ELSE
+      HML(29) = 1.6001797477679D12 +1.1334202842585D8*TN(1)
+     * +8.2371106421355D5*TN(2) +3.463564344686667D2*TN(3)
+     * -6.93337739007625D-1*TN(4) +2.6351294609042D-4*TN(5)
+      ENDIF
+C C3H6
+      IF (T .GT. 1000) THEN
+      HML(30) = -7.679034495053D10 +5.597541814907D8*TN(1)
+     * +6.19777710067D5*TN(2) -1.371866157816333D2*TN(3)
+     * +1.4991107259805D-2*TN(4) -6.262828164008D-7*TN(5)
+      ELSE
+      HML(30) = 8.93665152526D10 +1.241611598457D8*TN(1)
+     * +8.699130918090001D5*TN(2) +1.243516452698D2*TN(3)
+     * -3.46904637828D-1*TN(4) +1.1903295299692D-4*TN(5)
+      ENDIF
+C nC3H7
+      IF (T .GT. 1000) THEN
+      HML(31) = 6.6318390884436D11 +6.4102776012029D8*TN(1)
+     * +6.664697117367501D5*TN(2) -1.461143153511267D2*TN(3)
+     * +1.5774361539688D-2*TN(4) -6.4624893150538D-7*TN(5)
+      ELSE
+      HML(31) = 8.574210394046D11 +8.722896282023001D7*TN(1)
+     * +1.08125933049115D6*TN(2) +6.524816156905332D1*TN(3)
+     * -4.073098024133D-1*TN(4) +1.55847519660714D-4*TN(5)
+      ENDIF
+C N2
+      IF (T .GT. 1000) THEN
+      HML(32) = -7.672610704627D10 +2.43335775464D8*TN(1)
+     * +6.185898991684D4*TN(2) -1.57553312892D1*TN(3)
+     * +2.0987980855345D-3*TN(4) -1.1230160884602D-7*TN(5)
+      ELSE
+      HML(32) = -8.488282427549001D10 +2.742688290327D8*TN(1)
+     * +5.854414444102D4*TN(2) -1.098408298374D2*TN(3)
+     * +1.17266082206625D-1*TN(4) -4.065552606308D-5*TN(5)
+      ENDIF
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKCVML  (T, ICKWRK, RCKWRK, CVML)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION CVML(*)
+C
+      CALL SKCPML (T, ICKWRK, RCKWRK, CVML)
+C
+      DO K = 1, 32
+         CVML(K) = CVML(K) - 8.31451D7
+      ENDDO
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKCPML  (T, ICKWRK, RCKWRK, CPML)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION CPML(*), TN(4)
+C
+      TN(1) = T
+      TN(2) = TN(1)*T
+      TN(3) = TN(2)*T
+      TN(4) = TN(3)*T
+C H2
+      IF (T .GT. 1000) THEN
+      CPML(1) = 2.7747841281192D8 -4.10757356614681D3*TN(1)
+     * +4.152738375248779D1*TN(2) -1.49300657857694D-2*TN(3)
+     * +1.66502532630576D-6*TN(4)
+      ELSE
+      CPML(1) = 1.94919645405512D8 +6.63541195810825D5*TN(1)
+     * -1.6195128127101D3*TN(2) +1.67597319128394D0*TN(3)
+     * -6.13288036295211D-4*TN(4)
+      ENDIF
+C H
+      IF (T .GT. 1000) THEN
+      CPML(2) = 2.07862750831451D8 -1.91934620743823D-3*TN(1)
+     * +1.34330843226548D-6*TN(2) -3.937047156559851D-10*TN(3)
+     * +4.14226690675007D-14*TN(4)
+      ELSE
+      CPML(2) = 2.0786275D8 +5.86449677690369D-5*TN(1)
+     * -1.65950938059764D-7*TN(2) +1.91301603008032D-10*TN(3)
+     * -7.71363975173732D-14*TN(4)
+      ENDIF
+C O
+      IF (T .GT. 1000) THEN
+      CPML(3) = 2.13634747695178D8 -7.148326280997871D3*TN(1)
+     * +3.48780881008639D0*TN(2) -8.329293115634899D-4*TN(3)
+     * +1.02130195215641D-7*TN(4)
+      ELSE
+      CPML(3) = 2.6342588485621D8 -2.72659292883684D5*TN(1)
+     * +5.52338217260596D2*TN(2) -5.09518680331424D-1*TN(3)
+     * +1.75657302853921D-4*TN(4)
+      ENDIF
+C O2
+      IF (T .GT. 1000) THEN
+      CPML(4) = 2.72926936960584D8 +1.23311461822054D5*TN(1)
+     * -6.30212144906719D1*TN(2) +1.74164502425305D-2*TN(3)
+     * -1.80190226539094D-6*TN(4)
+      ELSE
+      CPML(4) = 3.14492712297836D8 -2.49163761406616D5*TN(1)
+     * +8.18754910351651D2*TN(2) -8.049522483875592D-1*TN(3)
+     * +2.69700119696487D-4*TN(4)
+      ENDIF
+C OH
+      IF (T .GT. 1000) THEN
+      CPML(5) = 2.57158454610917D8 +4.55992435797916D4*TN(1)
+     * +1.05182898325828D1*TN(2) -7.31229190197756D-3*TN(3)
+     * +9.762263743757599D-7*TN(4)
+      ELSE
+      CPML(5) = 3.31916522128893D8 -1.99657785332152D5*TN(1)
+     * +3.83958950893291D2*TN(2) -3.22697218836183D-1*TN(3)
+     * +1.1341945314297D-4*TN(4)
+      ENDIF
+C H2O
+      IF (T .GT. 1000) THEN
+      CPML(6) = 2.52261608980299D8 +1.81000068127604D5*TN(1)
+     * -1.36418259163618D1*TN(2) -8.068565713313699D-3*TN(3)
+     * +1.39850882999392D-6*TN(4)
+      ELSE
+      CPML(6) = 3.49096389225256D8 -1.6931951688791D5*TN(1)
+     * +5.42139485476161D2*TN(2) -4.56297865996962D-1*TN(3)
+     * +1.47331302142467D-4*TN(4)
+      ENDIF
+C HO2
+      IF (T .GT. 1000) THEN
+      CPML(7) = 3.3401140200159D8 +1.86230068690863D5*TN(1)
+     * -5.2685570247565D1*TN(2) +9.499025858287D-3*TN(3)
+     * -8.9720659334285D-7*TN(4)
+      ELSE
+      CPML(7) = 3.57673425721251D8 -3.94866099716001D5*TN(1)
+     * +1.75920806304841D3*TN(2) -2.01846282430194D0*TN(3)
+     * +7.72605158574924D-4*TN(4)
+      ENDIF
+C H2O2
+      IF (T .GT. 1000) THEN
+      CPML(8) = 3.46299578463535D8 +4.08102502807994D5*TN(1)
+     * -1.58091448765475D2*TN(2) +3.08622959245686D-2*TN(3)
+     * -2.39381648100555D-6*TN(4)
+      ELSE
+      CPML(8) = 3.55537817221319D8 -4.513302414370669D4*TN(1)
+     * +1.39131435932151D3*TN(2) -1.79402858239663D0*TN(3)
+     * +7.17088542570713D-4*TN(4)
+      ENDIF
+C CH
+      IF (T .GT. 1000) THEN
+      CPML(9) = 2.39330237822323D8 +8.072671509811309D4*TN(1)
+     * +1.20099484295405D1*TN(2) -1.08660542738899D-2*TN(3)
+     * +1.46401379074733D-6*TN(4)
+      ELSE
+      CPML(9) = 2.90161154345915D8 +2.69253384399991D4*TN(1)
+     * -1.40431296493315D2*TN(2) +2.62919212751477D-1*TN(3)
+     * -1.16909549366217D-4*TN(4)
+      ENDIF
+C CH2
+      IF (T .GT. 1000) THEN
+      CPML(10) = 2.38967425863963D8 +3.04011154972692D5*TN(1)
+     * -1.17146953570247D2*TN(2) +2.16326546195599D-2*TN(3)
+     * -1.56086273309717D-6*TN(4)
+      ELSE
+      CPML(10) = 3.12848294285017D8 +8.05569712169493D4*TN(1)
+     * +2.32382107789291D2*TN(2) -3.20184424253003D-1*TN(3)
+     * +1.40300471004269D-4*TN(4)
+      ENDIF
+C CH2*
+      IF (T .GT. 1000) THEN
+      CPML(11) = 1.90571763634742D8 +3.87114137822287D5*TN(1)
+     * -1.67281245525097D2*TN(2) +3.47468361606D-2*TN(3)
+     * -2.82457511395615D-6*TN(4)
+      ELSE
+      CPML(11) = 3.49093358586361D8 -1.96772373488969D5*TN(1)
+     * +6.8453046541522D2*TN(2) -5.56087716218431D-1*TN(3)
+     * +1.61563182393387D-4*TN(4)
+      ENDIF
+C CH3
+      IF (T .GT. 1000) THEN
+      CPML(12) = 1.90046228401172D8 +6.01962240253687D5*TN(1)
+     * -2.48366343358948D2*TN(2) +4.952825929384441D-2*TN(3)
+     * -3.884159880456941D-6*TN(4)
+      ELSE
+      CPML(12) = 3.0544104116704D8 +1.67200784348925D5*TN(1)
+     * +4.76439595193056D2*TN(2) -5.71304470133675D-1*TN(3)
+     * +2.11509272920034D-4*TN(4)
+      ENDIF
+C CH4
+      IF (T .GT. 1000) THEN
+      CPML(13) = 6.2235350369245D6 +1.11339160246617D6*TN(1)
+     * -4.76659059178859D2*TN(2) +1.01680250518285D-1*TN(3)
+     * -8.465437479873001D-6*TN(4)
+      ELSE
+      CPML(13) = 4.28186965816463D8 -1.13667489942388D6*TN(1)
+     * +4.08908099839149D3*TN(2) -4.03040073710726D0*TN(3)
+     * +1.38597856410156D-3*TN(4)
+      ENDIF
+C CO
+      IF (T .GT. 1000) THEN
+      CPML(14) = 2.25754379062011D8 +1.71489049420093D5*TN(1)
+     * -8.304746861237209D1*TN(2) +1.91277803554608D-2*TN(3)
+     * -1.69323097115916D-6*TN(4)
+      ELSE
+      CPML(14) = 2.97620668316497D8 -5.0747917758968D4*TN(1)
+     * +8.4543129149283D1*TN(2) +7.541309492576839D-2*TN(3)
+     * -7.51984654118049D-5*TN(4)
+      ENDIF
+C CO2
+      IF (T .GT. 1000) THEN
+      CPML(15) = 3.20728921558079D8 +3.67033256704726D5*TN(1)
+     * -1.84150934837204D2*TN(2) +4.35256440302788D-2*TN(3)
+     * -3.92514850241964D-6*TN(4)
+      ELSE
+      CPML(15) = 1.95954169997752D8 +7.47025196901327D5*TN(1)
+     * -5.922893322163189D2*TN(2) +2.04469616760922D-1*TN(3)
+     * -1.19479132884148D-5*TN(4)
+      ENDIF
+C HCO
+      IF (T .GT. 1000) THEN
+      CPML(16) = 2.30492716042538D8 +4.12146540788226D5*TN(1)
+     * -2.06570353374463D2*TN(2) +4.898591494798781D-2*TN(3)
+     * -4.43586351269661D-6*TN(4)
+      ELSE
+      CPML(16) = 3.509709187853841D8 -2.69716495123932D5*TN(1)
+     * +1.14573487176146D3*TN(2) -1.10702789268943D0*TN(3)
+     * +3.60657556573115D-4*TN(4)
+      ENDIF
+C CH2O
+      IF (T .GT. 1000) THEN
+      CPML(17) = 1.46392752770608D8 +7.649349881789821D5*TN(1)
+     * -3.67716532327663D2*TN(2) +8.3678236358612D-2*TN(3)
+     * -7.3488265573364D-6*TN(4)
+      ELSE
+      CPML(17) = 3.98574590679065D8 -8.23829395488419D5*TN(1)
+     * +3.10314148871608D3*TN(2) -3.15357109543711D0*TN(3)
+     * +1.09562503278052D-3*TN(4)
+      ENDIF
+C CH3O
+      IF (T .GT. 1000) THEN
+      CPML(18) = 3.135234599349D8 +6.544764052147D5*TN(1)
+     * -2.208653133184D2*TN(2) +3.279601099381D-2*TN(3)
+     * -1.756536685816D-6*TN(4)
+      ELSE
+      CPML(18) = 1.751205422004D8 +6.000245129345D5*TN(1)
+     * +4.438677882872D2*TN(2) -6.134142829836D-1*TN(3)
+     * +1.72576801011D-4*TN(4)
+      ENDIF
+C C2H2
+      IF (T .GT. 1000) THEN
+      CPML(19) = 3.448500924747641D8 +4.95683368949464D5*TN(1)
+     * -1.97299041990252D2*TN(2) +3.88630316990121D-2*TN(3)
+     * -3.00349379084063D-6*TN(4)
+      ELSE
+      CPML(19) = 6.72378704287394D7 +1.94239948347679D6*TN(1)
+     * -2.95307960753565D3*TN(2) +2.32933023896087D0*TN(3)
+     * -7.06794024305274D-4*TN(4)
+      ENDIF
+C H2CC
+      IF (T .GT. 1000) THEN
+      CPML(20) = 3.556975647334D8 +3.9546140948604D5*TN(1)
+     * -1.3553490234059D2*TN(2) +2.1171075511506D-2*TN(3)
+     * -1.2377294705929D-6*TN(4)
+      ELSE
+      CPML(20) = 2.7284466155833D8 +5.800600524174101D5*TN(1)
+     * -1.9834466479044D2*TN(2) -1.0064242090832D-1*TN(3)
+     * +8.1639795379795D-5*TN(4)
+      ENDIF
+C C2H3
+      IF (T .GT. 1000) THEN
+      CPML(21) = 2.508258186524D8 +8.589079398569201D5*TN(1)
+     * -3.89187537158399D2*TN(2) +8.4611187570888D-2*TN(3)
+     * -7.17215486846491D-6*TN(4)
+      ELSE
+      CPML(21) = 2.67100844231895D8 +1.25947500724062D5*TN(1)
+     * +2.15519924816812D3*TN(2) -2.97374974545997D0*TN(3)
+     * +1.22348740506723D-3*TN(4)
+      ENDIF
+C C2H4
+      IF (T .GT. 1000) THEN
+      CPML(22) = 1.69292666009316D8 +1.21769450303101D6*TN(1)
+     * -5.579684035046651D2*TN(2) +1.22408646551273D-1*TN(3)
+     * -1.04518430124511D-5*TN(4)
+      ELSE
+      CPML(22) = 3.29188202974748D8 -6.29451847820397D5*TN(1)
+     * +4.74750449273692D3*TN(2) -5.75022160270603D0*TN(3)
+     * +2.24395631815223D-3*TN(4)
+      ENDIF
+C C2H5
+      IF (T .GT. 1000) THEN
+      CPML(23) = 1.62520103506542D8 +1.44649793679622D6*TN(1)
+     * -6.63669732315268D2*TN(2) +1.45684922736739D-1*TN(3)
+     * -1.24419638006776D-5*TN(4)
+      ELSE
+      CPML(23) = 3.58061519610168D8 -3.48094354412292D5*TN(1)
+     * +4.13349884022957D3*TN(2) -4.98144415685306D0*TN(3)
+     * +1.91656941884804D-3*TN(4)
+      ENDIF
+C C2H6
+      IF (T .GT. 1000) THEN
+      CPML(24) = 8.912169450565001D7 +1.80302375144327D6*TN(1)
+     * -8.335800716321701D2*TN(2) +1.84093229643451D-1*TN(3)
+     * -1.5797809289339D-5*TN(4)
+      ELSE
+      CPML(24) = 3.56810954115892D8 -4.5742631794577D5*TN(1)
+     * +4.98403563995888D3*TN(2) -5.89055001129535D0*TN(3)
+     * +2.23399052983721D-3*TN(4)
+      ENDIF
+C HCCO
+      IF (T .GT. 1000) THEN
+      CPML(25) = 4.6795773406158D8 +3.3967601114851D5*TN(1)
+     * -1.3248795037697D2*TN(2) +2.3801159561452D-2*TN(3)
+     * -1.6136661324232D-6*TN(4)
+      ELSE
+      CPML(25) = 1.8721960097514D8 +1.4679284865471D6*TN(1)
+     * -1.9729584755551D3*TN(2) +1.4363947096309D0*TN(3)
+     * -4.2125307770761D-4*TN(4)
+      ENDIF
+C CH2CO
+      IF (T .GT. 1000) THEN
+      CPML(26) = 3.75092266801132D8 +7.486050103399949D5*TN(1)
+     * -3.46664876460385D2*TN(2) +7.67716856934782D-2*TN(3)
+     * -6.60869017059651D-6*TN(4)
+      ELSE
+      CPML(26) = 1.7758432274713D8 +1.50649543264171D6*TN(1)
+     * -1.44628801204774D3*TN(2) +7.76905792311168D-1*TN(3)
+     * -1.67502135449365D-4*TN(4)
+      ENDIF
+C CH2CHO
+      IF (T .GT. 1000) THEN
+      CPML(27) = 4.9684767140249D8 +6.7601883501214D5*TN(1)
+     * -2.2811893341495D2*TN(2) +3.3842584142491D-2*TN(3)
+     * -1.8092515938121D-6*TN(4)
+      ELSE
+      CPML(27) = 2.8344683415424D8 +8.928598090874001D5*TN(1)
+     * +1.5726833306175D2*TN(2) +5.9520110770781D-1*TN(3)
+     * +2.3840902087801D-4*TN(4)
+      ENDIF
+C CH3CHO
+      IF (T .GT. 1000) THEN
+      CPML(28) = 4.4932533287708D8 +9.747149128608999D5*TN(1)
+     * -3.5139727521787D2*TN(2) +5.6848342756401D-2*TN(3)
+     * -3.4076905326213D-6*TN(4)
+      ELSE
+      CPML(28) = 3.9323138307345D8 -2.6550606716958D5*TN(1)
+     * +3.9522957600371D3*TN(2) -4.7774019574561D0*TN(3)
+     * +1.8234645003512D-3*TN(4)
+      ENDIF
+C aC3H5
+      IF (T .GT. 1000) THEN
+      CPML(29) = 5.4050864339527D8 +1.1910311914681D6*TN(1)
+     * -4.7211144708032D2*TN(2) +9.213143072251D-2*TN(3)
+     * -7.513314421003699D-6*TN(4)
+      ELSE
+      CPML(29) = 1.1334202842585D8 +1.6474221284271D6*TN(1)
+     * +1.039069303406D3*TN(2) -2.7733509560305D0*TN(3)
+     * +1.3175647304521D-3*TN(4)
+      ENDIF
+C C3H6
+      IF (T .GT. 1000) THEN
+      CPML(30) = 5.597541814907D8 +1.239555420134D6*TN(1)
+     * -4.115598473449D2*TN(2) +5.996442903922D-2*TN(3)
+     * -3.131414082004D-6*TN(4)
+      ELSE
+      CPML(30) = 1.241611598457D8 +1.739826183618D6*TN(1)
+     * +3.730549358094D2*TN(2) -1.387618551312D0*TN(3)
+     * +5.951647649846D-4*TN(4)
+      ENDIF
+C nC3H7
+      IF (T .GT. 1000) THEN
+      CPML(31) = 6.4102776012029D8 +1.3329394234735D6*TN(1)
+     * -4.3834294605338D2*TN(2) +6.3097446158752D-2*TN(3)
+     * -3.2312446575269D-6*TN(4)
+      ELSE
+      CPML(31) = 8.722896282023001D7 +2.1625186609823D6*TN(1)
+     * +1.9574448470716D2*TN(2) -1.6292392096532D0*TN(3)
+     * +7.792375983035701D-4*TN(4)
+      ENDIF
+C N2
+      IF (T .GT. 1000) THEN
+      CPML(32) = 2.43335775464D8 +1.2371797983368D5*TN(1)
+     * -4.72659938676D1*TN(2) +8.395192342138D-3*TN(3)
+     * -5.615080442301D-7*TN(4)
+      ELSE
+      CPML(32) = 2.742688290327D8 +1.1708828888204D5*TN(1)
+     * -3.295224895122D2*TN(2) +4.690643288265D-1*TN(3)
+     * -2.032776303154D-4*TN(4)
+      ENDIF
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKCVMLDT  (T, ICKWRK, RCKWRK, CVDT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION CVDT(*)
+C
+      CALL SKCPMLDT (T, ICKWRK, RCKWRK, CVDT)
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKCPMLDT  (T, ICKWRK, RCKWRK, CPDT)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION CPDT(*), TN(3)
+C
+      TN(1) = T
+      TN(2) = TN(1)*T
+      TN(3) = TN(2)*T
+C H2
+      IF (T .GT. 1000) THEN
+      CPDT(1) = -4.10757356614681D3 +8.30547675049756D1*TN(1)
+     * -4.47901973573082D-2*TN(2) +6.66010130522304D-6*TN(3)
+      ELSE
+      CPDT(1) = 6.63541195810825D5 -3.2390256254202D3*TN(1)
+     * +5.02791957385182D0*TN(2) -2.453152145180844D-3*TN(3)
+      ENDIF
+C H
+      IF (T .GT. 1000) THEN
+      CPDT(2) = -1.91934620743823D-3 +2.68661686453096D-6*TN(1)
+     * -1.181114146967955D-9*TN(2) +1.656906762700028D-13*TN(3)
+      ELSE
+      CPDT(2) = 5.86449677690369D-5 -3.31901876119528D-7*TN(1)
+     * +5.739048090240959D-10*TN(2) -3.085455900694928D-13*TN(3)
+      ENDIF
+C O
+      IF (T .GT. 1000) THEN
+      CPDT(3) = -7.148326280997871D3 +6.97561762017278D0*TN(1)
+     * -2.49878793469047D-3*TN(2) +4.08520780862564D-7*TN(3)
+      ELSE
+      CPDT(3) = -2.72659292883684D5 +1.104676434521192D3*TN(1)
+     * -1.528556040994272D0*TN(2) +7.02629211415684D-4*TN(3)
+      ENDIF
+C O2
+      IF (T .GT. 1000) THEN
+      CPDT(4) = 1.23311461822054D5 -1.260424289813438D2*TN(1)
+     * +5.22493507275915D-2*TN(2) -7.20760906156376D-6*TN(3)
+      ELSE
+      CPDT(4) = -2.49163761406616D5 +1.637509820703302D3*TN(1)
+     * -2.414856745162677D0*TN(2) +1.078800478785948D-3*TN(3)
+      ENDIF
+C OH
+      IF (T .GT. 1000) THEN
+      CPDT(5) = 4.55992435797916D4 +2.10365796651656D1*TN(1)
+     * -2.193687570593268D-2*TN(2) +3.90490549750304D-6*TN(3)
+      ELSE
+      CPDT(5) = -1.99657785332152D5 +7.67917901786582D2*TN(1)
+     * -9.680916565085491D-1*TN(2) +4.5367781257188D-4*TN(3)
+      ENDIF
+C H2O
+      IF (T .GT. 1000) THEN
+      CPDT(6) = 1.81000068127604D5 -2.72836518327236D1*TN(1)
+     * -2.42056971399411D-2*TN(2) +5.59403531997568D-6*TN(3)
+      ELSE
+      CPDT(6) = -1.6931951688791D5 +1.084278970952322D3*TN(1)
+     * -1.368893597990886D0*TN(2) +5.89325208569868D-4*TN(3)
+      ENDIF
+C HO2
+      IF (T .GT. 1000) THEN
+      CPDT(7) = 1.86230068690863D5 -1.0537114049513D2*TN(1)
+     * +2.8497077574861D-2*TN(2) -3.5888263733714D-6*TN(3)
+      ELSE
+      CPDT(7) = -3.94866099716001D5 +3.51841612609682D3*TN(1)
+     * -6.05538847290582D0*TN(2) +3.090420634299696D-3*TN(3)
+      ENDIF
+C H2O2
+      IF (T .GT. 1000) THEN
+      CPDT(8) = 4.08102502807994D5 -3.1618289753095D2*TN(1)
+     * +9.25868877737058D-2*TN(2) -9.575265924022199D-6*TN(3)
+      ELSE
+      CPDT(8) = -4.513302414370669D4 +2.78262871864302D3*TN(1)
+     * -5.38208574718989D0*TN(2) +2.868354170282852D-3*TN(3)
+      ENDIF
+C CH
+      IF (T .GT. 1000) THEN
+      CPDT(9) = 8.072671509811309D4 +2.4019896859081D1*TN(1)
+     * -3.25981628216697D-2*TN(2) +5.85605516298932D-6*TN(3)
+      ELSE
+      CPDT(9) = 2.69253384399991D4 -2.8086259298663D2*TN(1)
+     * +7.88757638254431D-1*TN(2) -4.67638197464868D-4*TN(3)
+      ENDIF
+C CH2
+      IF (T .GT. 1000) THEN
+      CPDT(10) = 3.04011154972692D5 -2.34293907140494D2*TN(1)
+     * +6.489796385867969D-2*TN(2) -6.243450932388681D-6*TN(3)
+      ELSE
+      CPDT(10) = 8.05569712169493D4 +4.64764215578582D2*TN(1)
+     * -9.605532727590092D-1*TN(2) +5.61201884017076D-4*TN(3)
+      ENDIF
+C CH2*
+      IF (T .GT. 1000) THEN
+      CPDT(11) = 3.87114137822287D5 -3.34562491050194D2*TN(1)
+     * +1.042405084818D-1*TN(2) -1.12983004558246D-5*TN(3)
+      ELSE
+      CPDT(11) = -1.96772373488969D5 +1.36906093083044D3*TN(1)
+     * -1.668263148655293D0*TN(2) +6.46252729573548D-4*TN(3)
+      ENDIF
+C CH3
+      IF (T .GT. 1000) THEN
+      CPDT(12) = 6.01962240253687D5 -4.96732686717896D2*TN(1)
+     * +1.485847778815332D-1*TN(2) -1.553663952182776D-5*TN(3)
+      ELSE
+      CPDT(12) = 1.67200784348925D5 +9.528791903861119D2*TN(1)
+     * -1.713913410401025D0*TN(2) +8.460370916801359D-4*TN(3)
+      ENDIF
+C CH4
+      IF (T .GT. 1000) THEN
+      CPDT(13) = 1.11339160246617D6 -9.533181183577181D2*TN(1)
+     * +3.05040751554855D-1*TN(2) -3.3861749919492D-5*TN(3)
+      ELSE
+      CPDT(13) = -1.13667489942388D6 +8.178161996782981D3*TN(1)
+     * -1.209120221132178D1*TN(2) +5.54391425640624D-3*TN(3)
+      ENDIF
+C CO
+      IF (T .GT. 1000) THEN
+      CPDT(14) = 1.71489049420093D5 -1.660949372247442D2*TN(1)
+     * +5.73833410663824D-2*TN(2) -6.77292388463664D-6*TN(3)
+      ELSE
+      CPDT(14) = -5.0747917758968D4 +1.69086258298566D2*TN(1)
+     * +2.262392847773052D-1*TN(2) -3.007938616472196D-4*TN(3)
+      ENDIF
+C CO2
+      IF (T .GT. 1000) THEN
+      CPDT(15) = 3.67033256704726D5 -3.68301869674408D2*TN(1)
+     * +1.305769320908364D-1*TN(2) -1.570059400967856D-5*TN(3)
+      ELSE
+      CPDT(15) = 7.47025196901327D5 -1.184578664432638D3*TN(1)
+     * +6.134088502827659D-1*TN(2) -4.779165315365919D-5*TN(3)
+      ENDIF
+C HCO
+      IF (T .GT. 1000) THEN
+      CPDT(16) = 4.12146540788226D5 -4.13140706748926D2*TN(1)
+     * +1.469577448439634D-1*TN(2) -1.774345405078644D-5*TN(3)
+      ELSE
+      CPDT(16) = -2.69716495123932D5 +2.29146974352292D3*TN(1)
+     * -3.32108367806829D0*TN(2) +1.44263022629246D-3*TN(3)
+      ENDIF
+C CH2O
+      IF (T .GT. 1000) THEN
+      CPDT(17) = 7.649349881789821D5 -7.35433064655326D2*TN(1)
+     * +2.51034709075836D-1*TN(2) -2.93953062293456D-5*TN(3)
+      ELSE
+      CPDT(17) = -8.23829395488419D5 +6.20628297743216D3*TN(1)
+     * -9.460713286311329D0*TN(2) +4.38250013112208D-3*TN(3)
+      ENDIF
+C CH3O
+      IF (T .GT. 1000) THEN
+      CPDT(18) = 6.544764052147D5 -4.417306266368D2*TN(1)
+     * +9.838803298143001D-2*TN(2) -7.026146743264D-6*TN(3)
+      ELSE
+      CPDT(18) = 6.000245129345D5 +8.877355765743999D2*TN(1)
+     * -1.8402428489508D0*TN(2) +6.903072040439999D-4*TN(3)
+      ENDIF
+C C2H2
+      IF (T .GT. 1000) THEN
+      CPDT(19) = 4.95683368949464D5 -3.94598083980504D2*TN(1)
+     * +1.165890950970363D-1*TN(2) -1.201397516336252D-5*TN(3)
+      ELSE
+      CPDT(19) = 1.94239948347679D6 -5.9061592150713D3*TN(1)
+     * +6.98799071688261D0*TN(2) -2.827176097221096D-3*TN(3)
+      ENDIF
+C H2CC
+      IF (T .GT. 1000) THEN
+      CPDT(20) = 3.9546140948604D5 -2.7106980468118D2*TN(1)
+     * +6.351322653451801D-2*TN(2) -4.9509178823716D-6*TN(3)
+      ELSE
+      CPDT(20) = 5.800600524174101D5 -3.9668932958088D2*TN(1)
+     * -3.0192726272496D-1*TN(2) +3.2655918151918D-4*TN(3)
+      ENDIF
+C C2H3
+      IF (T .GT. 1000) THEN
+      CPDT(21) = 8.589079398569201D5 -7.78375074316798D2*TN(1)
+     * +2.53833562712664D-1*TN(2) -2.868861947385964D-5*TN(3)
+      ELSE
+      CPDT(21) = 1.25947500724062D5 +4.31039849633624D3*TN(1)
+     * -8.921249236379911D0*TN(2) +4.89394962026892D-3*TN(3)
+      ENDIF
+C C2H4
+      IF (T .GT. 1000) THEN
+      CPDT(22) = 1.21769450303101D6 -1.11593680700933D3*TN(1)
+     * +3.67225939653819D-1*TN(2) -4.18073720498044D-5*TN(3)
+      ELSE
+      CPDT(22) = -6.29451847820397D5 +9.49500898547384D3*TN(1)
+     * -1.725066480811809D1*TN(2) +8.975825272608921D-3*TN(3)
+      ENDIF
+C C2H5
+      IF (T .GT. 1000) THEN
+      CPDT(23) = 1.44649793679622D6 -1.327339464630536D3*TN(1)
+     * +4.37054768210217D-1*TN(2) -4.97678552027104D-5*TN(3)
+      ELSE
+      CPDT(23) = -3.48094354412292D5 +8.266997680459141D3*TN(1)
+     * -1.494433247055918D1*TN(2) +7.66627767539216D-3*TN(3)
+      ENDIF
+C C2H6
+      IF (T .GT. 1000) THEN
+      CPDT(24) = 1.80302375144327D6 -1.66716014326434D3*TN(1)
+     * +5.522796889303531D-1*TN(2) -6.319123715735599D-5*TN(3)
+      ELSE
+      CPDT(24) = -4.5742631794577D5 +9.96807127991776D3*TN(1)
+     * -1.767165003388605D1*TN(2) +8.93596211934884D-3*TN(3)
+      ENDIF
+C HCCO
+      IF (T .GT. 1000) THEN
+      CPDT(25) = 3.3967601114851D5 -2.6497590075394D2*TN(1)
+     * +7.1403478684356D-2*TN(2) -6.4546645296928D-6*TN(3)
+      ELSE
+      CPDT(25) = 1.4679284865471D6 -3.9459169511102D3*TN(1)
+     * +4.309184128892701D0*TN(2) -1.68501231083044D-3*TN(3)
+      ENDIF
+C CH2CO
+      IF (T .GT. 1000) THEN
+      CPDT(26) = 7.486050103399949D5 -6.9332975292077D2*TN(1)
+     * +2.303150570804346D-1*TN(2) -2.643476068238604D-5*TN(3)
+      ELSE
+      CPDT(26) = 1.50649543264171D6 -2.89257602409548D3*TN(1)
+     * +2.330717376933504D0*TN(2) -6.700085417974599D-4*TN(3)
+      ENDIF
+C CH2CHO
+      IF (T .GT. 1000) THEN
+      CPDT(27) = 6.7601883501214D5 -4.562378668299D2*TN(1)
+     * +1.01527752427473D-1*TN(2) -7.2370063752484D-6*TN(3)
+      ELSE
+      CPDT(27) = 8.928598090874001D5 +3.145366661235D2*TN(1)
+     * +1.78560332312343D0*TN(2) +9.5363608351204D-4*TN(3)
+      ENDIF
+C CH3CHO
+      IF (T .GT. 1000) THEN
+      CPDT(28) = 9.747149128608999D5 -7.0279455043574D2*TN(1)
+     * +1.70545028269203D-1*TN(2) -1.36307621304852D-5*TN(3)
+      ELSE
+      CPDT(28) = -2.6550606716958D5 +7.9045915200742D3*TN(1)
+     * -1.43322058723683D1*TN(2) +7.2938580014048D-3*TN(3)
+      ENDIF
+C aC3H5
+      IF (T .GT. 1000) THEN
+      CPDT(29) = 1.1910311914681D6 -9.4422289416064D2*TN(1)
+     * +2.7639429216753D-1*TN(2) -3.00532576840148D-5*TN(3)
+      ELSE
+      CPDT(29) = 1.6474221284271D6 +2.078138606812D3*TN(1)
+     * -8.3200528680915D0*TN(2) +5.2702589218084D-3*TN(3)
+      ENDIF
+C C3H6
+      IF (T .GT. 1000) THEN
+      CPDT(30) = 1.239555420134D6 -8.231196946898001D2*TN(1)
+     * +1.7989328711766D-1*TN(2) -1.2525656328016D-5*TN(3)
+      ELSE
+      CPDT(30) = 1.739826183618D6 +7.461098716188001D2*TN(1)
+     * -4.162855653936D0*TN(2) +2.3806590599384D-3*TN(3)
+      ENDIF
+C nC3H7
+      IF (T .GT. 1000) THEN
+      CPDT(31) = 1.3329394234735D6 -8.7668589210676D2*TN(1)
+     * +1.89292338476256D-1*TN(2) -1.29249786301076D-5*TN(3)
+      ELSE
+      CPDT(31) = 2.1625186609823D6 +3.9148896941432D2*TN(1)
+     * -4.8877176289596D0*TN(2) +3.11695039321428D-3*TN(3)
+      ENDIF
+C N2
+      IF (T .GT. 1000) THEN
+      CPDT(32) = 1.2371797983368D5 -9.453198773520001D1*TN(1)
+     * +2.5185577026414D-2*TN(2) -2.2460321769204D-6*TN(3)
+      ELSE
+      CPDT(32) = 1.1708828888204D5 -6.590449790243999D2*TN(1)
+     * +1.4071929864795D0*TN(2) -8.131105212615999D-4*TN(3)
+      ENDIF
+C
+      END
+C                                                                      C
+C----------------------------------------------------------------------C
+C                                                                      C
+      SUBROUTINE SKKKII(KK, II)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      KK = 32
+      II = 206
+      END
+C
+      SUBROUTINE DWDCT(T, C, A, LDA)
+C
+C     Analytic Jacobian for species net production rate w(T, C)
+C     T: input, Temperature, K, scalar
+C     C: input, species mole concentration, mole/cm^3, vector, size at least KK
+C     A: output, Jacobian matrix [dg/dc dg/dT], size at least KK*(KK+1)
+C     LDA: input, leading dimension of matrix A, scalar, value at least KK
+C
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (EXPARG=690.776, SMALL=1.D-300)
+      DIMENSION G0(32), DG(32), DM(32), C(*), A(LDA,*)
+C
+      IF (LDA .LT. 32) THEN
+      WRITE(*,*) 'LDA TOO SMALL'
+      STOP
+      ENDIF
+      DO M=1,33
+      DO N=1,32
+      A(N,M) = 0.D0
+      ENDDO
+      ENDDO
+C
+      DO N=1,32
+      G0(N) = 0.D0
+      DG(N) = 0.D0
+      DM(N) = 0.D0
+      ENDDO
+C
+      CTOT = 0.D0
+      DO N=1,32
+      CTOT = CTOT +C(N)
+      ENDDO
+C
+      CALL GDG1(T, G0, DG)
+C
+      CALL AJ1(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+      CALL AJ2(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+      CALL AJ3(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+C
+      CALL DMDC(A, LDA, DM)
+C
+      END
+C
+C------ thermo data for species
+C
+C
+C
+C
+      SUBROUTINE GDG1(T, G0, DG)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION G0(*), DG(*)
+C
+      T2 = T*T
+      T3 = T2*T
+      T4 = T3*T
+      TLOG = LOG(T)
+C H2
+      IF ( T .LT. 1000 ) THEN
+      G0(1) = -2.34433112D0*TLOG -3.990260375D-3*T +3.2463585D-6*T2
+     * -1.67976745D-9*T3 +3.688058805D-13*T4 -9.17935173D2/T
+     * +1.661320882D0
+      DG(1) = -2.34433112D0/T -3.990260375D-3 +6.492717D-6*T
+     * -5.03930235D-9*T2 +1.475223522D-12*T3 +9.17935173D2/T2
+      ELSE
+      G0(1) = -3.3372792D0*TLOG +2.470123655D-5*T
+     * -8.324279633333333D-8*T2 +1.496386616666667D-11*T3
+     * -1.00127688D-15*T4 -9.50158922D2/T +6.54230251D0
+      DG(1) = -3.3372792D0/T +2.470123655D-5 -1.664855926666667D-7*T
+     * +4.48915985D-11*T2 -4.00510752D-15*T3 +9.50158922D2/T2
+      ENDIF
+C
+C H
+      IF ( T .LT. 1000 ) THEN
+      G0(2) = -2.5D0*TLOG -3.526664095D-13*T +3.326532733333333D-16*T2
+     * -1.917346933333333D-19*T3 +4.63866166D-23*T4 +2.54736599D4/T
+     * +2.946682853D0
+      DG(2) = -2.5D0/T -3.526664095D-13 +6.653065466666667D-16*T
+     * -5.7520408D-19*T2 +1.855464664D-22*T3 -2.54736599D4/T2
+      ELSE
+      G0(2) = -2.50000001D0*TLOG +1.154214865D-11*T
+     * -2.692699133333334D-15*T2 +3.945960291666667D-19*T3
+     * -2.490986785D-23*T4 +2.54736599D4/T +2.946682924D0
+      DG(2) = -2.50000001D0/T +1.154214865D-11 -5.385398266666667D-15*T
+     * +1.1837880875D-18*T2 -9.96394714D-23*T3 -2.54736599D4/T2
+      ENDIF
+C
+C O
+      IF ( T .LT. 1000 ) THEN
+      G0(3) = -3.1682671D0*TLOG +1.63965942D-3*T
+     * -1.107177326666667D-6*T2 +5.106721866666666D-10*T3
+     * -1.056329855D-13*T4 +2.91222592D4/T +1.11633364D0
+      DG(3) = -3.1682671D0/T +1.63965942D-3 -2.214354653333333D-6*T
+     * +1.53201656D-9*T2 -4.22531942D-13*T3 -2.91222592D4/T2
+      ELSE
+      G0(3) = -2.56942078D0*TLOG +4.298705685D-5*T
+     * -6.991409816666667D-9*T2 +8.348149916666666D-13*T3
+     * -6.14168455D-17*T4 +2.92175791D4/T -2.21491786D0
+      DG(3) = -2.56942078D0/T +4.298705685D-5 -1.398281963333333D-8*T
+     * +2.504444975D-12*T2 -2.45667382D-16*T3 -2.92175791D4/T2
+      ENDIF
+C
+C O2
+      IF ( T .LT. 1000 ) THEN
+      G0(4) = -3.78245636D0*TLOG +1.49836708D-3*T
+     * -1.641217001666667D-6*T2 +8.067745908333334D-10*T3
+     * -1.621864185D-13*T4 -1.06394356D3/T +1.247806300000001D-1
+      DG(4) = -3.78245636D0/T +1.49836708D-3 -3.282434003333333D-6*T
+     * +2.4203237725D-9*T2 -6.48745674D-13*T3 +1.06394356D3/T2
+      ELSE
+      G0(4) = -3.28253784D0*TLOG -7.4154377D-4*T
+     * +1.263277781666667D-7*T2 -1.745587958333333D-11*T3
+     * +1.08358897D-15*T4 -1.08845772D3/T -2.17069345D0
+      DG(4) = -3.28253784D0/T -7.4154377D-4 +2.526555563333333D-7*T
+     * -5.236763875D-11*T2 +4.33435588D-15*T3 +1.08845772D3/T2
+      ENDIF
+C
+C OH
+      IF ( T .LT. 1000 ) THEN
+      G0(5) = -3.99201543D0*TLOG +1.20065876D-3*T
+     * -7.696564016666666D-7*T2 +3.234277775D-10*T3 -6.8205735D-14*T4
+     * +3.61508056D3/T +4.095940888D0
+      DG(5) = -3.99201543D0/T +1.20065876D-3 -1.539312803333333D-6*T
+     * +9.702833325D-10*T2 -2.7282294D-13*T3 -3.61508056D3/T2
+      ELSE
+      G0(5) = -3.09288767D0*TLOG -2.74214858D-4*T
+     * -2.108420466666667D-8*T2 +7.3288463D-12*T3 -5.8706188D-16*T4
+     * +3.858657D3/T -1.38380843D0
+      DG(5) = -3.09288767D0/T -2.74214858D-4 -4.216840933333333D-8*T
+     * +2.19865389D-11*T2 -2.34824752D-15*T3 -3.858657D3/T2
+      ENDIF
+C
+C H2O
+      IF ( T .LT. 1000 ) THEN
+      G0(6) = -4.19864056D0*TLOG +1.01821705D-3*T -1.086733685D-6*T2
+     * +4.57330885D-10*T3 -8.85989085D-14*T4 -3.02937267D4/T
+     * +5.047672768D0
+      DG(6) = -4.19864056D0/T +1.01821705D-3 -2.17346737D-6*T
+     * +1.371992655D-9*T2 -3.54395634D-13*T3 +3.02937267D4/T2
+      ELSE
+      G0(6) = -3.03399249D0*TLOG -1.08845902D-3*T
+     * +2.734541966666666D-8*T2 +8.086832250000001D-12*T3
+     * -8.4100496D-16*T4 -3.00042971D4/T -1.93277761D0
+      DG(6) = -3.03399249D0/T -1.08845902D-3 +5.469083933333333D-8*T
+     * +2.426049675D-11*T2 -3.36401984D-15*T3 +3.00042971D4/T2
+      ENDIF
+C
+C HO2
+      IF ( T .LT. 1000 ) THEN
+      G0(7) = -4.30179801D0*TLOG +2.374560255D-3*T
+     * -3.526381516666666D-6*T2 +2.02303245D-9*T3 -4.64612562D-13*T4
+     * +2.9480804D2/T +5.851355599999999D-1
+      DG(7) = -4.30179801D0/T +2.374560255D-3 -7.052763033333333D-6*T
+     * +6.06909735D-9*T2 -1.858450248D-12*T3 -2.9480804D2/T2
+      ELSE
+      G0(7) = -4.0172109D0*TLOG -1.119910065D-3*T
+     * +1.056096916666667D-7*T2 -9.520530833333334D-12*T3
+     * +5.39542675D-16*T4 +1.11856713D2/T +2.321087500000001D-1
+      DG(7) = -4.0172109D0/T -1.119910065D-3 +2.112193833333333D-7*T
+     * -2.85615925D-11*T2 +2.1581707D-15*T3 -1.11856713D2/T2
+      ENDIF
+C
+C H2O2
+      IF ( T .LT. 1000 ) THEN
+      G0(8) = -4.27611269D0*TLOG +2.714112085D-4*T -2.78892835D-6*T2
+     * +1.798090108333333D-9*T3 -4.312271815D-13*T4 -1.77025821D4/T
+     * +8.410619499999998D-1
+      DG(8) = -4.27611269D0/T +2.714112085D-4 -5.577856700000001D-6*T
+     * +5.394270325D-9*T2 -1.724908726D-12*T3 +1.77025821D4/T2
+      ELSE
+      G0(8) = -4.16500285D0*TLOG -2.45415847D-3*T
+     * +3.168987083333333D-7*T2 -3.09321655D-11*T3 +1.439541525D-15*T4
+     * -1.78617877D4/T +1.248846229999999D0
+      DG(8) = -4.16500285D0/T -2.45415847D-3 +6.337974166666666D-7*T
+     * -9.27964965D-11*T2 +5.7581661D-15*T3 +1.78617877D4/T2
+      ENDIF
+C
+C CH
+      IF ( T .LT. 1000 ) THEN
+      G0(9) = -3.48981665D0*TLOG -1.619177705D-4*T
+     * +2.814984416666667D-7*T2 -2.635144391666666D-10*T3
+     * +7.03045335D-14*T4 +7.07972934D4/T +1.40580557D0
+      DG(9) = -3.48981665D0/T -1.619177705D-4 +5.629968833333334D-7*T
+     * -7.905433175D-10*T2 +2.81218134D-13*T3 -7.07972934D4/T2
+      ELSE
+      G0(9) = -2.87846473D0*TLOG -4.854568405D-4*T
+     * -2.407427583333333D-8*T2 +1.089065408333333D-11*T3
+     * -8.80396915D-16*T4 +7.10124364D4/T -2.60651526D0
+      DG(9) = -2.87846473D0/T -4.854568405D-4 -4.814855166666666D-8*T
+     * +3.267196225D-11*T2 -3.52158766D-15*T3 -7.10124364D4/T2
+      ENDIF
+C
+C CH2
+      IF ( T .LT. 1000 ) THEN
+      G0(10) = -3.76267867D0*TLOG -4.844360715D-4*T
+     * -4.658164016666667D-7*T2 +3.209092941666667D-10*T3
+     * -8.43708595D-14*T4 +4.60040401D4/T +2.20014682D0
+      DG(10) = -3.76267867D0/T -4.844360715D-4 -9.316328033333335D-7*T
+     * +9.627278825000001D-10*T2 -3.37483438D-13*T3 -4.60040401D4/T2
+      ELSE
+      G0(10) = -2.87410113D0*TLOG -1.82819646D-3*T
+     * +2.348243283333333D-7*T2 -2.168162908333333D-11*T3
+     * +9.38637835D-16*T4 +4.6263604D4/T -3.29709211D0
+      DG(10) = -2.87410113D0/T -1.82819646D-3 +4.696486566666667D-7*T
+     * -6.504488725D-11*T2 +3.75455134D-15*T3 -4.6263604D4/T2
+      ENDIF
+C
+C CH2*
+      IF ( T .LT. 1000 ) THEN
+      G0(11) = -4.19860411D0*TLOG +1.183307095D-3*T
+     * -1.372160366666667D-6*T2 +5.573466508333334D-10*T3
+     * -9.71573685D-14*T4 +5.04968163D4/T +4.967723077D0
+      DG(11) = -4.19860411D0/T +1.183307095D-3 -2.744320733333333D-6*T
+     * +1.6720399525D-9*T2 -3.88629474D-13*T3 -5.04968163D4/T2
+      ELSE
+      G0(11) = -2.29203842D0*TLOG -2.327943185D-3*T
+     * +3.353199116666667D-7*T2 -3.48255D-11*T3 +1.698581825D-15*T4
+     * +5.09259997D4/T -6.33446327D0
+      DG(11) = -2.29203842D0/T -2.327943185D-3 +6.706398233333333D-7*T
+     * -1.044765D-10*T2 +6.7943273D-15*T3 -5.09259997D4/T2
+      ENDIF
+C
+C CH3
+      IF ( T .LT. 1000 ) THEN
+      G0(12) = -3.6735904D0*TLOG -1.005475875D-3*T
+     * -9.550364266666668D-7*T2 +5.725978541666666D-10*T3
+     * -1.27192867D-13*T4 +1.64449988D4/T +2.06902607D0
+      DG(12) = -3.6735904D0/T -1.005475875D-3 -1.910072853333334D-6*T
+     * +1.7177935625D-9*T2 -5.08771468D-13*T3 -1.64449988D4/T2
+      ELSE
+      G0(12) = -2.28571772D0*TLOG -3.619950185D-3*T
+     * +4.978572466666667D-7*T2 -4.9640387D-11*T3 +2.33577197D-15*T4
+     * +1.67755843D4/T -6.19435407D0
+      DG(12) = -2.28571772D0/T -3.619950185D-3 +9.957144933333334D-7*T
+     * -1.48921161D-10*T2 +9.34308788D-15*T3 -1.67755843D4/T2
+      ENDIF
+C
+C CH4
+      IF ( T .LT. 1000 ) THEN
+      G0(13) = -5.14987613D0*TLOG +6.8354894D-3*T
+     * -8.196676650000001D-6*T2 +4.039525216666667D-9*T3
+     * -8.3346978D-13*T4 -1.02466476D4/T +9.791179889999999D0
+      DG(13) = -5.14987613D0/T +6.8354894D-3 -1.63933533D-5*T
+     * +1.211857565D-8*T2 -3.33387912D-12*T3 +1.02466476D4/T2
+      ELSE
+      G0(13) = -7.4851495D-2*TLOG -6.69547335D-3*T
+     * +9.554763483333334D-7*T2 -1.019104458333333D-10*T3
+     * +5.0907615D-15*T4 -9.46834459D3/T -1.8362466505D1
+      DG(13) = -7.4851495D-2/T -6.69547335D-3 +1.910952696666667D-6*T
+     * -3.057313375D-10*T2 +2.0363046D-14*T3 +9.46834459D3/T2
+      ENDIF
+C
+C CO
+      IF ( T .LT. 1000 ) THEN
+      G0(14) = -3.57953347D0*TLOG +3.0517684D-4*T -1.69469055D-7*T2
+     * -7.558382366666667D-11*T3 +4.522122495D-14*T4 -1.4344086D4/T
+     * +7.112418999999992D-2
+      DG(14) = -3.57953347D0/T +3.0517684D-4 -3.3893811D-7*T
+     * -2.26751471D-10*T2 +1.808848998D-13*T3 +1.4344086D4/T2
+      ELSE
+      G0(14) = -2.71518561D0*TLOG -1.031263715D-3*T
+     * +1.664709618333334D-7*T2 -1.9171084D-11*T3 +1.01823858D-15*T4
+     * -1.41518724D4/T -5.10350211D0
+      DG(14) = -2.71518561D0/T -1.031263715D-3 +3.329419236666667D-7*T
+     * -5.7513252D-11*T2 +4.07295432D-15*T3 +1.41518724D4/T2
+      ENDIF
+C
+C CO2
+      IF ( T .LT. 1000 ) THEN
+      G0(15) = -2.35677352D0*TLOG -4.492298385D-3*T
+     * +1.187260448333333D-6*T2 -2.049325183333333D-10*T3
+     * +7.1849774D-15*T4 -4.83719697D4/T -7.5442787D0
+      DG(15) = -2.35677352D0/T -4.492298385D-3 +2.374520896666667D-6*T
+     * -6.14797555D-10*T2 +2.87399096D-14*T3 +4.83719697D4/T2
+      ELSE
+      G0(15) = -3.85746029D0*TLOG -2.20718513D-3*T
+     * +3.691356733333334D-7*T2 -4.362418233333334D-11*T3
+     * +2.36042082D-15*T4 -4.8759166D4/T +1.58582223D0
+      DG(15) = -3.85746029D0/T -2.20718513D-3 +7.382713466666667D-7*T
+     * -1.30872547D-10*T2 +9.44168328D-15*T3 +4.8759166D4/T2
+      ENDIF
+C
+C HCO
+      IF ( T .LT. 1000 ) THEN
+      G0(16) = -4.22118584D0*TLOG +1.62196266D-3*T
+     * -2.296657433333333D-6*T2 +1.109534108333333D-9*T3
+     * -2.168844325D-13*T4 +3.83956496D3/T +8.268134100000003D-1
+      DG(16) = -4.22118584D0/T +1.62196266D-3 -4.593314866666667D-6*T
+     * +3.328602325D-9*T2 -8.6753773D-13*T3 -3.83956496D3/T2
+      ELSE
+      G0(16) = -2.77217438D0*TLOG -2.47847763D-3*T
+     * +4.140760216666667D-7*T2 -4.909681483333334D-11*T3
+     * +2.667543555D-15*T4 +4.01191815D3/T -7.02617054D0
+      DG(16) = -2.77217438D0/T -2.47847763D-3 +8.281520433333334D-7*T
+     * -1.472904445D-10*T2 +1.067017422D-14*T3 -4.01191815D3/T2
+      ENDIF
+C
+C CH2O
+      IF ( T .LT. 1000 ) THEN
+      G0(17) = -4.79372315D0*TLOG +4.954166845D-3*T
+     * -6.220333466666666D-6*T2 +3.160710508333333D-9*T3
+     * -6.5886326D-13*T4 -1.43089567D4/T +4.19091025D0
+      DG(17) = -4.79372315D0/T +4.954166845D-3 -1.244066693333333D-5*T
+     * +9.482131525D-9*T2 -2.63545304D-12*T3 +1.43089567D4/T2
+      ELSE
+      G0(17) = -1.76069008D0*TLOG -4.60000041D-3*T
+     * +7.370980216666666D-7*T2 -8.386767666666666D-11*T3
+     * +4.4192782D-15*T4 -1.39958323D4/T -1.189563292D1
+      DG(17) = -1.76069008D0/T -4.60000041D-3 +1.474196043333333D-6*T
+     * -2.5160303D-10*T2 +1.76771128D-14*T3 +1.39958323D4/T2
+      ENDIF
+C
+C CH3O
+      IF ( T .LT. 1000 ) THEN
+      G0(18) = -2.106204D0*TLOG -3.6082975D-3*T -8.897453333333335D-7*T2
+     * +6.14803D-10*T3 -1.037805D-13*T4 +9.786011D2/T -1.1045973D1
+      DG(18) = -2.106204D0/T -3.6082975D-3 -1.779490666666667D-6*T
+     * +1.844409D-9*T2 -4.15122D-13*T3 -9.786011D2/T2
+      ELSE
+      G0(18) = -3.770799D0*TLOG -3.9357485D-3*T +4.427306666666667D-7*T2
+     * -3.287025833333333D-11*T3 +1.056308D-15*T4 +1.2783252D2/T
+     * +8.412240000000001D-1
+      DG(18) = -3.770799D0/T -3.9357485D-3 +8.854613333333335D-7*T
+     * -9.8610775D-11*T2 +4.225232D-15*T3 -1.2783252D2/T2
+      ENDIF
+C
+C C2H2
+      IF ( T .LT. 1000 ) THEN
+      G0(19) = -8.08681094D-1*TLOG -1.168078145D-2*T +5.91953025D-6*T2
+     * -2.334603641666667D-9*T3 +4.25036487D-13*T4 +2.64289807D4/T
+     * -1.3131024006D1
+      DG(19) = -8.08681094D-1/T -1.168078145D-2 +1.18390605D-5*T
+     * -7.003810925D-9*T2 +1.700145948D-12*T3 -2.64289807D4/T2
+      ELSE
+      G0(19) = -4.14756964D0*TLOG -2.98083332D-3*T +3.9549142D-7*T2
+     * -3.895101425D-11*T3 +1.806176065D-15*T4 +2.59359992D4/T
+     * +5.377850850000001D0
+      DG(19) = -4.14756964D0/T -2.98083332D-3 +7.9098284D-7*T
+     * -1.1685304275D-10*T2 +7.22470426D-15*T3 -2.59359992D4/T2
+      ENDIF
+C
+C H2CC
+      IF ( T .LT. 1000 ) THEN
+      G0(20) = -3.2815483D0*TLOG -3.48823955D-3*T +3.975874D-7*T2
+     * +1.008702666666667D-10*T3 -4.90947725D-14*T4 +4.8621794D4/T
+     * -2.638842700000001D0
+      DG(20) = -3.2815483D0/T -3.48823955D-3 +7.951748D-7*T
+     * +3.026108D-10*T2 -1.9637909D-13*T3 -4.8621794D4/T2
+      ELSE
+      G0(20) = -4.278034D0*TLOG -2.3781402D-3*T +2.716834833333333D-7*T2
+     * -2.1219005D-11*T3 +7.4431895D-16*T4 +4.8316688D4/T +3.63779699D0
+      DG(20) = -4.278034D0/T -2.3781402D-3 +5.433669666666667D-7*T
+     * -6.365701500000001D-11*T2 +2.9772758D-15*T3 -4.8316688D4/T2
+      ENDIF
+C
+C C2H3
+      IF ( T .LT. 1000 ) THEN
+      G0(21) = -3.21246645D0*TLOG -7.5739581D-4*T
+     * -4.320156866666666D-6*T2 +2.980482058333333D-9*T3
+     * -7.35754365D-13*T4 +3.48598468D4/T -5.2980738D0
+      DG(21) = -3.21246645D0/T -7.5739581D-4 -8.640313733333333D-6*T
+     * +8.941446174999999D-9*T2 -2.94301746D-12*T3 -3.48598468D4/T2
+      ELSE
+      G0(21) = -3.016724D0*TLOG -5.1651146D-3*T +7.801372483333333D-7*T2
+     * -8.480274D-11*T3 +4.313035205D-15*T4 +3.46128739D4/T
+     * -4.77059978D0
+      DG(21) = -3.016724D0/T -5.1651146D-3 +1.560274496666667D-6*T
+     * -2.5440822D-10*T2 +1.725214082D-14*T3 -3.46128739D4/T2
+      ENDIF
+C
+C C2H4
+      IF ( T .LT. 1000 ) THEN
+      G0(22) = -3.95920148D0*TLOG +3.785261235D-3*T
+     * -9.516504866666667D-6*T2 +5.763239608333333D-9*T3
+     * -1.349421865D-12*T4 +5.08977593D3/T -1.381294799999999D-1
+      DG(22) = -3.95920148D0/T +3.785261235D-3 -1.903300973333333D-5*T
+     * +1.7289718825D-8*T2 -5.39768746D-12*T3 -5.08977593D3/T2
+      ELSE
+      G0(22) = -2.03611116D0*TLOG -7.32270755D-3*T
+     * +1.118463191666667D-6*T2 -1.226857691666667D-10*T3
+     * +6.28530305D-15*T4 +4.93988614D3/T -8.269258140000002D0
+      DG(22) = -2.03611116D0/T -7.32270755D-3 +2.236926383333334D-6*T
+     * -3.680573075D-10*T2 +2.51412122D-14*T3 -4.93988614D3/T2
+      ENDIF
+C
+C C2H5
+      IF ( T .LT. 1000 ) THEN
+      G0(23) = -4.30646568D0*TLOG +2.09329446D-3*T
+     * -8.285713449999999D-6*T2 +4.992721716666666D-9*T3
+     * -1.15254502D-12*T4 +1.28416265D4/T -4.007435600000004D-1
+      DG(23) = -4.30646568D0/T +2.09329446D-3 -1.65714269D-5*T
+     * +1.497816515D-8*T2 -4.61018008D-12*T3 -1.28416265D4/T2
+      ELSE
+      G0(23) = -1.95465642D0*TLOG -8.6986361D-3*T
+     * +1.330344446666667D-6*T2 -1.460147408333333D-10*T3
+     * +7.4820788D-15*T4 +1.285752D4/T -1.150777788D1
+      DG(23) = -1.95465642D0/T -8.6986361D-3 +2.660688893333333D-6*T
+     * -4.380442225D-10*T2 +2.99283152D-14*T3 -1.285752D4/T2
+      ENDIF
+C
+C C2H6
+      IF ( T .LT. 1000 ) THEN
+      G0(24) = -4.29142492D0*TLOG +2.75077135D-3*T
+     * -9.990638133333334D-6*T2 +5.903885708333334D-9*T3
+     * -1.343428855D-12*T4 -1.15222055D4/T +1.62460176D0
+      DG(24) = -4.29142492D0/T +2.75077135D-3 -1.998127626666667D-5*T
+     * +1.7711657125D-8*T2 -5.37371542D-12*T3 +1.15222055D4/T2
+      ELSE
+      G0(24) = -1.0718815D0*TLOG -1.084263385D-2*T +1.67093445D-6*T2
+     * -1.845100008333333D-10*T3 +9.5001445D-15*T4 -1.14263932D4/T
+     * -1.40437292D1
+      DG(24) = -1.0718815D0/T -1.084263385D-2 +3.3418689D-6*T
+     * -5.535300025D-10*T2 +3.8000578D-14*T3 +1.14263932D4/T2
+      ENDIF
+C
+C HCCO
+      IF ( T .LT. 1000 ) THEN
+      G0(25) = -2.2517214D0*TLOG -8.8275105D-3*T
+     * +3.954850166666667D-6*T2 -1.439646583333334D-9*T3
+     * +2.53324055D-13*T4 +2.0059449D4/T -1.02386956D1
+      DG(25) = -2.2517214D0/T -8.8275105D-3 +7.909700333333333D-6*T
+     * -4.31893975D-9*T2 +1.01329622D-12*T3 -2.0059449D4/T2
+      ELSE
+      G0(25) = -5.6282058D0*TLOG -2.04267005D-3*T
+     * +2.655757833333333D-7*T2 -2.385504333333333D-11*T3
+     * +9.703916D-16*T4 +1.9327215D4/T +9.5584653D0
+      DG(25) = -5.6282058D0/T -2.04267005D-3 +5.311515666666667D-7*T
+     * -7.156513D-11*T2 +3.8815664D-15*T3 -1.9327215D4/T2
+      ENDIF
+C
+C CH2CO
+      IF ( T .LT. 1000 ) THEN
+      G0(26) = -2.1358363D0*TLOG -9.05943605D-3*T
+     * +2.899124566666667D-6*T2 -7.7866464D-10*T3 +1.007288075D-13*T4
+     * -7.04291804D3/T -1.00798117D1
+      DG(26) = -2.1358363D0/T -9.05943605D-3 +5.798249133333333D-6*T
+     * -2.33599392D-9*T2 +4.0291523D-13*T3 +7.04291804D3/T2
+      ELSE
+      G0(26) = -4.51129732D0*TLOG -4.501798725D-3*T
+     * +6.948993916666666D-7*T2 -7.694549016666667D-11*T3
+     * +3.974191005D-15*T4 -7.55105311D3/T +3.879050115D0
+      DG(26) = -4.51129732D0/T -4.501798725D-3 +1.389798783333333D-6*T
+     * -2.308364705D-10*T2 +1.589676402D-14*T3 +7.55105311D3/T2
+      ENDIF
+C
+C CH2CHO
+      IF ( T .LT. 1000 ) THEN
+      G0(27) = -3.4090624D0*TLOG -5.369287D-3*T -3.1524875D-7*T2
+     * -5.965485916666667D-10*T3 -1.43369255D-13*T4 +1.5214766D3/T
+     * -6.162391100000001D0
+      DG(27) = -3.4090624D0/T -5.369287D-3 -6.304975D-7*T
+     * -1.789645775D-9*T2 -5.7347702D-13*T3 -1.5214766D3/T2
+      ELSE
+      G0(27) = -5.9756699D0*TLOG -4.0652957D-3*T +4.5727075D-7*T2
+     * -3.391920083333333D-11*T3 +1.08800855D-15*T4 +4.9032178D2/T
+     * +1.10077578D1
+      DG(27) = -5.9756699D0/T -4.0652957D-3 +9.145415D-7*T
+     * -1.017576025D-10*T2 +4.3520342D-15*T3 -4.9032178D2/T2
+      ENDIF
+C
+C CH3CHO
+      IF ( T .LT. 1000 ) THEN
+      G0(28) = -4.7294595D0*TLOG +1.5966429D-3*T
+     * -7.922486833333334D-6*T2 +4.788217583333333D-9*T3
+     * -1.0965556D-12*T4 -2.1572878D4/T +6.264436D-1
+      DG(28) = -4.7294595D0/T +1.5966429D-3 -1.584497366666667D-5*T
+     * +1.436465275D-8*T2 -4.3862224D-12*T3 +2.1572878D4/T2
+      ELSE
+      G0(28) = -5.4041108D0*TLOG -5.8615295D-3*T
+     * +7.043856166666666D-7*T2 -5.69770425D-11*T3 +2.04924315D-15*T4
+     * -2.2593122D4/T +8.884902499999999D0
+      DG(28) = -5.4041108D0/T -5.8615295D-3 +1.408771233333333D-6*T
+     * -1.709311275D-10*T2 +8.1969726D-15*T3 +2.2593122D4/T2
+      ENDIF
+C
+C aC3H5
+      IF ( T .LT. 1000 ) THEN
+      G0(29) = -1.3631835D0*TLOG -9.9069105D-3*T
+     * -2.082843333333334D-6*T2 +2.779629583333333D-9*T3
+     * -7.9232855D-13*T4 +1.9245629D4/T -1.58100305D1
+      DG(29) = -1.3631835D0/T -9.9069105D-3 -4.165686666666667D-6*T
+     * +8.338888750000001D-9*T2 -3.1693142D-12*T3 -1.9245629D4/T2
+      ELSE
+      G0(29) = -6.5007877D0*TLOG -7.1623655D-3*T
+     * +9.463605333333332D-7*T2 -9.234000833333333D-11*T3
+     * +4.51819435D-15*T4 +1.7482449D4/T +1.77438377D1
+      DG(29) = -6.5007877D0/T -7.1623655D-3 +1.892721066666667D-6*T
+     * -2.77020025D-10*T2 +1.80727774D-14*T3 -1.7482449D4/T2
+      ENDIF
+C
+C C3H6
+      IF ( T .LT. 1000 ) THEN
+      G0(30) = -1.493307D0*TLOG -1.046259D-2*T -7.47799D-7*T2
+     * +1.39076D-9*T3 -3.579073D-13*T4 +1.074826D3/T -1.4652033D1
+      DG(30) = -1.493307D0/T -1.046259D-2 -1.495598D-6*T +4.17228D-9*T2
+     * -1.4316292D-12*T3 -1.074826D3/T2
+      ELSE
+      G0(30) = -6.732257D0*TLOG -7.45417D-3*T +8.249831666666665D-7*T2
+     * -6.010018333333334D-11*T3 +1.883102D-15*T4 -9.235703D2/T
+     * +2.0045607D1
+      DG(30) = -6.732257D0/T -7.45417D-3 +1.649966333333333D-6*T
+     * -1.8030055D-10*T2 +7.532408D-15*T3 +9.235703D2/T2
+      ENDIF
+C
+C nC3H7
+      IF ( T .LT. 1000 ) THEN
+      G0(31) = -1.0491173D0*TLOG -1.30044865D-2*T
+     * -3.923752666666667D-7*T2 +1.632927666666667D-9*T3
+     * -4.68601035D-13*T4 +1.0312346D4/T -2.00869167D1
+      DG(31) = -1.0491173D0/T -1.30044865D-2 -7.847505333333333D-7*T
+     * +4.898783D-9*T2 -1.87440414D-12*T3 -1.0312346D4/T2
+      ELSE
+      G0(31) = -7.7097479D0*TLOG -8.0157425D-3*T
+     * +8.786706333333331D-7*T2 -6.324029333333334D-11*T3
+     * +1.94313595D-15*T4 +7.9762236D3/T +2.32250449D1
+      DG(31) = -7.7097479D0/T -8.0157425D-3 +1.757341266666667D-6*T
+     * -1.8972088D-10*T2 +7.7725438D-15*T3 -7.9762236D3/T2
+      ENDIF
+C
+      END
+C
+C------ reaction rates
+C
+C
+C
+C
+      SUBROUTINE AJ1(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (EXPARG=690.776, SMALL=1.D-300)
+      DIMENSION C(*), A(LDA,*), G0(*), DG(*), DM(*)
+C
+      T2 = T*T
+      TLOG = LOG(T)
+      TI = 1.D0/T
+      TI2 = TI/T
+      PFAC = 1.218652692702276D-2/T
+      PFAC2 = PFAC*PFAC
+C
+C R1
+      RF = EXP(3.204986172372514D1 -7.252861830694163D3/T)
+      RFLGDT = 7.252861830694163D3/T2
+      G0_SUM = -G0(2) +G0(3) -G0(4) +G0(5)
+      DGDT = -DG(2) +DG(3) -DG(4) +DG(5)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(4)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(5)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      WFDC = RF*C(4)
+      A(2, 2) = A(2, 2) -WFDC
+      A(3, 2) = A(3, 2) +WFDC
+      A(4, 2) = A(4, 2) -WFDC
+      A(5, 2) = A(5, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 4) = A(2, 4) -WFDC
+      A(3, 4) = A(3, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      WBDC = RB*C(5)
+      A(2, 3) = A(2, 3) +WBDC
+      A(3, 3) = A(3, 3) -WBDC
+      A(4, 3) = A(4, 3) +WBDC
+      A(5, 3) = A(5, 3) -WBDC
+      WBDC = RB*C(3)
+      A(2, 5) = A(2, 5) +WBDC
+      A(3, 5) = A(3, 5) -WBDC
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+C
+C R2
+      RF = EXP(1.081977828441028D1 +2.67D0*TLOG -3.165232839455095D3/T)
+      RFLGDT = 2.67D0/T +3.165232839455095D3/T2
+      G0_SUM = -G0(1) +G0(2) -G0(3) +G0(5)
+      DGDT = -DG(1) +DG(2) -DG(3) +DG(5)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(1)*C(3)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(5)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      WFDC = RF*C(3)
+      A(1, 1) = A(1, 1) -WFDC
+      A(2, 1) = A(2, 1) +WFDC
+      A(3, 1) = A(3, 1) -WFDC
+      A(5, 1) = A(5, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 3) = A(1, 3) -WFDC
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      WBDC = RB*C(5)
+      A(1, 2) = A(1, 2) +WBDC
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(5, 2) = A(5, 2) -WBDC
+      WBDC = RB*C(2)
+      A(1, 5) = A(1, 5) +WBDC
+      A(2, 5) = A(2, 5) -WBDC
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+C
+C R3
+      RF = EXP(1.919078896564844D1 +1.51D0*TLOG -1.726033170004924D3/T)
+      RFLGDT = 1.51D0/T +1.726033170004924D3/T2
+      G0_SUM = -G0(1) +G0(2) -G0(5) +G0(6)
+      DGDT = -DG(1) +DG(2) -DG(5) +DG(6)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(1)*C(5)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      WFDC = RF*C(5)
+      A(1, 1) = A(1, 1) -WFDC
+      A(2, 1) = A(2, 1) +WFDC
+      A(5, 1) = A(5, 1) -WFDC
+      A(6, 1) = A(6, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 5) = A(1, 5) -WFDC
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      WBDC = RB*C(6)
+      A(1, 2) = A(1, 2) +WBDC
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(6, 2) = A(6, 2) -WBDC
+      WBDC = RB*C(2)
+      A(1, 6) = A(1, 6) +WBDC
+      A(2, 6) = A(2, 6) -WBDC
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+C
+C R4
+      RF = EXP(1.048290596776773D1 +2.4D0*TLOG +1.061787168720231D3/T)
+      RFLGDT = 2.4D0/T -1.061787168720231D3/T2
+      G0_SUM = +G0(3) -2*G0(5) +G0(6)
+      DGDT = +DG(3) -2*DG(5) +DG(6)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(5)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(5, 33) = A(5, 33) -2*DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      WFDC = 2*RF*C(5)
+      A(3, 5) = A(3, 5) +WFDC
+      A(5, 5) = A(5, 5) -2*WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      WBDC = RB*C(6)
+      A(3, 3) = A(3, 3) -WBDC
+      A(5, 3) = A(5, 3) +2*WBDC
+      A(6, 3) = A(6, 3) -WBDC
+      WBDC = RB*C(3)
+      A(3, 6) = A(3, 6) -WBDC
+      A(5, 6) = A(5, 6) +2*WBDC
+      A(6, 6) = A(6, 6) -WBDC
+C
+C R5
+C have third body
+      RF = 1.D18/T
+      RFLGDT = -1.D0/T
+      G0_SUM = +G0(1) -2*G0(2)
+      DGDT = +DG(1) -2*DG(2)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT -C(1) -C(6) +C(13) -C(15) +2.D0*C(19) +2.D0*C(22)
+     * +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(2)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(1)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -2*DWDT
+      WFDC = 2*RF*C(2)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -2*WFDC
+      WBDC = RB
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +2*WBDC
+      DWDM = WFDM -WBDM
+      A(1, 1) = A(1, 1) -DWDM
+      A(1, 6) = A(1, 6) -DWDM
+      A(1, 13) = A(1, 13) +DWDM
+      A(1, 15) = A(1, 15) -DWDM
+      A(1, 19) = A(1, 19) +2.D0*DWDM
+      A(1, 22) = A(1, 22) +2.D0*DWDM
+      A(1, 24) = A(1, 24) +2.D0*DWDM
+      DM(1) = DM(1) +DWDM
+      A(2, 1) = A(2, 1) +2.D0*DWDM
+      A(2, 6) = A(2, 6) +2.D0*DWDM
+      A(2, 13) = A(2, 13) -2.D0*DWDM
+      A(2, 15) = A(2, 15) +2.D0*DWDM
+      A(2, 19) = A(2, 19) -4.D0*DWDM
+      A(2, 22) = A(2, 22) -4.D0*DWDM
+      A(2, 24) = A(2, 24) -4.D0*DWDM
+      DM(2) = DM(2) -2*DWDM
+C
+C R6
+      RF = EXP(3.903858606524095D1 -6.D-1*TLOG)
+      RFLGDT = -6.D-1/T
+      G0_SUM = +G0(1) -2*G0(2)
+      DGDT = +DG(1) -2*DG(2)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(1)*C(2)*C(2)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(1)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -2*DWDT
+      WFDC = RF*C(2)*C(2)
+      A(1, 1) = A(1, 1) +WFDC
+      A(2, 1) = A(2, 1) -2*WFDC
+      WFDC = 2*RF*C(1)*C(2)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -2*WFDC
+      WBDC = 2*RB*C(1)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +2*WBDC
+C
+C R7
+      RF = EXP(4.554087623611493D1 -1.25D0*TLOG)
+      RFLGDT = -1.25D0/T
+      G0_SUM = +G0(1) -2*G0(2)
+      DGDT = +DG(1) -2*DG(2)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(2)*C(6)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -2*DWDT
+      WFDC = 2*RF*C(2)*C(6)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -2*WFDC
+      WFDC = RF*C(2)*C(2)
+      A(1, 6) = A(1, 6) +WFDC
+      A(2, 6) = A(2, 6) -2*WFDC
+      WBDC = RB*C(6)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +2*WBDC
+      WBDC = RB*C(1)
+      A(1, 6) = A(1, 6) -WBDC
+      A(2, 6) = A(2, 6) +2*WBDC
+C
+C R8
+      RF = 5.5D20/T2
+      RFLGDT = -2.D0/T
+      G0_SUM = +G0(1) -2*G0(2)
+      DGDT = +DG(1) -2*DG(2)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(2)*C(15)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -2*DWDT
+      WFDC = 2*RF*C(2)*C(15)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -2*WFDC
+      WFDC = RF*C(2)*C(2)
+      A(1, 15) = A(1, 15) +WFDC
+      A(2, 15) = A(2, 15) -2*WFDC
+      WBDC = RB*C(15)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +2*WBDC
+      WBDC = RB*C(1)
+      A(1, 15) = A(1, 15) -WBDC
+      A(2, 15) = A(2, 15) +2*WBDC
+C
+C R9
+C have third body
+      RF = 2.2D22/T2
+      RFLGDT = -2.D0/T
+      G0_SUM = -G0(2) -G0(5) +G0(6)
+      DGDT = -DG(2) -DG(5) +DG(6)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT -2.7D-1*C(1) +2.65D0*C(6) +C(13) +2.D0*C(19) +2.D0*C(22)
+     * +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(5)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(6)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      WFDC = RF*C(5)
+      A(2, 2) = A(2, 2) -WFDC
+      A(5, 2) = A(5, 2) -WFDC
+      A(6, 2) = A(6, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 5) = A(2, 5) -WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      WBDC = RB
+      A(2, 6) = A(2, 6) +WBDC
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) +2.7D-1*DWDM
+      A(2, 6) = A(2, 6) -2.65D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(5, 1) = A(5, 1) +2.7D-1*DWDM
+      A(5, 6) = A(5, 6) -2.65D0*DWDM
+      A(5, 13) = A(5, 13) -DWDM
+      A(5, 19) = A(5, 19) -2.D0*DWDM
+      A(5, 22) = A(5, 22) -2.D0*DWDM
+      A(5, 24) = A(5, 24) -2.D0*DWDM
+      DM(5) = DM(5) -DWDM
+      A(6, 1) = A(6, 1) -2.7D-1*DWDM
+      A(6, 6) = A(6, 6) +2.65D0*DWDM
+      A(6, 13) = A(6, 13) +DWDM
+      A(6, 19) = A(6, 19) +2.D0*DWDM
+      A(6, 22) = A(6, 22) +2.D0*DWDM
+      A(6, 24) = A(6, 24) +2.D0*DWDM
+      DM(6) = DM(6) +DWDM
+C
+C R10
+C have third body
+      RF = 5.D17/T
+      RFLGDT = -1.D0/T
+      G0_SUM = -G0(2) -G0(3) +G0(5)
+      DGDT = -DG(2) -DG(3) +DG(5)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(3)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(5)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      WFDC = RF*C(3)
+      A(2, 2) = A(2, 2) -WFDC
+      A(3, 2) = A(3, 2) -WFDC
+      A(5, 2) = A(5, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 3) = A(2, 3) -WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      WBDC = RB
+      A(2, 5) = A(2, 5) +WBDC
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(3, 1) = A(3, 1) -DWDM
+      A(3, 6) = A(3, 6) -5.D0*DWDM
+      A(3, 13) = A(3, 13) -DWDM
+      A(3, 14) = A(3, 14) -5.D-1*DWDM
+      A(3, 15) = A(3, 15) -DWDM
+      A(3, 19) = A(3, 19) -2.D0*DWDM
+      A(3, 22) = A(3, 22) -2.D0*DWDM
+      A(3, 24) = A(3, 24) -2.D0*DWDM
+      DM(3) = DM(3) -DWDM
+      A(5, 1) = A(5, 1) +DWDM
+      A(5, 6) = A(5, 6) +5.D0*DWDM
+      A(5, 13) = A(5, 13) +DWDM
+      A(5, 14) = A(5, 14) +5.D-1*DWDM
+      A(5, 15) = A(5, 15) +DWDM
+      A(5, 19) = A(5, 19) +2.D0*DWDM
+      A(5, 22) = A(5, 22) +2.D0*DWDM
+      A(5, 24) = A(5, 24) +2.D0*DWDM
+      DM(5) = DM(5) +DWDM
+C
+C R11
+C have third body
+      RF = 1.2D17/T
+      RFLGDT = -1.D0/T
+      G0_SUM = -2*G0(3) +G0(4)
+      DGDT = -2*DG(3) +DG(4)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +1.4D0*C(1) +1.44D1*C(6) +C(13) +7.5D-1*C(14)
+     * +2.6D0*C(15) +2.D0*C(19) +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(3)*C(3)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(4)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -2*DWDT
+      A(4, 33) = A(4, 33) +DWDT
+      WFDC = 2*RF*C(3)
+      A(3, 3) = A(3, 3) -2*WFDC
+      A(4, 3) = A(4, 3) +WFDC
+      WBDC = RB
+      A(3, 4) = A(3, 4) +2*WBDC
+      A(4, 4) = A(4, 4) -WBDC
+      DWDM = WFDM -WBDM
+      A(3, 1) = A(3, 1) -2.8D0*DWDM
+      A(3, 6) = A(3, 6) -2.88D1*DWDM
+      A(3, 13) = A(3, 13) -2.D0*DWDM
+      A(3, 14) = A(3, 14) -1.5D0*DWDM
+      A(3, 15) = A(3, 15) -5.2D0*DWDM
+      A(3, 19) = A(3, 19) -4.D0*DWDM
+      A(3, 22) = A(3, 22) -4.D0*DWDM
+      A(3, 24) = A(3, 24) -4.D0*DWDM
+      DM(3) = DM(3) -2*DWDM
+      A(4, 1) = A(4, 1) +1.4D0*DWDM
+      A(4, 6) = A(4, 6) +1.44D1*DWDM
+      A(4, 13) = A(4, 13) +DWDM
+      A(4, 14) = A(4, 14) +7.5D-1*DWDM
+      A(4, 15) = A(4, 15) +2.6D0*DWDM
+      A(4, 19) = A(4, 19) +2.D0*DWDM
+      A(4, 22) = A(4, 22) +2.D0*DWDM
+      A(4, 24) = A(4, 24) +2.D0*DWDM
+      DM(4) = DM(4) +DWDM
+C
+C R12
+C have third body
+      RF = EXP(4.247615109107398D1 -8.6D-1*TLOG)
+      RFLGDT = -8.6D-1/T
+      G0_SUM = -G0(2) -G0(4) +G0(7)
+      DGDT = -DG(2) -DG(4) +DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT -C(4) -C(6) -2.5D-1*C(14) +5.D-1*C(15) +2.D0*C(19)
+     * +2.D0*C(22) +5.D-1*C(24) -C(32)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(4)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(7)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      WFDC = RF*C(4)
+      A(2, 2) = A(2, 2) -WFDC
+      A(4, 2) = A(4, 2) -WFDC
+      A(7, 2) = A(7, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 4) = A(2, 4) -WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      WBDC = RB
+      A(2, 7) = A(2, 7) +WBDC
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 4) = A(2, 4) +DWDM
+      A(2, 6) = A(2, 6) +DWDM
+      A(2, 14) = A(2, 14) +2.5D-1*DWDM
+      A(2, 15) = A(2, 15) -5.D-1*DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -5.D-1*DWDM
+      A(2, 32) = A(2, 32) +DWDM
+      DM(2) = DM(2) -DWDM
+      A(4, 4) = A(4, 4) +DWDM
+      A(4, 6) = A(4, 6) +DWDM
+      A(4, 14) = A(4, 14) +2.5D-1*DWDM
+      A(4, 15) = A(4, 15) -5.D-1*DWDM
+      A(4, 19) = A(4, 19) -2.D0*DWDM
+      A(4, 22) = A(4, 22) -2.D0*DWDM
+      A(4, 24) = A(4, 24) -5.D-1*DWDM
+      A(4, 32) = A(4, 32) +DWDM
+      DM(4) = DM(4) -DWDM
+      A(7, 4) = A(7, 4) -DWDM
+      A(7, 6) = A(7, 6) -DWDM
+      A(7, 14) = A(7, 14) -2.5D-1*DWDM
+      A(7, 15) = A(7, 15) +5.D-1*DWDM
+      A(7, 19) = A(7, 19) +2.D0*DWDM
+      A(7, 22) = A(7, 22) +2.D0*DWDM
+      A(7, 24) = A(7, 24) +5.D-1*DWDM
+      A(7, 32) = A(7, 32) -DWDM
+      DM(7) = DM(7) +DWDM
+C
+C R13
+      RF = EXP(4.715031414854902D1 -1.72D0*TLOG)
+      RFLGDT = -1.72D0/T
+      G0_SUM = -G0(2) -G0(4) +G0(7)
+      DGDT = -DG(2) -DG(4) +DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(4)*C(4)
+      WFDT = WF*RFLGDT
+      WB = RB*C(4)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      WFDC = RF*C(4)*C(4)
+      A(2, 2) = A(2, 2) -WFDC
+      A(4, 2) = A(4, 2) -WFDC
+      A(7, 2) = A(7, 2) +WFDC
+      WFDC = 2*RF*C(2)*C(4)
+      A(2, 4) = A(2, 4) -WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      WBDC = RB*C(7)
+      A(2, 4) = A(2, 4) +WBDC
+      A(4, 4) = A(4, 4) +WBDC
+      A(7, 4) = A(7, 4) -WBDC
+      WBDC = RB*C(4)
+      A(2, 7) = A(2, 7) +WBDC
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+C
+C R14
+      RF = EXP(4.425110344198566D1 -7.6D-1*TLOG)
+      RFLGDT = -7.6D-1/T
+      G0_SUM = -G0(2) -G0(4) +G0(7)
+      DGDT = -DG(2) -DG(4) +DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(4)*C(6)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      WFDC = RF*C(4)*C(6)
+      A(2, 2) = A(2, 2) -WFDC
+      A(4, 2) = A(4, 2) -WFDC
+      A(7, 2) = A(7, 2) +WFDC
+      WFDC = RF*C(2)*C(6)
+      A(2, 4) = A(2, 4) -WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      WFDC = RF*C(2)*C(4)
+      A(2, 6) = A(2, 6) -WFDC
+      A(4, 6) = A(4, 6) -WFDC
+      A(7, 6) = A(7, 6) +WFDC
+      WBDC = RB*C(7)
+      A(2, 6) = A(2, 6) +WBDC
+      A(4, 6) = A(4, 6) +WBDC
+      A(7, 6) = A(7, 6) -WBDC
+      WBDC = RB*C(6)
+      A(2, 7) = A(2, 7) +WBDC
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+C
+C R15
+      RF = EXP(4.47046282119143D1 -1.24D0*TLOG)
+      RFLGDT = -1.24D0/T
+      G0_SUM = -G0(2) -G0(4) +G0(7)
+      DGDT = -DG(2) -DG(4) +DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(4)*C(32)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(32)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      WFDC = RF*C(4)*C(32)
+      A(2, 2) = A(2, 2) -WFDC
+      A(4, 2) = A(4, 2) -WFDC
+      A(7, 2) = A(7, 2) +WFDC
+      WFDC = RF*C(2)*C(32)
+      A(2, 4) = A(2, 4) -WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      WFDC = RF*C(2)*C(4)
+      A(2, 32) = A(2, 32) -WFDC
+      A(4, 32) = A(4, 32) -WFDC
+      A(7, 32) = A(7, 32) +WFDC
+      WBDC = RB*C(32)
+      A(2, 7) = A(2, 7) +WBDC
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      WBDC = RB*C(7)
+      A(2, 32) = A(2, 32) +WBDC
+      A(4, 32) = A(4, 32) +WBDC
+      A(7, 32) = A(7, 32) -WBDC
+C
+C R16
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.193508620913272D1 -3.7D-1*TLOG)
+      RFLGDT = -3.7D-1/T
+      G0_SUM = -2*G0(5) +G0(8)
+      DGDT = -2*DG(5) +DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(4.227944079682793D1 -9.D-1*TLOG +8.554683349878635D2/T)
+      PR = RL*CM/RF
+      PRLGDT = -5.3D-1/T -8.554683349878635D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.654D-1*EXP(-T/9.4D1)
+      TEMP2 = 7.346D-1*EXP(-T/1.756D3)
+      TEMP3 = EXP(-5.182D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.063829787234043D-2*TEMP1 -5.694760820045558D-4*TEMP2
+     * +5.182D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(5)*C(5)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(8)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -2*DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      WFDC = 2*RF*C(5)
+      A(5, 5) = A(5, 5) -2*WFDC
+      A(8, 5) = A(8, 5) +WFDC
+      WBDC = RB
+      A(5, 8) = A(5, 8) +2*WBDC
+      A(8, 8) = A(8, 8) -WBDC
+      DWDM = WFDM -WBDM
+      A(5, 1) = A(5, 1) -2.D0*DWDM
+      A(5, 6) = A(5, 6) -1.D1*DWDM
+      A(5, 13) = A(5, 13) -2.D0*DWDM
+      A(5, 14) = A(5, 14) -DWDM
+      A(5, 15) = A(5, 15) -2.D0*DWDM
+      A(5, 19) = A(5, 19) -4.D0*DWDM
+      A(5, 22) = A(5, 22) -4.D0*DWDM
+      A(5, 24) = A(5, 24) -4.D0*DWDM
+      DM(5) = DM(5) -2*DWDM
+      A(8, 1) = A(8, 1) +DWDM
+      A(8, 6) = A(8, 6) +5.D0*DWDM
+      A(8, 13) = A(8, 13) +DWDM
+      A(8, 14) = A(8, 14) +5.D-1*DWDM
+      A(8, 15) = A(8, 15) +DWDM
+      A(8, 19) = A(8, 19) +2.D0*DWDM
+      A(8, 22) = A(8, 22) +2.D0*DWDM
+      A(8, 24) = A(8, 24) +2.D0*DWDM
+      DM(8) = DM(8) +DWDM
+C
+C R17
+      RF = EXP(2.900978721062765D1 -3.376583839863861D2/T)
+      RFLGDT = 3.376583839863861D2/T2
+      G0_SUM = -G0(2) +G0(3) +G0(6) -G0(7)
+      DGDT = -DG(2) +DG(3) +DG(6) -DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      WFDC = RF*C(7)
+      A(2, 2) = A(2, 2) -WFDC
+      A(3, 2) = A(3, 2) +WFDC
+      A(6, 2) = A(6, 2) +WFDC
+      A(7, 2) = A(7, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 7) = A(2, 7) -WFDC
+      A(3, 7) = A(3, 7) +WFDC
+      A(6, 7) = A(6, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      WBDC = RB*C(6)
+      A(2, 3) = A(2, 3) +WBDC
+      A(3, 3) = A(3, 3) -WBDC
+      A(6, 3) = A(6, 3) -WBDC
+      A(7, 3) = A(7, 3) +WBDC
+      WBDC = RB*C(3)
+      A(2, 6) = A(2, 6) +WBDC
+      A(3, 6) = A(3, 6) -WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(7, 6) = A(7, 6) +WBDC
+C
+C R18
+      RF = EXP(3.044042381129104D1 -4.126376674647341D2/T)
+      RFLGDT = 4.126376674647341D2/T2
+      G0_SUM = +G0(1) -G0(2) +G0(4) -G0(7)
+      DGDT = +DG(1) -DG(2) +DG(4) -DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(4)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      WFDC = RF*C(7)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(4, 2) = A(4, 2) +WFDC
+      A(7, 2) = A(7, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 7) = A(1, 7) +WFDC
+      A(2, 7) = A(2, 7) -WFDC
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      WBDC = RB*C(4)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(4, 1) = A(4, 1) -WBDC
+      A(7, 1) = A(7, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 4) = A(1, 4) -WBDC
+      A(2, 4) = A(2, 4) +WBDC
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+C
+C R19
+      RF = EXP(3.189088011662822D1 -1.509650002919759D2/T)
+      RFLGDT = 1.509650002919759D2/T2
+      G0_SUM = -G0(2) +2*G0(5) -G0(7)
+      DGDT = -DG(2) +2*DG(5) -DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(5)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(5, 33) = A(5, 33) +2*DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      WFDC = RF*C(7)
+      A(2, 2) = A(2, 2) -WFDC
+      A(5, 2) = A(5, 2) +2*WFDC
+      A(7, 2) = A(7, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 7) = A(2, 7) -WFDC
+      A(5, 7) = A(5, 7) +2*WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      WBDC = 2*RB*C(5)
+      A(2, 5) = A(2, 5) +WBDC
+      A(5, 5) = A(5, 5) -2*WBDC
+      A(7, 5) = A(7, 5) +WBDC
+C
+C R20
+      RF = 2.D13
+      G0_SUM = -G0(3) +G0(4) +G0(5) -G0(7)
+      DGDT = -DG(3) +DG(4) +DG(5) -DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(4)*C(5)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      WFDC = RF*C(7)
+      A(3, 3) = A(3, 3) -WFDC
+      A(4, 3) = A(4, 3) +WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(7, 3) = A(7, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 7) = A(3, 7) -WFDC
+      A(4, 7) = A(4, 7) +WFDC
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      WBDC = RB*C(5)
+      A(3, 4) = A(3, 4) +WBDC
+      A(4, 4) = A(4, 4) -WBDC
+      A(5, 4) = A(5, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+      WBDC = RB*C(4)
+      A(3, 5) = A(3, 5) +WBDC
+      A(4, 5) = A(4, 5) -WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+C
+C R21
+      RF = EXP(3.146832057516076D1 +2.516083338199599D2/T)
+      RFLGDT = -2.516083338199599D2/T2
+      G0_SUM = +G0(4) -G0(5) +G0(6) -G0(7)
+      DGDT = +DG(4) -DG(5) +DG(6) -DG(7)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(4)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      WFDC = RF*C(7)
+      A(4, 5) = A(4, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(7, 5) = A(7, 5) -WFDC
+      WFDC = RF*C(5)
+      A(4, 7) = A(4, 7) +WFDC
+      A(5, 7) = A(5, 7) -WFDC
+      A(6, 7) = A(6, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      WBDC = RB*C(6)
+      A(4, 4) = A(4, 4) -WBDC
+      A(5, 4) = A(5, 4) +WBDC
+      A(6, 4) = A(6, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+      WBDC = RB*C(4)
+      A(4, 6) = A(4, 6) -WBDC
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(7, 6) = A(7, 6) +WBDC
+C
+C R22
+      RF = EXP(2.559080028740199D1 +8.20243168253069D2/T)
+      RFLGDT = -8.20243168253069D2/T2
+      G0_SUM = +G0(4) -2*G0(7) +G0(8)
+      DGDT = +DG(4) -2*DG(7) +DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(4)*C(8)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -2*DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      WFDC = 2*RF*C(7)
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -2*WFDC
+      A(8, 7) = A(8, 7) +WFDC
+      WBDC = RB*C(8)
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +2*WBDC
+      A(8, 4) = A(8, 4) -WBDC
+      WBDC = RB*C(4)
+      A(4, 8) = A(4, 8) -WBDC
+      A(7, 8) = A(7, 8) +2*WBDC
+      A(8, 8) = A(8, 8) -WBDC
+C
+C R23
+      RF = EXP(3.367127582720596D1 -6.038600011679037D3/T)
+      RFLGDT = 6.038600011679037D3/T2
+      G0_SUM = +G0(4) -2*G0(7) +G0(8)
+      DGDT = +DG(4) -2*DG(7) +DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(7)
+      WFDT = WF*RFLGDT
+      WB = RB*C(4)*C(8)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -2*DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      WFDC = 2*RF*C(7)
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -2*WFDC
+      A(8, 7) = A(8, 7) +WFDC
+      WBDC = RB*C(8)
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +2*WBDC
+      A(8, 4) = A(8, 4) -WBDC
+      WBDC = RB*C(4)
+      A(4, 8) = A(4, 8) -WBDC
+      A(7, 8) = A(7, 8) +2*WBDC
+      A(8, 8) = A(8, 8) -WBDC
+C
+C R24
+      RF = EXP(1.630871601056697D1 +2.D0*TLOG -2.616726671727583D3/T)
+      RFLGDT = 2.D0/T +2.616726671727583D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(7) -G0(8)
+      DGDT = +DG(1) -DG(2) +DG(7) -DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(8)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      WFDC = RF*C(8)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(7, 2) = A(7, 2) +WFDC
+      A(8, 2) = A(8, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 8) = A(1, 8) +WFDC
+      A(2, 8) = A(2, 8) -WFDC
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      WBDC = RB*C(7)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(7, 1) = A(7, 1) -WBDC
+      A(8, 1) = A(8, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 7) = A(1, 7) -WBDC
+      A(2, 7) = A(2, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+C
+C R25
+      RF = EXP(2.993360620892259D1 -1.811580003503711D3/T)
+      RFLGDT = 1.811580003503711D3/T2
+      G0_SUM = -G0(2) +G0(5) +G0(6) -G0(8)
+      DGDT = -DG(2) +DG(5) +DG(6) -DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(8)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(6)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      WFDC = RF*C(8)
+      A(2, 2) = A(2, 2) -WFDC
+      A(5, 2) = A(5, 2) +WFDC
+      A(6, 2) = A(6, 2) +WFDC
+      A(8, 2) = A(8, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 8) = A(2, 8) -WFDC
+      A(5, 8) = A(5, 8) +WFDC
+      A(6, 8) = A(6, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      WBDC = RB*C(6)
+      A(2, 5) = A(2, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(6, 5) = A(6, 5) -WBDC
+      A(8, 5) = A(8, 5) +WBDC
+      WBDC = RB*C(5)
+      A(2, 6) = A(2, 6) +WBDC
+      A(5, 6) = A(5, 6) -WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(8, 6) = A(8, 6) +WBDC
+C
+C R26
+      RF = EXP(1.608039378377431D1 +2.D0*TLOG -2.012866670559679D3/T)
+      RFLGDT = 2.D0/T +2.012866670559679D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(7) -G0(8)
+      DGDT = -DG(3) +DG(5) +DG(7) -DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(8)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      WFDC = RF*C(8)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(7, 3) = A(7, 3) +WFDC
+      A(8, 3) = A(8, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 8) = A(3, 8) -WFDC
+      A(5, 8) = A(5, 8) +WFDC
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      WBDC = RB*C(7)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) -WBDC
+      A(8, 5) = A(8, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 7) = A(3, 7) +WBDC
+      A(5, 7) = A(5, 7) -WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+C
+C R27
+      RF = EXP(2.819063690386397D1 -1.610293336447743D2/T)
+      RFLGDT = 1.610293336447743D2/T2
+      G0_SUM = -G0(5) +G0(6) +G0(7) -G0(8)
+      DGDT = -DG(5) +DG(6) +DG(7) -DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(8)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      WFDC = RF*C(8)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(7, 5) = A(7, 5) +WFDC
+      A(8, 5) = A(8, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 8) = A(5, 8) -WFDC
+      A(6, 8) = A(6, 8) +WFDC
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      WBDC = RB*C(7)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(7, 6) = A(7, 6) -WBDC
+      A(8, 6) = A(8, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 7) = A(5, 7) +WBDC
+      A(6, 7) = A(6, 7) -WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+C
+C R28
+      RF = EXP(3.399404921946901D1 -4.810751342637632D3/T)
+      RFLGDT = 4.810751342637632D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(7) -G0(8)
+      DGDT = -DG(5) +DG(6) +DG(7) -DG(8)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(8)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(7)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      WFDC = RF*C(8)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(7, 5) = A(7, 5) +WFDC
+      A(8, 5) = A(8, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 8) = A(5, 8) -WFDC
+      A(6, 8) = A(6, 8) +WFDC
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      WBDC = RB*C(7)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(7, 6) = A(7, 6) -WBDC
+      A(8, 6) = A(8, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 7) = A(5, 7) +WBDC
+      A(6, 7) = A(6, 7) -WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+C
+C R29
+C have third body
+      RF = EXP(3.403127856123737D1 -1.509650002919759D3/T)
+      RFLGDT = 1.509650002919759D3/T2
+      G0_SUM = -G0(3) -G0(14) +G0(15)
+      DGDT = -DG(3) -DG(14) +DG(15)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(4) +5.D0*C(6) +C(13) +5.D-1*C(14)
+     * +2.5D0*C(15) +2.D0*C(19) +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(3)*C(14)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(15)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      WFDC = RF*C(14)
+      A(3, 3) = A(3, 3) -WFDC
+      A(14, 3) = A(14, 3) -WFDC
+      A(15, 3) = A(15, 3) +WFDC
+      WFDC = RF*C(3)
+      A(3, 14) = A(3, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(15, 14) = A(15, 14) +WFDC
+      WBDC = RB
+      A(3, 15) = A(3, 15) +WBDC
+      A(14, 15) = A(14, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+      DWDM = WFDM -WBDM
+      A(3, 1) = A(3, 1) -DWDM
+      A(3, 4) = A(3, 4) -5.D0*DWDM
+      A(3, 6) = A(3, 6) -5.D0*DWDM
+      A(3, 13) = A(3, 13) -DWDM
+      A(3, 14) = A(3, 14) -5.D-1*DWDM
+      A(3, 15) = A(3, 15) -2.5D0*DWDM
+      A(3, 19) = A(3, 19) -2.D0*DWDM
+      A(3, 22) = A(3, 22) -2.D0*DWDM
+      A(3, 24) = A(3, 24) -2.D0*DWDM
+      DM(3) = DM(3) -DWDM
+      A(14, 1) = A(14, 1) -DWDM
+      A(14, 4) = A(14, 4) -5.D0*DWDM
+      A(14, 6) = A(14, 6) -5.D0*DWDM
+      A(14, 13) = A(14, 13) -DWDM
+      A(14, 14) = A(14, 14) -5.D-1*DWDM
+      A(14, 15) = A(14, 15) -2.5D0*DWDM
+      A(14, 19) = A(14, 19) -2.D0*DWDM
+      A(14, 22) = A(14, 22) -2.D0*DWDM
+      A(14, 24) = A(14, 24) -2.D0*DWDM
+      DM(14) = DM(14) -DWDM
+      A(15, 1) = A(15, 1) +DWDM
+      A(15, 4) = A(15, 4) +5.D0*DWDM
+      A(15, 6) = A(15, 6) +5.D0*DWDM
+      A(15, 13) = A(15, 13) +DWDM
+      A(15, 14) = A(15, 14) +5.D-1*DWDM
+      A(15, 15) = A(15, 15) +2.5D0*DWDM
+      A(15, 19) = A(15, 19) +2.D0*DWDM
+      A(15, 22) = A(15, 22) +2.D0*DWDM
+      A(15, 24) = A(15, 24) +2.D0*DWDM
+      DM(15) = DM(15) +DWDM
+C
+C R30
+      RF = EXP(1.767834331920165D1 +1.228D0*TLOG -3.522516673479438D1/T)
+      RFLGDT = 1.228D0/T +3.522516673479438D1/T2
+      G0_SUM = +G0(2) -G0(5) -G0(14) +G0(15)
+      DGDT = +DG(2) -DG(5) -DG(14) +DG(15)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(14)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      WFDC = RF*C(14)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(14, 5) = A(14, 5) -WFDC
+      A(15, 5) = A(15, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 14) = A(2, 14) +WFDC
+      A(5, 14) = A(5, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(15, 14) = A(15, 14) +WFDC
+      WBDC = RB*C(15)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(14, 2) = A(14, 2) +WBDC
+      A(15, 2) = A(15, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 15) = A(2, 15) -WBDC
+      A(5, 15) = A(5, 15) +WBDC
+      A(14, 15) = A(14, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+C
+C R31
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(1.757671067365784D1 +1.5D0*TLOG -4.005604674413761D4/T)
+      RFLGDT = 1.5D0/T +4.005604674413761D4/T2
+      G0_SUM = -G0(1) -G0(14) +G0(17)
+      DGDT = -DG(1) -DG(14) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.379313832844233D1 -3.42D0*TLOG -4.244632591542722D4/T)
+      PR = RL*CM/RF
+      PRLGDT = -4.92D0/T +2.390279171289614D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 6.8D-2*EXP(-T/1.97D2)
+      TEMP2 = 9.32D-1*EXP(-T/1.54D3)
+      TEMP3 = EXP(-1.03D4/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -5.076142131979695D-3*TEMP1 -6.493506493506494D-4*TEMP2
+     * +1.03D4/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(1)*C(14)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(17)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(14)
+      A(1, 1) = A(1, 1) -WFDC
+      A(14, 1) = A(14, 1) -WFDC
+      A(17, 1) = A(17, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 14) = A(1, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(17, 14) = A(17, 14) +WFDC
+      WBDC = RB
+      A(1, 17) = A(1, 17) +WBDC
+      A(14, 17) = A(14, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      DWDM = WFDM -WBDM
+      A(1, 1) = A(1, 1) -DWDM
+      A(1, 6) = A(1, 6) -5.D0*DWDM
+      A(1, 13) = A(1, 13) -DWDM
+      A(1, 14) = A(1, 14) -5.D-1*DWDM
+      A(1, 15) = A(1, 15) -DWDM
+      A(1, 19) = A(1, 19) -2.D0*DWDM
+      A(1, 22) = A(1, 22) -2.D0*DWDM
+      A(1, 24) = A(1, 24) -2.D0*DWDM
+      DM(1) = DM(1) -DWDM
+      A(14, 1) = A(14, 1) -DWDM
+      A(14, 6) = A(14, 6) -5.D0*DWDM
+      A(14, 13) = A(14, 13) -DWDM
+      A(14, 14) = A(14, 14) -5.D-1*DWDM
+      A(14, 15) = A(14, 15) -DWDM
+      A(14, 19) = A(14, 19) -2.D0*DWDM
+      A(14, 22) = A(14, 22) -2.D0*DWDM
+      A(14, 24) = A(14, 24) -2.D0*DWDM
+      DM(14) = DM(14) -DWDM
+      A(17, 1) = A(17, 1) +DWDM
+      A(17, 6) = A(17, 6) +5.D0*DWDM
+      A(17, 13) = A(17, 13) +DWDM
+      A(17, 14) = A(17, 14) +5.D-1*DWDM
+      A(17, 15) = A(17, 15) +DWDM
+      A(17, 19) = A(17, 19) +2.D0*DWDM
+      A(17, 22) = A(17, 22) +2.D0*DWDM
+      A(17, 24) = A(17, 24) +2.D0*DWDM
+      DM(17) = DM(17) +DWDM
+C
+C R32
+      RF = EXP(2.85473118478027D1 -2.405375671318816D4/T)
+      RFLGDT = 2.405375671318816D4/T2
+      G0_SUM = +G0(3) -G0(4) -G0(14) +G0(15)
+      DGDT = +DG(3) -DG(4) -DG(14) +DG(15)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(14)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      WFDC = RF*C(14)
+      A(3, 4) = A(3, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(14, 4) = A(14, 4) -WFDC
+      A(15, 4) = A(15, 4) +WFDC
+      WFDC = RF*C(4)
+      A(3, 14) = A(3, 14) +WFDC
+      A(4, 14) = A(4, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(15, 14) = A(15, 14) +WFDC
+      WBDC = RB*C(15)
+      A(3, 3) = A(3, 3) -WBDC
+      A(4, 3) = A(4, 3) +WBDC
+      A(14, 3) = A(14, 3) +WBDC
+      A(15, 3) = A(15, 3) -WBDC
+      WBDC = RB*C(3)
+      A(3, 15) = A(3, 15) -WBDC
+      A(4, 15) = A(4, 15) +WBDC
+      A(14, 15) = A(14, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+C
+C R33
+      RF = EXP(3.26416564100248D1 -1.18759133563021D4/T)
+      RFLGDT = 1.18759133563021D4/T2
+      G0_SUM = +G0(5) -G0(7) -G0(14) +G0(15)
+      DGDT = +DG(5) -DG(7) -DG(14) +DG(15)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(14)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      WFDC = RF*C(14)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(14, 7) = A(14, 7) -WFDC
+      A(15, 7) = A(15, 7) +WFDC
+      WFDC = RF*C(7)
+      A(5, 14) = A(5, 14) +WFDC
+      A(7, 14) = A(7, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(15, 14) = A(15, 14) +WFDC
+      WBDC = RB*C(15)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(14, 5) = A(14, 5) +WBDC
+      A(15, 5) = A(15, 5) -WBDC
+      WBDC = RB*C(5)
+      A(5, 15) = A(5, 15) -WBDC
+      A(7, 15) = A(7, 15) +WBDC
+      A(14, 15) = A(14, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+C
+C R34
+      RF = 5.7D13
+      G0_SUM = +G0(2) -G0(3) -G0(9) +G0(14)
+      DGDT = +DG(2) -DG(3) -DG(9) +DG(14)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      WFDC = RF*C(9)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(9, 3) = A(9, 3) -WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 9) = A(2, 9) +WFDC
+      A(3, 9) = A(3, 9) -WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(14, 9) = A(14, 9) +WFDC
+      WBDC = RB*C(14)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(14, 2) = A(14, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 14) = A(2, 14) -WBDC
+      A(3, 14) = A(3, 14) +WBDC
+      A(9, 14) = A(9, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+C
+C R35
+      RF = 3.D13
+      G0_SUM = +G0(2) -G0(5) -G0(9) +G0(16)
+      DGDT = +DG(2) -DG(5) -DG(9) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(9)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(9, 5) = A(9, 5) -WFDC
+      A(16, 5) = A(16, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 9) = A(2, 9) +WFDC
+      A(5, 9) = A(5, 9) -WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(16, 9) = A(16, 9) +WFDC
+      WBDC = RB*C(16)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(16, 2) = A(16, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 16) = A(2, 16) -WBDC
+      A(5, 16) = A(5, 16) +WBDC
+      A(9, 16) = A(9, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R36
+      RF = EXP(1.852233439767887D1 +1.79D0*TLOG -8.40371834958666D2/T)
+      RFLGDT = 1.79D0/T +8.40371834958666D2/T2
+      G0_SUM = -G0(1) +G0(2) -G0(9) +G0(10)
+      DGDT = -DG(1) +DG(2) -DG(9) +DG(10)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(1)*C(9)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(10)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      WFDC = RF*C(9)
+      A(1, 1) = A(1, 1) -WFDC
+      A(2, 1) = A(2, 1) +WFDC
+      A(9, 1) = A(9, 1) -WFDC
+      A(10, 1) = A(10, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 9) = A(1, 9) -WFDC
+      A(2, 9) = A(2, 9) +WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(10, 9) = A(10, 9) +WFDC
+      WBDC = RB*C(10)
+      A(1, 2) = A(1, 2) +WBDC
+      A(2, 2) = A(2, 2) -WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(10, 2) = A(10, 2) -WBDC
+      WBDC = RB*C(2)
+      A(1, 10) = A(1, 10) +WBDC
+      A(2, 10) = A(2, 10) -WBDC
+      A(9, 10) = A(9, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+C
+C R37
+      RF = EXP(2.937324013959647D1 +3.799285840681393D2/T)
+      RFLGDT = -3.799285840681393D2/T2
+      G0_SUM = +G0(2) -G0(6) -G0(9) +G0(17)
+      DGDT = +DG(2) -DG(6) -DG(9) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(6)*C(9)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(6, 33) = A(6, 33) -DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(9)
+      A(2, 6) = A(2, 6) +WFDC
+      A(6, 6) = A(6, 6) -WFDC
+      A(9, 6) = A(9, 6) -WFDC
+      A(17, 6) = A(17, 6) +WFDC
+      WFDC = RF*C(6)
+      A(2, 9) = A(2, 9) +WFDC
+      A(6, 9) = A(6, 9) -WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(17, 9) = A(17, 9) +WFDC
+      WBDC = RB*C(17)
+      A(2, 2) = A(2, 2) -WBDC
+      A(6, 2) = A(6, 2) +WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(17, 2) = A(17, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 17) = A(2, 17) -WBDC
+      A(6, 17) = A(6, 17) +WBDC
+      A(9, 17) = A(9, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R38
+      RF = 3.3D13
+      G0_SUM = +G0(3) -G0(4) -G0(9) +G0(16)
+      DGDT = +DG(3) -DG(4) -DG(9) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(3)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(9)
+      A(3, 4) = A(3, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(9, 4) = A(9, 4) -WFDC
+      A(16, 4) = A(16, 4) +WFDC
+      WFDC = RF*C(4)
+      A(3, 9) = A(3, 9) +WFDC
+      A(4, 9) = A(4, 9) -WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(16, 9) = A(16, 9) +WFDC
+      WBDC = RB*C(16)
+      A(3, 3) = A(3, 3) -WBDC
+      A(4, 3) = A(4, 3) +WBDC
+      A(9, 3) = A(9, 3) +WBDC
+      A(16, 3) = A(16, 3) -WBDC
+      WBDC = RB*C(3)
+      A(3, 16) = A(3, 16) -WBDC
+      A(4, 16) = A(4, 16) +WBDC
+      A(9, 16) = A(9, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R39
+C have third body
+C falloff: Troe 7-parameters
+      RF = 5.D13
+      G0_SUM = -G0(9) -G0(14) +G0(25)
+      DGDT = -DG(9) -DG(14) +DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.546192379744703D1 -3.74D0*TLOG -9.742274685508845D2/T)
+      PR = RL*CM/RF
+      PRLGDT = -3.74D0/T +9.742274685508845D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 4.243D-1*EXP(-T/2.37D2)
+      TEMP2 = 5.757D-1*EXP(-T/1.652D3)
+      TEMP3 = EXP(-5.069D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -4.219409282700422D-3*TEMP1 -6.053268765133172D-4*TEMP2
+     * +5.069D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(9)*C(14)
+      WFDT = WF*PCLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(25)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(25, 33) = A(25, 33) +DWDT
+      WFDC = RF*C(14)
+      A(9, 9) = A(9, 9) -WFDC
+      A(14, 9) = A(14, 9) -WFDC
+      A(25, 9) = A(25, 9) +WFDC
+      WFDC = RF*C(9)
+      A(9, 14) = A(9, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(25, 14) = A(25, 14) +WFDC
+      WBDC = RB
+      A(9, 25) = A(9, 25) +WBDC
+      A(14, 25) = A(14, 25) +WBDC
+      A(25, 25) = A(25, 25) -WBDC
+      DWDM = WFDM -WBDM
+      A(9, 1) = A(9, 1) -DWDM
+      A(9, 6) = A(9, 6) -5.D0*DWDM
+      A(9, 13) = A(9, 13) -DWDM
+      A(9, 14) = A(9, 14) -5.D-1*DWDM
+      A(9, 15) = A(9, 15) -DWDM
+      A(9, 19) = A(9, 19) -2.D0*DWDM
+      A(9, 22) = A(9, 22) -2.D0*DWDM
+      A(9, 24) = A(9, 24) -2.D0*DWDM
+      DM(9) = DM(9) -DWDM
+      A(14, 1) = A(14, 1) -DWDM
+      A(14, 6) = A(14, 6) -5.D0*DWDM
+      A(14, 13) = A(14, 13) -DWDM
+      A(14, 14) = A(14, 14) -5.D-1*DWDM
+      A(14, 15) = A(14, 15) -DWDM
+      A(14, 19) = A(14, 19) -2.D0*DWDM
+      A(14, 22) = A(14, 22) -2.D0*DWDM
+      A(14, 24) = A(14, 24) -2.D0*DWDM
+      DM(14) = DM(14) -DWDM
+      A(25, 1) = A(25, 1) +DWDM
+      A(25, 6) = A(25, 6) +5.D0*DWDM
+      A(25, 13) = A(25, 13) +DWDM
+      A(25, 14) = A(25, 14) +5.D-1*DWDM
+      A(25, 15) = A(25, 15) +DWDM
+      A(25, 19) = A(25, 19) +2.D0*DWDM
+      A(25, 22) = A(25, 22) +2.D0*DWDM
+      A(25, 24) = A(25, 24) +2.D0*DWDM
+      DM(25) = DM(25) +DWDM
+C
+C R40
+      RF = EXP(2.885479654755066D1 -3.472195006715446D2/T)
+      RFLGDT = 3.472195006715446D2/T2
+      G0_SUM = -G0(9) +G0(14) -G0(15) +G0(16)
+      DGDT = -DG(9) +DG(14) -DG(15) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(9)*C(15)
+      WFDT = WF*RFLGDT
+      WB = RB*C(14)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(15, 33) = A(15, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(15)
+      A(9, 9) = A(9, 9) -WFDC
+      A(14, 9) = A(14, 9) +WFDC
+      A(15, 9) = A(15, 9) -WFDC
+      A(16, 9) = A(16, 9) +WFDC
+      WFDC = RF*C(9)
+      A(9, 15) = A(9, 15) -WFDC
+      A(14, 15) = A(14, 15) +WFDC
+      A(15, 15) = A(15, 15) -WFDC
+      A(16, 15) = A(16, 15) +WFDC
+      WBDC = RB*C(16)
+      A(9, 14) = A(9, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(15, 14) = A(15, 14) +WBDC
+      A(16, 14) = A(16, 14) -WBDC
+      WBDC = RB*C(14)
+      A(9, 16) = A(9, 16) +WBDC
+      A(14, 16) = A(14, 16) -WBDC
+      A(15, 16) = A(15, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R41
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.77171988121696D1 +4.8D-1*TLOG +1.308363335863791D2/T)
+      RFLGDT = 4.8D-1/T -1.308363335863791D2/T2
+      G0_SUM = -G0(2) -G0(16) +G0(17)
+      DGDT = -DG(2) -DG(16) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(5.556214682430743D1 -2.57D0*TLOG -7.170837513868855D2/T)
+      PR = RL*CM/RF
+      PRLGDT = -3.05D0/T +8.479200849732647D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.176D-1*EXP(-T/2.71D2)
+      TEMP2 = 7.824D-1*EXP(-T/2.755D3)
+      TEMP3 = EXP(-6.57D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -3.690036900369004D-3*TEMP1 -3.629764065335753D-4*TEMP2
+     * +6.57D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(16)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(17)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(16)
+      A(2, 2) = A(2, 2) -WFDC
+      A(16, 2) = A(16, 2) -WFDC
+      A(17, 2) = A(17, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 16) = A(2, 16) -WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(17, 16) = A(17, 16) +WFDC
+      WBDC = RB
+      A(2, 17) = A(2, 17) +WBDC
+      A(16, 17) = A(16, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(16, 1) = A(16, 1) -DWDM
+      A(16, 6) = A(16, 6) -5.D0*DWDM
+      A(16, 13) = A(16, 13) -DWDM
+      A(16, 14) = A(16, 14) -5.D-1*DWDM
+      A(16, 15) = A(16, 15) -DWDM
+      A(16, 19) = A(16, 19) -2.D0*DWDM
+      A(16, 22) = A(16, 22) -2.D0*DWDM
+      A(16, 24) = A(16, 24) -2.D0*DWDM
+      DM(16) = DM(16) -DWDM
+      A(17, 1) = A(17, 1) +DWDM
+      A(17, 6) = A(17, 6) +5.D0*DWDM
+      A(17, 13) = A(17, 13) +DWDM
+      A(17, 14) = A(17, 14) +5.D-1*DWDM
+      A(17, 15) = A(17, 15) +DWDM
+      A(17, 19) = A(17, 19) +2.D0*DWDM
+      A(17, 22) = A(17, 22) +2.D0*DWDM
+      A(17, 24) = A(17, 24) +2.D0*DWDM
+      DM(17) = DM(17) +DWDM
+C
+C R42
+      RF = 7.34D13
+      G0_SUM = +G0(1) -G0(2) +G0(14) -G0(16)
+      DGDT = +DG(1) -DG(2) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(14, 2) = A(14, 2) +WFDC
+      A(16, 2) = A(16, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 16) = A(1, 16) +WFDC
+      A(2, 16) = A(2, 16) -WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(14, 1) = A(14, 1) -WBDC
+      A(16, 1) = A(16, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 14) = A(1, 14) -WBDC
+      A(2, 14) = A(2, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+C
+C R43
+      RF = 3.D13
+      G0_SUM = -G0(3) +G0(5) +G0(14) -G0(16)
+      DGDT = -DG(3) +DG(5) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      A(16, 3) = A(16, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 16) = A(3, 16) -WFDC
+      A(5, 16) = A(5, 16) +WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(14, 5) = A(14, 5) -WBDC
+      A(16, 5) = A(16, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 14) = A(3, 14) +WBDC
+      A(5, 14) = A(5, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+C
+C R44
+      RF = 3.D13
+      G0_SUM = +G0(2) -G0(3) +G0(15) -G0(16)
+      DGDT = +DG(2) -DG(3) +DG(15) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(15, 3) = A(15, 3) +WFDC
+      A(16, 3) = A(16, 3) -WFDC
+      WFDC = RF*C(3)
+      A(2, 16) = A(2, 16) +WFDC
+      A(3, 16) = A(3, 16) -WFDC
+      A(15, 16) = A(15, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(15)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(15, 2) = A(15, 2) -WBDC
+      A(16, 2) = A(16, 2) +WBDC
+      WBDC = RB*C(2)
+      A(2, 15) = A(2, 15) -WBDC
+      A(3, 15) = A(3, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+      A(16, 15) = A(16, 15) +WBDC
+C
+C R45
+      RF = 5.D13
+      G0_SUM = -G0(5) +G0(6) +G0(14) -G0(16)
+      DGDT = -DG(5) +DG(6) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(14, 5) = A(14, 5) +WFDC
+      A(16, 5) = A(16, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 16) = A(5, 16) -WFDC
+      A(6, 16) = A(6, 16) +WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(14, 6) = A(14, 6) -WBDC
+      A(16, 6) = A(16, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 14) = A(5, 14) +WBDC
+      A(6, 14) = A(6, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+C
+C R46
+C have third body
+      RF = EXP(3.976988501176528D1 -TLOG -8.554683349878635D3/T)
+      RFLGDT = -1.D0/T +8.554683349878635D3/T2
+      G0_SUM = +G0(2) +G0(14) -G0(16)
+      DGDT = +DG(2) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(16)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(2)*C(14)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF
+      A(2, 16) = A(2, 16) +WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(2, 2) = A(2, 2) -WBDC
+      A(14, 2) = A(14, 2) -WBDC
+      A(16, 2) = A(16, 2) +WBDC
+      WBDC = RB*C(2)
+      A(2, 14) = A(2, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) +DWDM
+      A(2, 6) = A(2, 6) +5.D0*DWDM
+      A(2, 13) = A(2, 13) +DWDM
+      A(2, 14) = A(2, 14) +5.D-1*DWDM
+      A(2, 15) = A(2, 15) +DWDM
+      A(2, 19) = A(2, 19) +2.D0*DWDM
+      A(2, 22) = A(2, 22) +2.D0*DWDM
+      A(2, 24) = A(2, 24) +2.D0*DWDM
+      DM(2) = DM(2) +DWDM
+      A(14, 1) = A(14, 1) +DWDM
+      A(14, 6) = A(14, 6) +5.D0*DWDM
+      A(14, 13) = A(14, 13) +DWDM
+      A(14, 14) = A(14, 14) +5.D-1*DWDM
+      A(14, 15) = A(14, 15) +DWDM
+      A(14, 19) = A(14, 19) +2.D0*DWDM
+      A(14, 22) = A(14, 22) +2.D0*DWDM
+      A(14, 24) = A(14, 24) +2.D0*DWDM
+      DM(14) = DM(14) +DWDM
+      A(16, 1) = A(16, 1) -DWDM
+      A(16, 6) = A(16, 6) -5.D0*DWDM
+      A(16, 13) = A(16, 13) -DWDM
+      A(16, 14) = A(16, 14) -5.D-1*DWDM
+      A(16, 15) = A(16, 15) -DWDM
+      A(16, 19) = A(16, 19) -2.D0*DWDM
+      A(16, 22) = A(16, 22) -2.D0*DWDM
+      A(16, 24) = A(16, 24) -2.D0*DWDM
+      DM(16) = DM(16) -DWDM
+C
+C R47
+      RF = EXP(2.965916936322083D1 -2.012866670559679D2/T)
+      RFLGDT = 2.012866670559679D2/T2
+      G0_SUM = -G0(4) +G0(7) +G0(14) -G0(16)
+      DGDT = -DG(4) +DG(7) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(16)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(14, 4) = A(14, 4) +WFDC
+      A(16, 4) = A(16, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 16) = A(4, 16) -WFDC
+      A(7, 16) = A(7, 16) +WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(14, 7) = A(14, 7) -WBDC
+      A(16, 7) = A(16, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 14) = A(4, 14) +WBDC
+      A(7, 14) = A(7, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+C
+C R48
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.775765221977888D1 -8.D-1*TLOG)
+      RFLGDT = -8.D-1/T
+      G0_SUM = -G0(2) -G0(10) +G0(12)
+      DGDT = -DG(2) -DG(10) +DG(12)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.333294832064492D1 -3.14D0*TLOG -6.189565011971013D2/T)
+      PR = RL*CM/RF
+      PRLGDT = -2.34D0/T +6.189565011971013D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 3.2D-1*EXP(-T/7.8D1)
+      TEMP2 = 6.8D-1*EXP(-T/1.995D3)
+      TEMP3 = EXP(-5.59D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.282051282051282D-2*TEMP1 -5.012531328320802D-4*TEMP2
+     * +5.59D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(10)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(12)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      WFDC = RF*C(10)
+      A(2, 2) = A(2, 2) -WFDC
+      A(10, 2) = A(10, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 10) = A(2, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(12, 10) = A(12, 10) +WFDC
+      WBDC = RB
+      A(2, 12) = A(2, 12) +WBDC
+      A(10, 12) = A(10, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(10, 1) = A(10, 1) -DWDM
+      A(10, 6) = A(10, 6) -5.D0*DWDM
+      A(10, 13) = A(10, 13) -DWDM
+      A(10, 14) = A(10, 14) -5.D-1*DWDM
+      A(10, 15) = A(10, 15) -DWDM
+      A(10, 19) = A(10, 19) -2.D0*DWDM
+      A(10, 22) = A(10, 22) -2.D0*DWDM
+      A(10, 24) = A(10, 24) -2.D0*DWDM
+      DM(10) = DM(10) -DWDM
+      A(12, 1) = A(12, 1) +DWDM
+      A(12, 6) = A(12, 6) +5.D0*DWDM
+      A(12, 13) = A(12, 13) +DWDM
+      A(12, 14) = A(12, 14) +5.D-1*DWDM
+      A(12, 15) = A(12, 15) +DWDM
+      A(12, 19) = A(12, 19) +2.D0*DWDM
+      A(12, 22) = A(12, 22) +2.D0*DWDM
+      A(12, 24) = A(12, 24) +2.D0*DWDM
+      DM(12) = DM(12) +DWDM
+C
+C R49
+      RF = EXP(1.312236337740433D1 +2.D0*TLOG -3.63825650703662D3/T)
+      RFLGDT = 2.D0/T +3.63825650703662D3/T2
+      G0_SUM = -G0(1) +G0(2) -G0(10) +G0(12)
+      DGDT = -DG(1) +DG(2) -DG(10) +DG(12)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(1)*C(10)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      WFDC = RF*C(10)
+      A(1, 1) = A(1, 1) -WFDC
+      A(2, 1) = A(2, 1) +WFDC
+      A(10, 1) = A(10, 1) -WFDC
+      A(12, 1) = A(12, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 10) = A(1, 10) -WFDC
+      A(2, 10) = A(2, 10) +WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(12, 10) = A(12, 10) +WFDC
+      WBDC = RB*C(12)
+      A(1, 2) = A(1, 2) +WBDC
+      A(2, 2) = A(2, 2) -WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(12, 2) = A(12, 2) -WBDC
+      WBDC = RB*C(2)
+      A(1, 12) = A(1, 12) +WBDC
+      A(2, 12) = A(2, 12) -WBDC
+      A(10, 12) = A(10, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+C
+C R50
+      RF = 8.D13
+      G0_SUM = +G0(2) -G0(3) -G0(10) +G0(16)
+      DGDT = +DG(2) -DG(3) -DG(10) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(10)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(10, 3) = A(10, 3) -WFDC
+      A(16, 3) = A(16, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 10) = A(2, 10) +WFDC
+      A(3, 10) = A(3, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(16, 10) = A(16, 10) +WFDC
+      WBDC = RB*C(16)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(16, 2) = A(16, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 16) = A(2, 16) -WBDC
+      A(3, 16) = A(3, 16) +WBDC
+      A(10, 16) = A(10, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R51
+      RF = EXP(2.998809439420666D1 -7.548250014598796D2/T)
+      RFLGDT = 7.548250014598796D2/T2
+      G0_SUM = -G0(4) +G0(5) -G0(10) +G0(16)
+      DGDT = -DG(4) +DG(5) -DG(10) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(10)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(10)
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      A(10, 4) = A(10, 4) -WFDC
+      A(16, 4) = A(16, 4) +WFDC
+      WFDC = RF*C(4)
+      A(4, 10) = A(4, 10) -WFDC
+      A(5, 10) = A(5, 10) +WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(16, 10) = A(16, 10) +WFDC
+      WBDC = RB*C(16)
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(10, 5) = A(10, 5) +WBDC
+      A(16, 5) = A(16, 5) -WBDC
+      WBDC = RB*C(5)
+      A(4, 16) = A(4, 16) +WBDC
+      A(5, 16) = A(5, 16) -WBDC
+      A(10, 16) = A(10, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R52
+      RF = EXP(2.860180003308677D1 -7.548250014598796D2/T)
+      RFLGDT = 7.548250014598796D2/T2
+      G0_SUM = +2*G0(2) -G0(4) -G0(10) +G0(15)
+      DGDT = +2*DG(2) -DG(4) -DG(10) +DG(15)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(10)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(2)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +2*DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      WFDC = RF*C(10)
+      A(2, 4) = A(2, 4) +2*WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(10, 4) = A(10, 4) -WFDC
+      A(15, 4) = A(15, 4) +WFDC
+      WFDC = RF*C(4)
+      A(2, 10) = A(2, 10) +2*WFDC
+      A(4, 10) = A(4, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(15, 10) = A(15, 10) +WFDC
+      WBDC = 2*RB*C(2)*C(15)
+      A(2, 2) = A(2, 2) -2*WBDC
+      A(4, 2) = A(4, 2) +WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(15, 2) = A(15, 2) -WBDC
+      WBDC = RB*C(2)*C(2)
+      A(2, 15) = A(2, 15) -2*WBDC
+      A(4, 15) = A(4, 15) +WBDC
+      A(10, 15) = A(10, 15) +WBDC
+      A(15, 15) = A(15, 15) -WBDC
+C
+C R53
+      RF = 2.D13
+      G0_SUM = +G0(2) -G0(5) -G0(10) +G0(17)
+      DGDT = +DG(2) -DG(5) -DG(10) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(10)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(10, 5) = A(10, 5) -WFDC
+      A(17, 5) = A(17, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 10) = A(2, 10) +WFDC
+      A(5, 10) = A(5, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(17, 10) = A(17, 10) +WFDC
+      WBDC = RB*C(17)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(17, 2) = A(17, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 17) = A(2, 17) -WBDC
+      A(5, 17) = A(5, 17) +WBDC
+      A(10, 17) = A(10, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R54
+      RF = EXP(1.624031328368257D1 +2.D0*TLOG -1.509650002919759D3/T)
+      RFLGDT = 2.D0/T +1.509650002919759D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(9) -G0(10)
+      DGDT = -DG(5) +DG(6) +DG(9) -DG(10)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(10)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(9)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(9, 33) = A(9, 33) +DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      WFDC = RF*C(10)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(9, 5) = A(9, 5) +WFDC
+      A(10, 5) = A(10, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 10) = A(5, 10) -WFDC
+      A(6, 10) = A(6, 10) +WFDC
+      A(9, 10) = A(9, 10) +WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      WBDC = RB*C(9)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(9, 6) = A(9, 6) -WBDC
+      A(10, 6) = A(10, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 9) = A(5, 9) +WBDC
+      A(6, 9) = A(6, 9) -WBDC
+      A(9, 9) = A(9, 9) -WBDC
+      A(10, 9) = A(10, 9) +WBDC
+C
+C R55
+      RF = 2.D13
+      G0_SUM = +G0(5) -G0(7) -G0(10) +G0(17)
+      DGDT = +DG(5) -DG(7) -DG(10) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(10)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(10, 7) = A(10, 7) -WFDC
+      A(17, 7) = A(17, 7) +WFDC
+      WFDC = RF*C(7)
+      A(5, 10) = A(5, 10) +WFDC
+      A(7, 10) = A(7, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(17, 10) = A(17, 10) +WFDC
+      WBDC = RB*C(17)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(10, 5) = A(10, 5) +WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      WBDC = RB*C(5)
+      A(5, 17) = A(5, 17) -WBDC
+      A(7, 17) = A(7, 17) +WBDC
+      A(10, 17) = A(10, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R56
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.74203000846129D1 +5.D-1*TLOG -2.269507171056038D3/T)
+      RFLGDT = 5.D-1/T +2.269507171056038D3/T2
+      G0_SUM = -G0(10) -G0(14) +G0(26)
+      DGDT = -DG(10) -DG(14) +DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(7.697484926241725D1 -5.11D0*TLOG -3.57032225690523D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -5.61D0/T +1.300815085849192D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 4.093D-1*EXP(-T/2.75D2)
+      TEMP2 = 5.907D-1*EXP(-T/1.226D3)
+      TEMP3 = EXP(-5.185D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -3.636363636363636D-3*TEMP1 -8.156606851549755D-4*TEMP2
+     * +5.185D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(10)*C(14)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(26)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(14, 33) = A(14, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      WFDC = RF*C(14)
+      A(10, 10) = A(10, 10) -WFDC
+      A(14, 10) = A(14, 10) -WFDC
+      A(26, 10) = A(26, 10) +WFDC
+      WFDC = RF*C(10)
+      A(10, 14) = A(10, 14) -WFDC
+      A(14, 14) = A(14, 14) -WFDC
+      A(26, 14) = A(26, 14) +WFDC
+      WBDC = RB
+      A(10, 26) = A(10, 26) +WBDC
+      A(14, 26) = A(14, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      DWDM = WFDM -WBDM
+      A(10, 1) = A(10, 1) -DWDM
+      A(10, 6) = A(10, 6) -5.D0*DWDM
+      A(10, 13) = A(10, 13) -DWDM
+      A(10, 14) = A(10, 14) -5.D-1*DWDM
+      A(10, 15) = A(10, 15) -DWDM
+      A(10, 19) = A(10, 19) -2.D0*DWDM
+      A(10, 22) = A(10, 22) -2.D0*DWDM
+      A(10, 24) = A(10, 24) -2.D0*DWDM
+      DM(10) = DM(10) -DWDM
+      A(14, 1) = A(14, 1) -DWDM
+      A(14, 6) = A(14, 6) -5.D0*DWDM
+      A(14, 13) = A(14, 13) -DWDM
+      A(14, 14) = A(14, 14) -5.D-1*DWDM
+      A(14, 15) = A(14, 15) -DWDM
+      A(14, 19) = A(14, 19) -2.D0*DWDM
+      A(14, 22) = A(14, 22) -2.D0*DWDM
+      A(14, 24) = A(14, 24) -2.D0*DWDM
+      DM(14) = DM(14) -DWDM
+      A(26, 1) = A(26, 1) +DWDM
+      A(26, 6) = A(26, 6) +5.D0*DWDM
+      A(26, 13) = A(26, 13) +DWDM
+      A(26, 14) = A(26, 14) +5.D-1*DWDM
+      A(26, 15) = A(26, 15) +DWDM
+      A(26, 19) = A(26, 19) +2.D0*DWDM
+      A(26, 22) = A(26, 22) +2.D0*DWDM
+      A(26, 24) = A(26, 24) +2.D0*DWDM
+      DM(26) = DM(26) +DWDM
+C
+C R57
+      RF = 4.D13
+      G0_SUM = +G0(2) -G0(9) -G0(10) +G0(19)
+      DGDT = +DG(2) -DG(9) -DG(10) +DG(19)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      WFDC = RF*C(10)
+      A(2, 9) = A(2, 9) +WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(10, 9) = A(10, 9) -WFDC
+      A(19, 9) = A(19, 9) +WFDC
+      WFDC = RF*C(9)
+      A(2, 10) = A(2, 10) +WFDC
+      A(9, 10) = A(9, 10) -WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(19, 10) = A(19, 10) +WFDC
+      WBDC = RB*C(19)
+      A(2, 2) = A(2, 2) -WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(19, 2) = A(19, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 19) = A(2, 19) -WBDC
+      A(9, 19) = A(9, 19) +WBDC
+      A(10, 19) = A(10, 19) +WBDC
+      A(19, 19) = A(19, 19) -WBDC
+C
+C R58
+      RF = 3.2D13
+      G0_SUM = +G0(1) -2*G0(10) +G0(19)
+      DGDT = +DG(1) -2*DG(10) +DG(19)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(10, 33) = A(10, 33) -2*DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      WFDC = 2*RF*C(10)
+      A(1, 10) = A(1, 10) +WFDC
+      A(10, 10) = A(10, 10) -2*WFDC
+      A(19, 10) = A(19, 10) +WFDC
+      WBDC = RB*C(19)
+      A(1, 1) = A(1, 1) -WBDC
+      A(10, 1) = A(10, 1) +2*WBDC
+      A(19, 1) = A(19, 1) -WBDC
+      WBDC = RB*C(1)
+      A(1, 19) = A(1, 19) -WBDC
+      A(10, 19) = A(10, 19) +2*WBDC
+      A(19, 19) = A(19, 19) -WBDC
+C
+C R59
+      RF = EXP(3.033907131703076D1 -3.019300005839518D2/T)
+      RFLGDT = 3.019300005839518D2/T2
+      G0_SUM = +G0(10) -G0(11)
+      DGDT = +DG(10) -DG(11)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(11)*C(32)
+      WFDT = WF*RFLGDT
+      WB = RB*C(10)*C(32)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      WFDC = RF*C(32)
+      A(10, 11) = A(10, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      WFDC = RF*C(11)
+      A(10, 32) = A(10, 32) +WFDC
+      A(11, 32) = A(11, 32) -WFDC
+      WBDC = RB*C(32)
+      A(10, 10) = A(10, 10) -WBDC
+      A(11, 10) = A(11, 10) +WBDC
+      WBDC = RB*C(10)
+      A(10, 32) = A(10, 32) -WBDC
+      A(11, 32) = A(11, 32) +WBDC
+C
+C R60
+      RF = 3.D13
+      G0_SUM = +G0(1) -G0(2) +G0(9) -G0(11)
+      DGDT = +DG(1) -DG(2) +DG(9) -DG(11)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(9)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(9, 33) = A(9, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      WFDC = RF*C(11)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(9, 2) = A(9, 2) +WFDC
+      A(11, 2) = A(11, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 11) = A(1, 11) +WFDC
+      A(2, 11) = A(2, 11) -WFDC
+      A(9, 11) = A(9, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      WBDC = RB*C(9)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(9, 1) = A(9, 1) -WBDC
+      A(11, 1) = A(11, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 9) = A(1, 9) -WBDC
+      A(2, 9) = A(2, 9) +WBDC
+      A(9, 9) = A(9, 9) -WBDC
+      A(11, 9) = A(11, 9) +WBDC
+C
+C R61
+      RF = 1.5D13
+      G0_SUM = +G0(1) -G0(3) -G0(11) +G0(14)
+      DGDT = +DG(1) -DG(3) -DG(11) +DG(14)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      WFDC = RF*C(11)
+      A(1, 3) = A(1, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(11, 3) = A(11, 3) -WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      WFDC = RF*C(3)
+      A(1, 11) = A(1, 11) +WFDC
+      A(3, 11) = A(3, 11) -WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(14, 11) = A(14, 11) +WFDC
+      WBDC = RB*C(14)
+      A(1, 1) = A(1, 1) -WBDC
+      A(3, 1) = A(3, 1) +WBDC
+      A(11, 1) = A(11, 1) +WBDC
+      A(14, 1) = A(14, 1) -WBDC
+      WBDC = RB*C(1)
+      A(1, 14) = A(1, 14) -WBDC
+      A(3, 14) = A(3, 14) +WBDC
+      A(11, 14) = A(11, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+C
+C R62
+      RF = 1.5D13
+      G0_SUM = +G0(2) -G0(3) -G0(11) +G0(16)
+      DGDT = +DG(2) -DG(3) -DG(11) +DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      WFDC = RF*C(11)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(11, 3) = A(11, 3) -WFDC
+      A(16, 3) = A(16, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 11) = A(2, 11) +WFDC
+      A(3, 11) = A(3, 11) -WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(16, 11) = A(16, 11) +WFDC
+      WBDC = RB*C(16)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(16, 2) = A(16, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 16) = A(2, 16) -WBDC
+      A(3, 16) = A(3, 16) +WBDC
+      A(11, 16) = A(11, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+C
+C R63
+      RF = 3.D13
+      G0_SUM = +G0(2) -G0(5) -G0(11) +G0(17)
+      DGDT = +DG(2) -DG(5) -DG(11) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(11)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(11, 5) = A(11, 5) -WFDC
+      A(17, 5) = A(17, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 11) = A(2, 11) +WFDC
+      A(5, 11) = A(5, 11) -WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(17, 11) = A(17, 11) +WFDC
+      WBDC = RB*C(17)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(17, 2) = A(17, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 17) = A(2, 17) -WBDC
+      A(5, 17) = A(5, 17) +WBDC
+      A(11, 17) = A(11, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R64
+      RF = 7.D13
+      G0_SUM = -G0(1) +G0(2) -G0(11) +G0(12)
+      DGDT = -DG(1) +DG(2) -DG(11) +DG(12)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) -DWDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      WFDC = RF*C(11)
+      A(1, 1) = A(1, 1) -WFDC
+      A(2, 1) = A(2, 1) +WFDC
+      A(11, 1) = A(11, 1) -WFDC
+      A(12, 1) = A(12, 1) +WFDC
+      WFDC = RF*C(1)
+      A(1, 11) = A(1, 11) -WFDC
+      A(2, 11) = A(2, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(12, 11) = A(12, 11) +WFDC
+      WBDC = RB*C(12)
+      A(1, 2) = A(1, 2) +WBDC
+      A(2, 2) = A(2, 2) -WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(12, 2) = A(12, 2) -WBDC
+      WBDC = RB*C(2)
+      A(1, 12) = A(1, 12) +WBDC
+      A(2, 12) = A(2, 12) -WBDC
+      A(11, 12) = A(11, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+C
+C R65
+      RF = 2.8D13
+      G0_SUM = +G0(2) -G0(4) +G0(5) -G0(11) +G0(14)
+      DGDT = +DG(2) -DG(4) +DG(5) -DG(11) +DG(14)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(5)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      WFDC = RF*C(11)
+      A(2, 4) = A(2, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      A(11, 4) = A(11, 4) -WFDC
+      A(14, 4) = A(14, 4) +WFDC
+      WFDC = RF*C(4)
+      A(2, 11) = A(2, 11) +WFDC
+      A(4, 11) = A(4, 11) -WFDC
+      A(5, 11) = A(5, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(14, 11) = A(14, 11) +WFDC
+      WBDC = RB*C(5)*C(14)
+      A(2, 2) = A(2, 2) -WBDC
+      A(4, 2) = A(4, 2) +WBDC
+      A(5, 2) = A(5, 2) -WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(14, 2) = A(14, 2) -WBDC
+      WBDC = RB*C(2)*C(14)
+      A(2, 5) = A(2, 5) -WBDC
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(11, 5) = A(11, 5) +WBDC
+      A(14, 5) = A(14, 5) -WBDC
+      WBDC = RB*C(2)*C(5)
+      A(2, 14) = A(2, 14) -WBDC
+      A(4, 14) = A(4, 14) +WBDC
+      A(5, 14) = A(5, 14) -WBDC
+      A(11, 14) = A(11, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+C
+C R66
+      RF = 1.2D13
+      G0_SUM = -G0(4) +G0(6) -G0(11) +G0(14)
+      DGDT = -DG(4) +DG(6) -DG(11) +DG(14)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      WFDC = RF*C(11)
+      A(4, 4) = A(4, 4) -WFDC
+      A(6, 4) = A(6, 4) +WFDC
+      A(11, 4) = A(11, 4) -WFDC
+      A(14, 4) = A(14, 4) +WFDC
+      WFDC = RF*C(4)
+      A(4, 11) = A(4, 11) -WFDC
+      A(6, 11) = A(6, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(14, 11) = A(14, 11) +WFDC
+      WBDC = RB*C(14)
+      A(4, 6) = A(4, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(11, 6) = A(11, 6) +WBDC
+      A(14, 6) = A(14, 6) -WBDC
+      WBDC = RB*C(6)
+      A(4, 14) = A(4, 14) +WBDC
+      A(6, 14) = A(6, 14) -WBDC
+      A(11, 14) = A(11, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+C
+C R67
+      RF = 3.D13
+      G0_SUM = +G0(10) -G0(11)
+      DGDT = +DG(10) -DG(11)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(10)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      WFDC = RF*C(11)
+      A(10, 6) = A(10, 6) +WFDC
+      A(11, 6) = A(11, 6) -WFDC
+      WFDC = RF*C(6)
+      A(10, 11) = A(10, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      WBDC = RB*C(10)
+      A(10, 6) = A(10, 6) -WBDC
+      A(11, 6) = A(11, 6) +WBDC
+      WBDC = RB*C(6)
+      A(10, 10) = A(10, 10) -WBDC
+      A(11, 10) = A(11, 10) +WBDC
+C
+C R68
+      RF = 9.D12
+      G0_SUM = +G0(10) -G0(11)
+      DGDT = +DG(10) -DG(11)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(10)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      WFDC = RF*C(14)
+      A(10, 11) = A(10, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      WFDC = RF*C(11)
+      A(10, 14) = A(10, 14) +WFDC
+      A(11, 14) = A(11, 14) -WFDC
+      WBDC = RB*C(14)
+      A(10, 10) = A(10, 10) -WBDC
+      A(11, 10) = A(11, 10) +WBDC
+      WBDC = RB*C(10)
+      A(10, 14) = A(10, 14) -WBDC
+      A(11, 14) = A(11, 14) +WBDC
+C
+C R69
+      RF = 7.D12
+      G0_SUM = +G0(10) -G0(11)
+      DGDT = +DG(10) -DG(11)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(10)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      WFDC = RF*C(15)
+      A(10, 11) = A(10, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      WFDC = RF*C(11)
+      A(10, 15) = A(10, 15) +WFDC
+      A(11, 15) = A(11, 15) -WFDC
+      WBDC = RB*C(15)
+      A(10, 10) = A(10, 10) -WBDC
+      A(11, 10) = A(11, 10) +WBDC
+      WBDC = RB*C(10)
+      A(10, 15) = A(10, 15) -WBDC
+      A(11, 15) = A(11, 15) +WBDC
+C
+C R70
+      RF = 1.4D13
+      G0_SUM = -G0(11) +G0(14) -G0(15) +G0(17)
+      DGDT = -DG(11) +DG(14) -DG(15) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(15, 33) = A(15, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(15)
+      A(11, 11) = A(11, 11) -WFDC
+      A(14, 11) = A(14, 11) +WFDC
+      A(15, 11) = A(15, 11) -WFDC
+      A(17, 11) = A(17, 11) +WFDC
+      WFDC = RF*C(11)
+      A(11, 15) = A(11, 15) -WFDC
+      A(14, 15) = A(14, 15) +WFDC
+      A(15, 15) = A(15, 15) -WFDC
+      A(17, 15) = A(17, 15) +WFDC
+      WBDC = RB*C(17)
+      A(11, 14) = A(11, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(15, 14) = A(15, 14) +WBDC
+      A(17, 14) = A(17, 14) -WBDC
+      WBDC = RB*C(14)
+      A(11, 17) = A(11, 17) +WBDC
+      A(14, 17) = A(14, 17) -WBDC
+      A(15, 17) = A(15, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R71
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.701483497650473D1 +4.54D-1*TLOG -1.308363335863791D3/T)
+      RFLGDT = 4.54D-1/T +1.308363335863791D3/T2
+      G0_SUM = -G0(2) -G0(17) +G0(18)
+      DGDT = -DG(2) -DG(17) +DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.986601015018565D1 -4.8D0*TLOG -2.797884672077953D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -5.254D0/T +1.489521336214162D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.42D-1*EXP(-T/9.4D1)
+      TEMP2 = 7.58D-1*EXP(-T/1.555D3)
+      TEMP3 = EXP(-4.2D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.063829787234043D-2*TEMP1 -6.430868167202573D-4*TEMP2
+     * +4.2D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(17)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(18)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      A(18, 33) = A(18, 33) +DWDT
+      WFDC = RF*C(17)
+      A(2, 2) = A(2, 2) -WFDC
+      A(17, 2) = A(17, 2) -WFDC
+      A(18, 2) = A(18, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 17) = A(2, 17) -WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      A(18, 17) = A(18, 17) +WFDC
+      WBDC = RB
+      A(2, 18) = A(2, 18) +WBDC
+      A(17, 18) = A(17, 18) +WBDC
+      A(18, 18) = A(18, 18) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(17, 1) = A(17, 1) -DWDM
+      A(17, 6) = A(17, 6) -5.D0*DWDM
+      A(17, 13) = A(17, 13) -DWDM
+      A(17, 14) = A(17, 14) -5.D-1*DWDM
+      A(17, 15) = A(17, 15) -DWDM
+      A(17, 19) = A(17, 19) -2.D0*DWDM
+      A(17, 22) = A(17, 22) -2.D0*DWDM
+      A(17, 24) = A(17, 24) -2.D0*DWDM
+      DM(17) = DM(17) -DWDM
+      A(18, 1) = A(18, 1) +DWDM
+      A(18, 6) = A(18, 6) +5.D0*DWDM
+      A(18, 13) = A(18, 13) +DWDM
+      A(18, 14) = A(18, 14) +5.D-1*DWDM
+      A(18, 15) = A(18, 15) +DWDM
+      A(18, 19) = A(18, 19) +2.D0*DWDM
+      A(18, 22) = A(18, 22) +2.D0*DWDM
+      A(18, 24) = A(18, 24) +2.D0*DWDM
+      DM(18) = DM(18) +DWDM
+C
+C R72
+      RF = EXP(2.385876005287556D1 +1.05D0*TLOG -1.648034586520737D3/T)
+      RFLGDT = 1.05D0/T +1.648034586520737D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(16) -G0(17)
+      DGDT = +DG(1) -DG(2) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(16, 2) = A(16, 2) +WFDC
+      A(17, 2) = A(17, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 17) = A(1, 17) +WFDC
+      A(2, 17) = A(2, 17) -WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(16, 1) = A(16, 1) -WBDC
+      A(17, 1) = A(17, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 16) = A(1, 16) -WBDC
+      A(2, 16) = A(2, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R73
+      RF = EXP(3.129458276205819D1 -1.781387003445316D3/T)
+      RFLGDT = 1.781387003445316D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(16) -G0(17)
+      DGDT = -DG(3) +DG(5) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(16, 3) = A(16, 3) +WFDC
+      A(17, 3) = A(17, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 17) = A(3, 17) -WFDC
+      A(5, 17) = A(5, 17) +WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(16, 5) = A(16, 5) -WBDC
+      A(17, 5) = A(17, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 16) = A(3, 16) +WBDC
+      A(5, 16) = A(5, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R74
+      RF = EXP(2.195582609812426D1 +1.18D0*TLOG +2.249378504350441D2/T)
+      RFLGDT = 1.18D0/T -2.249378504350441D2/T2
+      G0_SUM = -G0(5) +G0(6) +G0(16) -G0(17)
+      DGDT = -DG(5) +DG(6) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(16, 5) = A(16, 5) +WFDC
+      A(17, 5) = A(17, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 17) = A(5, 17) -WFDC
+      A(6, 17) = A(6, 17) +WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(16, 6) = A(16, 6) -WBDC
+      A(17, 6) = A(17, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 16) = A(5, 16) +WBDC
+      A(6, 16) = A(6, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R75
+      RF = EXP(3.223619130191664D1 -2.012866670559679D4/T)
+      RFLGDT = 2.012866670559679D4/T2
+      G0_SUM = -G0(4) +G0(7) +G0(16) -G0(17)
+      DGDT = -DG(4) +DG(7) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(16, 4) = A(16, 4) +WFDC
+      A(17, 4) = A(17, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 17) = A(4, 17) -WFDC
+      A(7, 17) = A(7, 17) +WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(16, 7) = A(16, 7) -WBDC
+      A(17, 7) = A(17, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 16) = A(4, 16) +WBDC
+      A(7, 16) = A(7, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R76
+      RF = EXP(2.763102111592855D1 -4.025733341119358D3/T)
+      RFLGDT = 4.025733341119358D3/T2
+      G0_SUM = -G0(7) +G0(8) +G0(16) -G0(17)
+      DGDT = -DG(7) +DG(8) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(8)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(7, 7) = A(7, 7) -WFDC
+      A(8, 7) = A(8, 7) +WFDC
+      A(16, 7) = A(16, 7) +WFDC
+      A(17, 7) = A(17, 7) -WFDC
+      WFDC = RF*C(7)
+      A(7, 17) = A(7, 17) -WFDC
+      A(8, 17) = A(8, 17) +WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(7, 8) = A(7, 8) +WBDC
+      A(8, 8) = A(8, 8) -WBDC
+      A(16, 8) = A(16, 8) -WBDC
+      A(17, 8) = A(17, 8) +WBDC
+      WBDC = RB*C(8)
+      A(7, 16) = A(7, 16) +WBDC
+      A(8, 16) = A(8, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R77
+      RF = EXP(3.218067859198638D1 +2.591565838345587D2/T)
+      RFLGDT = -2.591565838345587D2/T2
+      G0_SUM = +G0(2) -G0(9) -G0(17) +G0(26)
+      DGDT = +DG(2) -DG(9) -DG(17) +DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(9)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      WFDC = RF*C(17)
+      A(2, 9) = A(2, 9) +WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(17, 9) = A(17, 9) -WFDC
+      A(26, 9) = A(26, 9) +WFDC
+      WFDC = RF*C(9)
+      A(2, 17) = A(2, 17) +WFDC
+      A(9, 17) = A(9, 17) -WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      A(26, 17) = A(26, 17) +WFDC
+      WBDC = RB*C(26)
+      A(2, 2) = A(2, 2) -WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(17, 2) = A(17, 2) +WBDC
+      A(26, 2) = A(26, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 26) = A(2, 26) -WBDC
+      A(9, 26) = A(9, 26) +WBDC
+      A(17, 26) = A(17, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+C
+C R78
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.708037838837523D1 -6.3D-1*TLOG -1.927319837060892D2/T)
+      RFLGDT = -6.3D-1/T +1.927319837060892D2/T2
+      G0_SUM = -G0(2) -G0(12) +G0(13)
+      DGDT = -DG(2) -DG(12) +DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(7.689235621931073D1 -4.76D0*TLOG -1.227848669041404D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -4.13D0/T +1.035116685335315D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.17D-1*EXP(-T/7.4D1)
+      TEMP2 = 7.83D-1*EXP(-T/2.941D3)
+      TEMP3 = EXP(-6.964D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.351351351351351D-2*TEMP1 -3.400204012240735D-4*TEMP2
+     * +6.964D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(12)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(13)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      WFDC = RF*C(12)
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) -WFDC
+      A(13, 2) = A(13, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 12) = A(2, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      WBDC = RB
+      A(2, 13) = A(2, 13) +WBDC
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(12, 1) = A(12, 1) -DWDM
+      A(12, 6) = A(12, 6) -5.D0*DWDM
+      A(12, 13) = A(12, 13) -DWDM
+      A(12, 14) = A(12, 14) -5.D-1*DWDM
+      A(12, 15) = A(12, 15) -DWDM
+      A(12, 19) = A(12, 19) -2.D0*DWDM
+      A(12, 22) = A(12, 22) -2.D0*DWDM
+      A(12, 24) = A(12, 24) -2.D0*DWDM
+      DM(12) = DM(12) -DWDM
+      A(13, 1) = A(13, 1) +DWDM
+      A(13, 6) = A(13, 6) +5.D0*DWDM
+      A(13, 13) = A(13, 13) +DWDM
+      A(13, 14) = A(13, 14) +5.D-1*DWDM
+      A(13, 15) = A(13, 15) +DWDM
+      A(13, 19) = A(13, 19) +2.D0*DWDM
+      A(13, 22) = A(13, 22) +2.D0*DWDM
+      A(13, 24) = A(13, 24) +2.D0*DWDM
+      DM(13) = DM(13) +DWDM
+C
+C R79
+      RF = 8.43D13
+      G0_SUM = +G0(2) -G0(3) -G0(12) +G0(17)
+      DGDT = +DG(2) -DG(3) -DG(12) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(12)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(12, 3) = A(12, 3) -WFDC
+      A(17, 3) = A(17, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 12) = A(2, 12) +WFDC
+      A(3, 12) = A(3, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(17, 12) = A(17, 12) +WFDC
+      WBDC = RB*C(17)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(12, 2) = A(12, 2) +WBDC
+      A(17, 2) = A(17, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 17) = A(2, 17) -WBDC
+      A(3, 17) = A(3, 17) +WBDC
+      A(12, 17) = A(12, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R80
+      RF = EXP(1.784086224869942D1 +1.6D0*TLOG -2.727434338608365D3/T)
+      RFLGDT = 1.6D0/T +2.727434338608365D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(10) -G0(12)
+      DGDT = -DG(5) +DG(6) +DG(10) -DG(12)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(10)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      WFDC = RF*C(12)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(10, 5) = A(10, 5) +WFDC
+      A(12, 5) = A(12, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 12) = A(5, 12) -WFDC
+      A(6, 12) = A(6, 12) +WFDC
+      A(10, 12) = A(10, 12) +WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      WBDC = RB*C(10)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(10, 6) = A(10, 6) -WBDC
+      A(12, 6) = A(12, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 10) = A(5, 10) +WBDC
+      A(6, 10) = A(6, 10) -WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(12, 10) = A(12, 10) +WBDC
+C
+C R81
+      RF = 2.501D13
+      G0_SUM = -G0(5) +G0(6) +G0(11) -G0(12)
+      DGDT = -DG(5) +DG(6) +DG(11) -DG(12)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(11)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(11, 33) = A(11, 33) +DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      WFDC = RF*C(12)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(11, 5) = A(11, 5) +WFDC
+      A(12, 5) = A(12, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 12) = A(5, 12) -WFDC
+      A(6, 12) = A(6, 12) +WFDC
+      A(11, 12) = A(11, 12) +WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      WBDC = RB*C(11)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(11, 6) = A(11, 6) -WBDC
+      A(12, 6) = A(12, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 11) = A(5, 11) +WBDC
+      A(6, 11) = A(6, 11) -WBDC
+      A(11, 11) = A(11, 11) -WBDC
+      A(12, 11) = A(12, 11) +WBDC
+C
+C R82
+      RF = EXP(3.105950935782661D1 -1.449264002802969D4/T)
+      RFLGDT = 1.449264002802969D4/T2
+      G0_SUM = +G0(3) -G0(4) -G0(12) +G0(18)
+      DGDT = +DG(3) -DG(4) -DG(12) +DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(18)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(18, 33) = A(18, 33) +DWDT
+      WFDC = RF*C(12)
+      A(3, 4) = A(3, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(12, 4) = A(12, 4) -WFDC
+      A(18, 4) = A(18, 4) +WFDC
+      WFDC = RF*C(4)
+      A(3, 12) = A(3, 12) +WFDC
+      A(4, 12) = A(4, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(18, 12) = A(18, 12) +WFDC
+      WBDC = RB*C(18)
+      A(3, 3) = A(3, 3) -WBDC
+      A(4, 3) = A(4, 3) +WBDC
+      A(12, 3) = A(12, 3) +WBDC
+      A(18, 3) = A(18, 3) -WBDC
+      WBDC = RB*C(3)
+      A(3, 18) = A(3, 18) -WBDC
+      A(4, 18) = A(4, 18) +WBDC
+      A(12, 18) = A(12, 18) +WBDC
+      A(18, 18) = A(18, 18) -WBDC
+C
+C R83
+      RF = EXP(2.430678477540252D1 -4.498757008700882D3/T)
+      RFLGDT = 4.498757008700882D3/T2
+      G0_SUM = -G0(4) +G0(5) -G0(12) +G0(17)
+      DGDT = -DG(4) +DG(5) -DG(12) +DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      WFDC = RF*C(12)
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      A(12, 4) = A(12, 4) -WFDC
+      A(17, 4) = A(17, 4) +WFDC
+      WFDC = RF*C(4)
+      A(4, 12) = A(4, 12) -WFDC
+      A(5, 12) = A(5, 12) +WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(17, 12) = A(17, 12) +WFDC
+      WBDC = RB*C(17)
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(12, 5) = A(12, 5) +WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      WBDC = RB*C(5)
+      A(4, 17) = A(4, 17) +WBDC
+      A(5, 17) = A(5, 17) -WBDC
+      A(12, 17) = A(12, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+C
+C R84
+      RF = 1.D12
+      G0_SUM = +G0(4) -G0(7) -G0(12) +G0(13)
+      DGDT = +DG(4) -DG(7) -DG(12) +DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(4)*C(13)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      WFDC = RF*C(12)
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(12, 7) = A(12, 7) -WFDC
+      A(13, 7) = A(13, 7) +WFDC
+      WFDC = RF*C(7)
+      A(4, 12) = A(4, 12) +WFDC
+      A(7, 12) = A(7, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      WBDC = RB*C(13)
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+      A(12, 4) = A(12, 4) +WBDC
+      A(13, 4) = A(13, 4) -WBDC
+      WBDC = RB*C(4)
+      A(4, 13) = A(4, 13) -WBDC
+      A(7, 13) = A(7, 13) +WBDC
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+C
+C R85
+      RF = 1.34D13
+      G0_SUM = +G0(5) -G0(7) -G0(12) +G0(18)
+      DGDT = +DG(5) -DG(7) -DG(12) +DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(18)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(18, 33) = A(18, 33) +DWDT
+      WFDC = RF*C(12)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(12, 7) = A(12, 7) -WFDC
+      A(18, 7) = A(18, 7) +WFDC
+      WFDC = RF*C(7)
+      A(5, 12) = A(5, 12) +WFDC
+      A(7, 12) = A(7, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(18, 12) = A(18, 12) +WFDC
+      WBDC = RB*C(18)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(12, 5) = A(12, 5) +WBDC
+      A(18, 5) = A(18, 5) -WBDC
+      WBDC = RB*C(5)
+      A(5, 18) = A(5, 18) -WBDC
+      A(7, 18) = A(7, 18) +WBDC
+      A(12, 18) = A(12, 18) +WBDC
+      A(18, 18) = A(18, 18) -WBDC
+C
+C R86
+      RF = EXP(1.010642839653282D1 +2.47D0*TLOG -2.606662338374784D3/T)
+      RFLGDT = 2.47D0/T +2.606662338374784D3/T2
+      G0_SUM = +G0(7) -G0(8) -G0(12) +G0(13)
+      DGDT = +DG(7) -DG(8) -DG(12) +DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(8)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(13)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      WFDC = RF*C(12)
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      A(12, 8) = A(12, 8) -WFDC
+      A(13, 8) = A(13, 8) +WFDC
+      WFDC = RF*C(8)
+      A(7, 12) = A(7, 12) +WFDC
+      A(8, 12) = A(8, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      WBDC = RB*C(13)
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+      A(12, 7) = A(12, 7) +WBDC
+      A(13, 7) = A(13, 7) -WBDC
+      WBDC = RB*C(7)
+      A(7, 13) = A(7, 13) -WBDC
+      A(8, 13) = A(8, 13) +WBDC
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+C
+C R87
+      RF = 3.D13
+      G0_SUM = +G0(2) -G0(9) -G0(12) +G0(21)
+      DGDT = +DG(2) -DG(9) -DG(12) +DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      WFDC = RF*C(12)
+      A(2, 9) = A(2, 9) +WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(12, 9) = A(12, 9) -WFDC
+      A(21, 9) = A(21, 9) +WFDC
+      WFDC = RF*C(9)
+      A(2, 12) = A(2, 12) +WFDC
+      A(9, 12) = A(9, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(21, 12) = A(21, 12) +WFDC
+      WBDC = RB*C(21)
+      A(2, 2) = A(2, 2) -WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(12, 2) = A(12, 2) +WBDC
+      A(21, 2) = A(21, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 21) = A(2, 21) -WBDC
+      A(9, 21) = A(9, 21) +WBDC
+      A(12, 21) = A(12, 21) +WBDC
+      A(21, 21) = A(21, 21) -WBDC
+C
+C R88
+      RF = 8.48D12
+      G0_SUM = -G0(12) +G0(13) +G0(14) -G0(16)
+      DGDT = -DG(12) +DG(13) +DG(14) -DG(16)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(13)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      WFDC = RF*C(16)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(14, 12) = A(14, 12) +WFDC
+      A(16, 12) = A(16, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 16) = A(12, 16) -WFDC
+      A(13, 16) = A(13, 16) +WFDC
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      WBDC = RB*C(14)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(14, 13) = A(14, 13) -WBDC
+      A(16, 13) = A(16, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 14) = A(12, 14) +WBDC
+      A(13, 14) = A(13, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+C
+C R89
+C have third body
+C falloff: Troe 7-parameters
+      RF = 1.8D13
+      G0_SUM = -G0(12) -G0(16) +G0(28)
+      DGDT = -DG(12) -DG(16) +DG(28)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(1.113125418240785D2 -9.588D0*TLOG -2.56640500496359D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -9.588D0/T +2.56640500496359D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 3.827D-1*EXP(-T/1.3076D1)
+      TEMP2 = 6.173D-1*EXP(-T/2.078D3)
+      TEMP3 = EXP(-5.093D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -7.647598654022636D-2*TEMP1 -4.812319538017325D-4*TEMP2
+     * +5.093D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(12)*C(16)
+      WFDT = WF*PCLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(28)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(28, 33) = A(28, 33) +DWDT
+      WFDC = RF*C(16)
+      A(12, 12) = A(12, 12) -WFDC
+      A(16, 12) = A(16, 12) -WFDC
+      A(28, 12) = A(28, 12) +WFDC
+      WFDC = RF*C(12)
+      A(12, 16) = A(12, 16) -WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(28, 16) = A(28, 16) +WFDC
+      WBDC = RB
+      A(12, 28) = A(12, 28) +WBDC
+      A(16, 28) = A(16, 28) +WBDC
+      A(28, 28) = A(28, 28) -WBDC
+      DWDM = WFDM -WBDM
+      A(12, 1) = A(12, 1) -DWDM
+      A(12, 6) = A(12, 6) -5.D0*DWDM
+      A(12, 13) = A(12, 13) -DWDM
+      A(12, 14) = A(12, 14) -5.D-1*DWDM
+      A(12, 15) = A(12, 15) -DWDM
+      A(12, 19) = A(12, 19) -2.D0*DWDM
+      A(12, 22) = A(12, 22) -2.D0*DWDM
+      A(12, 24) = A(12, 24) -2.D0*DWDM
+      DM(12) = DM(12) -DWDM
+      A(16, 1) = A(16, 1) -DWDM
+      A(16, 6) = A(16, 6) -5.D0*DWDM
+      A(16, 13) = A(16, 13) -DWDM
+      A(16, 14) = A(16, 14) -5.D-1*DWDM
+      A(16, 15) = A(16, 15) -DWDM
+      A(16, 19) = A(16, 19) -2.D0*DWDM
+      A(16, 22) = A(16, 22) -2.D0*DWDM
+      A(16, 24) = A(16, 24) -2.D0*DWDM
+      DM(16) = DM(16) -DWDM
+      A(28, 1) = A(28, 1) +DWDM
+      A(28, 6) = A(28, 6) +5.D0*DWDM
+      A(28, 13) = A(28, 13) +DWDM
+      A(28, 14) = A(28, 14) +5.D-1*DWDM
+      A(28, 15) = A(28, 15) +DWDM
+      A(28, 19) = A(28, 19) +2.D0*DWDM
+      A(28, 22) = A(28, 22) +2.D0*DWDM
+      A(28, 24) = A(28, 24) +2.D0*DWDM
+      DM(28) = DM(28) +DWDM
+C
+C R90
+      RF = EXP(8.107720061910534D0 +2.81D0*TLOG -2.94884967236993D3/T)
+      RFLGDT = 2.81D0/T +2.94884967236993D3/T2
+      G0_SUM = -G0(12) +G0(13) +G0(16) -G0(17)
+      DGDT = -DG(12) +DG(13) +DG(16) -DG(17)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(17)
+      WFDT = WF*RFLGDT
+      WB = RB*C(13)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) -DWDT
+      WFDC = RF*C(17)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(16, 12) = A(16, 12) +WFDC
+      A(17, 12) = A(17, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 17) = A(12, 17) -WFDC
+      A(13, 17) = A(13, 17) +WFDC
+      A(16, 17) = A(16, 17) +WFDC
+      A(17, 17) = A(17, 17) -WFDC
+      WBDC = RB*C(16)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(16, 13) = A(16, 13) -WBDC
+      A(17, 13) = A(17, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 16) = A(12, 16) +WBDC
+      A(13, 16) = A(13, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) +WBDC
+C
+C R91
+      RF = 4.D13
+      G0_SUM = +G0(2) -G0(10) -G0(12) +G0(22)
+      DGDT = +DG(2) -DG(10) -DG(12) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(12)
+      A(2, 10) = A(2, 10) +WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(12, 10) = A(12, 10) -WFDC
+      A(22, 10) = A(22, 10) +WFDC
+      WFDC = RF*C(10)
+      A(2, 12) = A(2, 12) +WFDC
+      A(10, 12) = A(10, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(22, 12) = A(22, 12) +WFDC
+      WBDC = RB*C(22)
+      A(2, 2) = A(2, 2) -WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(12, 2) = A(12, 2) +WBDC
+      A(22, 2) = A(22, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 22) = A(2, 22) -WBDC
+      A(10, 22) = A(10, 22) +WBDC
+      A(12, 22) = A(12, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+C
+C R92
+      RF = EXP(3.011592776571655D1 +2.868335005547542D2/T)
+      RFLGDT = -2.868335005547542D2/T2
+      G0_SUM = +G0(2) -G0(11) -G0(12) +G0(22)
+      DGDT = +DG(2) -DG(11) -DG(12) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(11)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(12)
+      A(2, 11) = A(2, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(12, 11) = A(12, 11) -WFDC
+      A(22, 11) = A(22, 11) +WFDC
+      WFDC = RF*C(11)
+      A(2, 12) = A(2, 12) +WFDC
+      A(11, 12) = A(11, 12) -WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(22, 12) = A(22, 12) +WFDC
+      WBDC = RB*C(22)
+      A(2, 2) = A(2, 2) -WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(12, 2) = A(12, 2) +WBDC
+      A(22, 2) = A(22, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 22) = A(2, 22) -WBDC
+      A(11, 22) = A(11, 22) +WBDC
+      A(12, 22) = A(12, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+C
+C R93
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.759277757658865D1 -9.7D-1*TLOG -3.119943339367502D2/T)
+      RFLGDT = -9.7D-1/T +3.119943339367502D2/T2
+      G0_SUM = -2*G0(12) +G0(24)
+      DGDT = -2*DG(12) +DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(1.15700234196288D2 -9.67D0*TLOG -3.1300076727203D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -8.7D0/T +2.81801333878355D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 4.675D-1*EXP(-T/1.51D2)
+      TEMP2 = 5.325D-1*EXP(-T/1.038D3)
+      TEMP3 = EXP(-4.97D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -6.622516556291391D-3*TEMP1 -9.633911368015413D-4*TEMP2
+     * +4.97D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(12)*C(12)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(24)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -2*DWDT
+      A(24, 33) = A(24, 33) +DWDT
+      WFDC = 2*RF*C(12)
+      A(12, 12) = A(12, 12) -2*WFDC
+      A(24, 12) = A(24, 12) +WFDC
+      WBDC = RB
+      A(12, 24) = A(12, 24) +2*WBDC
+      A(24, 24) = A(24, 24) -WBDC
+      DWDM = WFDM -WBDM
+      A(12, 1) = A(12, 1) -2.D0*DWDM
+      A(12, 6) = A(12, 6) -1.D1*DWDM
+      A(12, 13) = A(12, 13) -2.D0*DWDM
+      A(12, 14) = A(12, 14) -DWDM
+      A(12, 15) = A(12, 15) -2.D0*DWDM
+      A(12, 19) = A(12, 19) -4.D0*DWDM
+      A(12, 22) = A(12, 22) -4.D0*DWDM
+      A(12, 24) = A(12, 24) -4.D0*DWDM
+      DM(12) = DM(12) -2*DWDM
+      A(24, 1) = A(24, 1) +DWDM
+      A(24, 6) = A(24, 6) +5.D0*DWDM
+      A(24, 13) = A(24, 13) +DWDM
+      A(24, 14) = A(24, 14) +5.D-1*DWDM
+      A(24, 15) = A(24, 15) +DWDM
+      A(24, 19) = A(24, 19) +2.D0*DWDM
+      A(24, 22) = A(24, 22) +2.D0*DWDM
+      A(24, 24) = A(24, 24) +2.D0*DWDM
+      DM(24) = DM(24) +DWDM
+C
+C R94
+      RF = EXP(2.923845702569198D1 +1.D-1*TLOG -5.334096676983148D3/T)
+      RFLGDT = 1.D-1/T +5.334096676983148D3/T2
+      G0_SUM = +G0(2) -2*G0(12) +G0(23)
+      DGDT = +DG(2) -2*DG(12) +DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(12)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(12, 33) = A(12, 33) -2*DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      WFDC = 2*RF*C(12)
+      A(2, 12) = A(2, 12) +WFDC
+      A(12, 12) = A(12, 12) -2*WFDC
+      A(23, 12) = A(23, 12) +WFDC
+      WBDC = RB*C(23)
+      A(2, 2) = A(2, 2) -WBDC
+      A(12, 2) = A(12, 2) +2*WBDC
+      A(23, 2) = A(23, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 23) = A(2, 23) -WBDC
+      A(12, 23) = A(12, 23) +2*WBDC
+      A(23, 23) = A(23, 23) -WBDC
+C
+C R95
+      RF = 5.D13
+      G0_SUM = -G0(12) +G0(14) +G0(22) -G0(25)
+      DGDT = -DG(12) +DG(14) +DG(22) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(12, 12) = A(12, 12) -WFDC
+      A(14, 12) = A(14, 12) +WFDC
+      A(22, 12) = A(22, 12) +WFDC
+      A(25, 12) = A(25, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 25) = A(12, 25) -WFDC
+      A(14, 25) = A(14, 25) +WFDC
+      A(22, 25) = A(22, 25) +WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(22)
+      A(12, 14) = A(12, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(22, 14) = A(22, 14) -WBDC
+      A(25, 14) = A(25, 14) +WBDC
+      WBDC = RB*C(14)
+      A(12, 22) = A(12, 22) +WBDC
+      A(14, 22) = A(14, 22) -WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      A(25, 22) = A(25, 22) +WBDC
+C
+C R96
+      RF = 2.D13
+      G0_SUM = +G0(1) -G0(2) +G0(17) -G0(18)
+      DGDT = +DG(1) -DG(2) +DG(17) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(17, 2) = A(17, 2) +WFDC
+      A(18, 2) = A(18, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 18) = A(1, 18) +WFDC
+      A(2, 18) = A(2, 18) -WFDC
+      A(17, 18) = A(17, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(17)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(17, 1) = A(17, 1) -WBDC
+      A(18, 1) = A(18, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 17) = A(1, 17) -WBDC
+      A(2, 17) = A(2, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(18, 17) = A(18, 17) +WBDC
+C
+C R97
+      RF = 3.2D13
+      G0_SUM = -G0(2) +G0(5) +G0(12) -G0(18)
+      DGDT = -DG(2) +DG(5) +DG(12) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(2, 2) = A(2, 2) -WFDC
+      A(5, 2) = A(5, 2) +WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(18, 2) = A(18, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 18) = A(2, 18) -WFDC
+      A(5, 18) = A(5, 18) +WFDC
+      A(12, 18) = A(12, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(12)
+      A(2, 5) = A(2, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(12, 5) = A(12, 5) -WBDC
+      A(18, 5) = A(18, 5) +WBDC
+      WBDC = RB*C(5)
+      A(2, 12) = A(2, 12) +WBDC
+      A(5, 12) = A(5, 12) -WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(18, 12) = A(18, 12) +WBDC
+C
+C R98
+      RF = 1.6D13
+      G0_SUM = -G0(2) +G0(6) +G0(11) -G0(18)
+      DGDT = -DG(2) +DG(6) +DG(11) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(11)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(11, 33) = A(11, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(2, 2) = A(2, 2) -WFDC
+      A(6, 2) = A(6, 2) +WFDC
+      A(11, 2) = A(11, 2) +WFDC
+      A(18, 2) = A(18, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 18) = A(2, 18) -WFDC
+      A(6, 18) = A(6, 18) +WFDC
+      A(11, 18) = A(11, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(11)
+      A(2, 6) = A(2, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(11, 6) = A(11, 6) -WBDC
+      A(18, 6) = A(18, 6) +WBDC
+      WBDC = RB*C(6)
+      A(2, 11) = A(2, 11) +WBDC
+      A(6, 11) = A(6, 11) -WBDC
+      A(11, 11) = A(11, 11) -WBDC
+      A(18, 11) = A(18, 11) +WBDC
+C
+C R99
+      RF = 1.D13
+      G0_SUM = -G0(3) +G0(5) +G0(17) -G0(18)
+      DGDT = -DG(3) +DG(5) +DG(17) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(17, 3) = A(17, 3) +WFDC
+      A(18, 3) = A(18, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 18) = A(3, 18) -WFDC
+      A(5, 18) = A(5, 18) +WFDC
+      A(17, 18) = A(17, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(17)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      A(18, 5) = A(18, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 17) = A(3, 17) +WBDC
+      A(5, 17) = A(5, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(18, 17) = A(18, 17) +WBDC
+C
+C R100
+      RF = 5.D12
+      G0_SUM = -G0(5) +G0(6) +G0(17) -G0(18)
+      DGDT = -DG(5) +DG(6) +DG(17) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(17, 5) = A(17, 5) +WFDC
+      A(18, 5) = A(18, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 18) = A(5, 18) -WFDC
+      A(6, 18) = A(6, 18) +WFDC
+      A(17, 18) = A(17, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(17)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(17, 6) = A(17, 6) -WBDC
+      A(18, 6) = A(18, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 17) = A(5, 17) +WBDC
+      A(6, 17) = A(6, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(18, 17) = A(18, 17) +WBDC
+C
+      END
+C
+C
+C
+      SUBROUTINE AJ2(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (EXPARG=690.776, SMALL=1.D-300)
+      DIMENSION C(*), A(LDA,*), G0(*), DG(*), DM(*)
+C
+      T2 = T*T
+      TLOG = LOG(T)
+      TI = 1.D0/T
+      TI2 = TI/T
+      PFAC = 1.218652692702276D-2/T
+      PFAC2 = PFAC*PFAC
+C
+C R101
+      RF = EXP(-2.847965319932889D1 +7.6D0*TLOG +1.776354836768916D3/T)
+      RFLGDT = 7.6D0/T -1.776354836768916D3/T2
+      G0_SUM = -G0(4) +G0(7) +G0(17) -G0(18)
+      DGDT = -DG(4) +DG(7) +DG(17) -DG(18)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(18)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(18, 33) = A(18, 33) -DWDT
+      WFDC = RF*C(18)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(17, 4) = A(17, 4) +WFDC
+      A(18, 4) = A(18, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 18) = A(4, 18) -WFDC
+      A(7, 18) = A(7, 18) +WFDC
+      A(17, 18) = A(17, 18) +WFDC
+      A(18, 18) = A(18, 18) -WFDC
+      WBDC = RB*C(17)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(17, 7) = A(17, 7) -WBDC
+      A(18, 7) = A(18, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 17) = A(4, 17) +WBDC
+      A(7, 17) = A(7, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(18, 17) = A(18, 17) +WBDC
+C
+C R102
+      RF = EXP(2.030775039298474D1 +1.62D0*TLOG -5.454868677216729D3/T)
+      RFLGDT = 1.62D0/T +5.454868677216729D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(12) -G0(13)
+      DGDT = +DG(1) -DG(2) +DG(12) -DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(13)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      WFDC = RF*C(13)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(13, 2) = A(13, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 13) = A(1, 13) +WFDC
+      A(2, 13) = A(2, 13) -WFDC
+      A(12, 13) = A(12, 13) +WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      WBDC = RB*C(12)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(12, 1) = A(12, 1) -WBDC
+      A(13, 1) = A(13, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 12) = A(1, 12) -WBDC
+      A(2, 12) = A(2, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(13, 12) = A(13, 12) +WBDC
+C
+C R103
+      RF = EXP(2.074306846424259D1 +1.5D0*TLOG -4.327663341703309D3/T)
+      RFLGDT = 1.5D0/T +4.327663341703309D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(12) -G0(13)
+      DGDT = -DG(3) +DG(5) +DG(12) -DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(13)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      WFDC = RF*C(13)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(12, 3) = A(12, 3) +WFDC
+      A(13, 3) = A(13, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 13) = A(3, 13) -WFDC
+      A(5, 13) = A(5, 13) +WFDC
+      A(12, 13) = A(12, 13) +WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      WBDC = RB*C(12)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(12, 5) = A(12, 5) -WBDC
+      A(13, 5) = A(13, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 12) = A(3, 12) +WBDC
+      A(5, 12) = A(5, 12) -WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(13, 12) = A(13, 12) +WBDC
+C
+C R104
+      RF = EXP(1.842068074395237D1 +1.6D0*TLOG -1.570036003036549D3/T)
+      RFLGDT = 1.6D0/T +1.570036003036549D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(12) -G0(13)
+      DGDT = -DG(5) +DG(6) +DG(12) -DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(13)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      WFDC = RF*C(13)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(12, 5) = A(12, 5) +WFDC
+      A(13, 5) = A(13, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 13) = A(5, 13) -WFDC
+      A(6, 13) = A(6, 13) +WFDC
+      A(12, 13) = A(12, 13) +WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      WBDC = RB*C(12)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(12, 6) = A(12, 6) -WBDC
+      A(13, 6) = A(13, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 12) = A(5, 12) +WBDC
+      A(6, 12) = A(6, 12) -WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(13, 12) = A(13, 12) +WBDC
+C
+C R105
+      RF = 6.D13
+      G0_SUM = +G0(2) -G0(9) -G0(13) +G0(22)
+      DGDT = +DG(2) -DG(9) -DG(13) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(13)
+      A(2, 9) = A(2, 9) +WFDC
+      A(9, 9) = A(9, 9) -WFDC
+      A(13, 9) = A(13, 9) -WFDC
+      A(22, 9) = A(22, 9) +WFDC
+      WFDC = RF*C(9)
+      A(2, 13) = A(2, 13) +WFDC
+      A(9, 13) = A(9, 13) -WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      A(22, 13) = A(22, 13) +WFDC
+      WBDC = RB*C(22)
+      A(2, 2) = A(2, 2) -WBDC
+      A(9, 2) = A(9, 2) +WBDC
+      A(13, 2) = A(13, 2) +WBDC
+      A(22, 2) = A(22, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 22) = A(2, 22) -WBDC
+      A(9, 22) = A(9, 22) +WBDC
+      A(13, 22) = A(13, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+C
+C R106
+      RF = EXP(1.471567190790855D1 +2.D0*TLOG -4.161601841382136D3/T)
+      RFLGDT = 2.D0/T +4.161601841382136D3/T2
+      G0_SUM = -G0(10) +2*G0(12) -G0(13)
+      DGDT = -DG(10) +2*DG(12) -DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(10)*C(13)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(12, 33) = A(12, 33) +2*DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      WFDC = RF*C(13)
+      A(10, 10) = A(10, 10) -WFDC
+      A(12, 10) = A(12, 10) +2*WFDC
+      A(13, 10) = A(13, 10) -WFDC
+      WFDC = RF*C(10)
+      A(10, 13) = A(10, 13) -WFDC
+      A(12, 13) = A(12, 13) +2*WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      WBDC = 2*RB*C(12)
+      A(10, 12) = A(10, 12) +WBDC
+      A(12, 12) = A(12, 12) -2*WBDC
+      A(13, 12) = A(13, 12) +WBDC
+C
+C R107
+      RF = EXP(3.040360983816833D1 +2.868335005547542D2/T)
+      RFLGDT = -2.868335005547542D2/T2
+      G0_SUM = -G0(11) +2*G0(12) -G0(13)
+      DGDT = -DG(11) +2*DG(12) -DG(13)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(11)*C(13)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(12)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(12, 33) = A(12, 33) +2*DWDT
+      A(13, 33) = A(13, 33) -DWDT
+      WFDC = RF*C(13)
+      A(11, 11) = A(11, 11) -WFDC
+      A(12, 11) = A(12, 11) +2*WFDC
+      A(13, 11) = A(13, 11) -WFDC
+      WFDC = RF*C(11)
+      A(11, 13) = A(11, 13) -WFDC
+      A(12, 13) = A(12, 13) +2*WFDC
+      A(13, 13) = A(13, 13) -WFDC
+      WBDC = 2*RB*C(12)
+      A(11, 12) = A(11, 12) +WBDC
+      A(12, 12) = A(12, 12) -2*WBDC
+      A(13, 12) = A(13, 12) +WBDC
+C
+C R108
+      RF = 1.D14
+      G0_SUM = -G0(2) +G0(11) +G0(14) -G0(25)
+      DGDT = -DG(2) +DG(11) +DG(14) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(11)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(11, 33) = A(11, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(2, 2) = A(2, 2) -WFDC
+      A(11, 2) = A(11, 2) +WFDC
+      A(14, 2) = A(14, 2) +WFDC
+      A(25, 2) = A(25, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 25) = A(2, 25) -WFDC
+      A(11, 25) = A(11, 25) +WFDC
+      A(14, 25) = A(14, 25) +WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(14)
+      A(2, 11) = A(2, 11) +WBDC
+      A(11, 11) = A(11, 11) -WBDC
+      A(14, 11) = A(14, 11) -WBDC
+      A(25, 11) = A(25, 11) +WBDC
+      WBDC = RB*C(11)
+      A(2, 14) = A(2, 14) +WBDC
+      A(11, 14) = A(11, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(25, 14) = A(25, 14) +WBDC
+C
+C R109
+      RF = 1.D14
+      G0_SUM = +G0(2) -G0(3) +2*G0(14) -G0(25)
+      DGDT = +DG(2) -DG(3) +2*DG(14) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(14)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(14, 33) = A(14, 33) +2*DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(14, 3) = A(14, 3) +2*WFDC
+      A(25, 3) = A(25, 3) -WFDC
+      WFDC = RF*C(3)
+      A(2, 25) = A(2, 25) +WFDC
+      A(3, 25) = A(3, 25) -WFDC
+      A(14, 25) = A(14, 25) +2*WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(14)*C(14)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(14, 2) = A(14, 2) -2*WBDC
+      A(25, 2) = A(25, 2) +WBDC
+      WBDC = 2*RB*C(2)*C(14)
+      A(2, 14) = A(2, 14) -WBDC
+      A(3, 14) = A(3, 14) +WBDC
+      A(14, 14) = A(14, 14) -2*WBDC
+      A(25, 14) = A(25, 14) +WBDC
+C
+C R110
+      RF = EXP(2.810102474517428D1 -4.297470341644914D2/T)
+      RFLGDT = 4.297470341644914D2/T2
+      G0_SUM = -G0(4) +G0(5) +2*G0(14) -G0(25)
+      DGDT = -DG(4) +DG(5) +2*DG(14) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(25)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(14)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(14, 33) = A(14, 33) +2*DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      A(14, 4) = A(14, 4) +2*WFDC
+      A(25, 4) = A(25, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 25) = A(4, 25) -WFDC
+      A(5, 25) = A(5, 25) +WFDC
+      A(14, 25) = A(14, 25) +2*WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(14)*C(14)
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(14, 5) = A(14, 5) -2*WBDC
+      A(25, 5) = A(25, 5) +WBDC
+      WBDC = 2*RB*C(5)*C(14)
+      A(4, 14) = A(4, 14) +WBDC
+      A(5, 14) = A(5, 14) -WBDC
+      A(14, 14) = A(14, 14) -2*WBDC
+      A(25, 14) = A(25, 14) +WBDC
+C
+C R111
+      RF = 5.D13
+      G0_SUM = -G0(9) +G0(14) +G0(19) -G0(25)
+      DGDT = -DG(9) +DG(14) +DG(19) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(9, 33) = A(9, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(9, 9) = A(9, 9) -WFDC
+      A(14, 9) = A(14, 9) +WFDC
+      A(19, 9) = A(19, 9) +WFDC
+      A(25, 9) = A(25, 9) -WFDC
+      WFDC = RF*C(9)
+      A(9, 25) = A(9, 25) -WFDC
+      A(14, 25) = A(14, 25) +WFDC
+      A(19, 25) = A(19, 25) +WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(19)
+      A(9, 14) = A(9, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(19, 14) = A(19, 14) -WBDC
+      A(25, 14) = A(25, 14) +WBDC
+      WBDC = RB*C(14)
+      A(9, 19) = A(9, 19) +WBDC
+      A(14, 19) = A(14, 19) -WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(25, 19) = A(25, 19) +WBDC
+C
+C R112
+      RF = 3.D13
+      G0_SUM = -G0(10) +G0(14) +G0(21) -G0(25)
+      DGDT = -DG(10) +DG(14) +DG(21) -DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(25, 33) = A(25, 33) -DWDT
+      WFDC = RF*C(25)
+      A(10, 10) = A(10, 10) -WFDC
+      A(14, 10) = A(14, 10) +WFDC
+      A(21, 10) = A(21, 10) +WFDC
+      A(25, 10) = A(25, 10) -WFDC
+      WFDC = RF*C(10)
+      A(10, 25) = A(10, 25) -WFDC
+      A(14, 25) = A(14, 25) +WFDC
+      A(21, 25) = A(21, 25) +WFDC
+      A(25, 25) = A(25, 25) -WFDC
+      WBDC = RB*C(21)
+      A(10, 14) = A(10, 14) +WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(21, 14) = A(21, 14) -WBDC
+      A(25, 14) = A(25, 14) +WBDC
+      WBDC = RB*C(14)
+      A(10, 21) = A(10, 21) +WBDC
+      A(14, 21) = A(14, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(25, 21) = A(25, 21) +WBDC
+C
+C R113
+      RF = 1.D13
+      G0_SUM = +2*G0(14) +G0(19) -2*G0(25)
+      DGDT = +2*DG(14) +DG(19) -2*DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(14)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(14, 33) = A(14, 33) +2*DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(25, 33) = A(25, 33) -2*DWDT
+      WFDC = 2*RF*C(25)
+      A(14, 25) = A(14, 25) +2*WFDC
+      A(19, 25) = A(19, 25) +WFDC
+      A(25, 25) = A(25, 25) -2*WFDC
+      WBDC = 2*RB*C(14)*C(19)
+      A(14, 14) = A(14, 14) -2*WBDC
+      A(19, 14) = A(19, 14) -WBDC
+      A(25, 14) = A(25, 14) +2*WBDC
+      WBDC = RB*C(14)*C(14)
+      A(14, 19) = A(14, 19) -2*WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(25, 19) = A(25, 19) +2*WBDC
+C
+C R114
+C have third body
+C falloff: Lindemann
+      RF = EXP(3.431563284359648D1 -5.2D-1*TLOG -2.553824588272593D4/T)
+      RFLGDT = -5.2D-1/T +2.553824588272593D4/T2
+      G0_SUM = -G0(19) +G0(20)
+      DGDT = -DG(19) +DG(20)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +1.5D0*C(19)
+     * +1.5D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(3.543486441946732D1 -6.4D-1*TLOG -2.500986838170401D4/T)
+      PR = RL*CM/RF
+      PRLGDT = -1.2D-1/T -5.283775010219179D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(19)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(20)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(19, 33) = A(19, 33) -DWDT
+      A(20, 33) = A(20, 33) +DWDT
+      WFDC = RF
+      A(19, 19) = A(19, 19) -WFDC
+      A(20, 19) = A(20, 19) +WFDC
+      WBDC = RB
+      A(19, 20) = A(19, 20) +WBDC
+      A(20, 20) = A(20, 20) -WBDC
+      DWDM = WFDM -WBDM
+      A(19, 1) = A(19, 1) -DWDM
+      A(19, 6) = A(19, 6) -5.D0*DWDM
+      A(19, 13) = A(19, 13) -DWDM
+      A(19, 14) = A(19, 14) -5.D-1*DWDM
+      A(19, 15) = A(19, 15) -DWDM
+      A(19, 19) = A(19, 19) -1.5D0*DWDM
+      A(19, 22) = A(19, 22) -1.5D0*DWDM
+      A(19, 24) = A(19, 24) -2.D0*DWDM
+      DM(19) = DM(19) -DWDM
+      A(20, 1) = A(20, 1) +DWDM
+      A(20, 6) = A(20, 6) +5.D0*DWDM
+      A(20, 13) = A(20, 13) +DWDM
+      A(20, 14) = A(20, 14) +5.D-1*DWDM
+      A(20, 15) = A(20, 15) +DWDM
+      A(20, 19) = A(20, 19) +1.5D0*DWDM
+      A(20, 22) = A(20, 22) +1.5D0*DWDM
+      A(20, 24) = A(20, 24) +2.D0*DWDM
+      DM(20) = DM(20) +DWDM
+C
+C R115
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(1.977134792742911D1 +1.62D0*TLOG -1.864328181039063D4/T)
+      RFLGDT = 1.62D0/T +1.864328181039063D4/T2
+      G0_SUM = +G0(2) +G0(19) -G0(21)
+      DGDT = +DG(2) +DG(19) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.311175598946197D1 -3.4D0*TLOG -1.801451258417455D4/T)
+      PR = RL*CM/RF
+      PRLGDT = -5.02D0/T -6.287692262160781D2/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = -9.816D-1*EXP(-T/5.3837D3)
+      TEMP2 = 1.9816D0*EXP(-T/4.2932D0)
+      TEMP3 = EXP(7.95D-2/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.857458625109126D-4*TEMP1 -2.329264884002609D-1*TEMP2
+     * -7.95D-2/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(21)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(2)*C(19)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF
+      A(2, 21) = A(2, 21) +WFDC
+      A(19, 21) = A(19, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(19)
+      A(2, 2) = A(2, 2) -WBDC
+      A(19, 2) = A(19, 2) -WBDC
+      A(21, 2) = A(21, 2) +WBDC
+      WBDC = RB*C(2)
+      A(2, 19) = A(2, 19) -WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(21, 19) = A(21, 19) +WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) +DWDM
+      A(2, 6) = A(2, 6) +5.D0*DWDM
+      A(2, 13) = A(2, 13) +DWDM
+      A(2, 14) = A(2, 14) +5.D-1*DWDM
+      A(2, 15) = A(2, 15) +DWDM
+      A(2, 19) = A(2, 19) +2.D0*DWDM
+      A(2, 22) = A(2, 22) +2.D0*DWDM
+      A(2, 24) = A(2, 24) +2.D0*DWDM
+      DM(2) = DM(2) +DWDM
+      A(19, 1) = A(19, 1) +DWDM
+      A(19, 6) = A(19, 6) +5.D0*DWDM
+      A(19, 13) = A(19, 13) +DWDM
+      A(19, 14) = A(19, 14) +5.D-1*DWDM
+      A(19, 15) = A(19, 15) +DWDM
+      A(19, 19) = A(19, 19) +2.D0*DWDM
+      A(19, 22) = A(19, 22) +2.D0*DWDM
+      A(19, 24) = A(19, 24) +2.D0*DWDM
+      DM(19) = DM(19) +DWDM
+      A(21, 1) = A(21, 1) -DWDM
+      A(21, 6) = A(21, 6) -5.D0*DWDM
+      A(21, 13) = A(21, 13) -DWDM
+      A(21, 14) = A(21, 14) -5.D-1*DWDM
+      A(21, 15) = A(21, 15) -DWDM
+      A(21, 19) = A(21, 19) -2.D0*DWDM
+      A(21, 22) = A(21, 22) -2.D0*DWDM
+      A(21, 24) = A(21, 24) -2.D0*DWDM
+      DM(21) = DM(21) -DWDM
+C
+C R116
+      RF = EXP(1.660790190750024D1 +2.D0*TLOG -9.561116685158474D2/T)
+      RFLGDT = 2.D0/T +9.561116685158474D2/T2
+      G0_SUM = +G0(2) -G0(3) -G0(19) +G0(25)
+      DGDT = +DG(2) -DG(3) -DG(19) +DG(25)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(19)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(25)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      A(25, 33) = A(25, 33) +DWDT
+      WFDC = RF*C(19)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(19, 3) = A(19, 3) -WFDC
+      A(25, 3) = A(25, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 19) = A(2, 19) +WFDC
+      A(3, 19) = A(3, 19) -WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      A(25, 19) = A(25, 19) +WFDC
+      WBDC = RB*C(25)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(19, 2) = A(19, 2) +WBDC
+      A(25, 2) = A(25, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 25) = A(2, 25) -WBDC
+      A(3, 25) = A(3, 25) +WBDC
+      A(19, 25) = A(19, 25) +WBDC
+      A(25, 25) = A(25, 25) -WBDC
+C
+C R117
+      RF = EXP(1.522160754638034D1 +2.D0*TLOG -9.561116685158474D2/T)
+      RFLGDT = 2.D0/T +9.561116685158474D2/T2
+      G0_SUM = -G0(3) +G0(10) +G0(14) -G0(19)
+      DGDT = -DG(3) +DG(10) +DG(14) -DG(19)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(19)
+      WFDT = WF*RFLGDT
+      WB = RB*C(10)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      WFDC = RF*C(19)
+      A(3, 3) = A(3, 3) -WFDC
+      A(10, 3) = A(10, 3) +WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      A(19, 3) = A(19, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 19) = A(3, 19) -WFDC
+      A(10, 19) = A(10, 19) +WFDC
+      A(14, 19) = A(14, 19) +WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      WBDC = RB*C(14)
+      A(3, 10) = A(3, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(14, 10) = A(14, 10) -WBDC
+      A(19, 10) = A(19, 10) +WBDC
+      WBDC = RB*C(10)
+      A(3, 14) = A(3, 14) +WBDC
+      A(10, 14) = A(10, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(19, 14) = A(19, 14) +WBDC
+C
+C R118
+      RF = EXP(-8.431015495175185D0 +4.5D0*TLOG +5.032166676399197D2/T)
+      RFLGDT = 4.5D0/T -5.032166676399197D2/T2
+      G0_SUM = +G0(2) -G0(5) -G0(19) +G0(26)
+      DGDT = +DG(2) -DG(5) -DG(19) +DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(19)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      WFDC = RF*C(19)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(19, 5) = A(19, 5) -WFDC
+      A(26, 5) = A(26, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 19) = A(2, 19) +WFDC
+      A(5, 19) = A(5, 19) -WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      A(26, 19) = A(26, 19) +WFDC
+      WBDC = RB*C(26)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(19, 2) = A(19, 2) +WBDC
+      A(26, 2) = A(26, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 26) = A(2, 26) -WBDC
+      A(5, 26) = A(5, 26) +WBDC
+      A(19, 26) = A(19, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+C
+C R119
+      RF = EXP(-7.635493904311701D0 +4.D0*TLOG +1.006433335279839D3/T)
+      RFLGDT = 4.D0/T -1.006433335279839D3/T2
+      G0_SUM = -G0(5) +G0(12) +G0(14) -G0(19)
+      DGDT = -DG(5) +DG(12) +DG(14) -DG(19)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(19)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      WFDC = RF*C(19)
+      A(5, 5) = A(5, 5) -WFDC
+      A(12, 5) = A(12, 5) +WFDC
+      A(14, 5) = A(14, 5) +WFDC
+      A(19, 5) = A(19, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 19) = A(5, 19) -WFDC
+      A(12, 19) = A(12, 19) +WFDC
+      A(14, 19) = A(14, 19) +WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      WBDC = RB*C(14)
+      A(5, 12) = A(5, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(14, 12) = A(14, 12) -WBDC
+      A(19, 12) = A(19, 12) +WBDC
+      WBDC = RB*C(12)
+      A(5, 14) = A(5, 14) +WBDC
+      A(12, 14) = A(12, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(19, 14) = A(19, 14) +WBDC
+C
+C R120
+      RF = EXP(1.611809565095832D1 +2.D0*TLOG -3.019300005839518D3/T)
+      RFLGDT = 2.D0/T +3.019300005839518D3/T2
+      G0_SUM = +G0(14) -G0(16) -G0(19) +G0(21)
+      DGDT = +DG(14) -DG(16) -DG(19) +DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(16)*C(19)
+      WFDT = WF*RFLGDT
+      WB = RB*C(14)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      WFDC = RF*C(19)
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(19, 16) = A(19, 16) -WFDC
+      A(21, 16) = A(21, 16) +WFDC
+      WFDC = RF*C(16)
+      A(14, 19) = A(14, 19) +WFDC
+      A(16, 19) = A(16, 19) -WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      A(21, 19) = A(21, 19) +WFDC
+      WBDC = RB*C(21)
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      A(19, 14) = A(19, 14) +WBDC
+      A(21, 14) = A(21, 14) -WBDC
+      WBDC = RB*C(14)
+      A(14, 21) = A(14, 21) -WBDC
+      A(16, 21) = A(16, 21) +WBDC
+      A(19, 21) = A(19, 21) +WBDC
+      A(21, 21) = A(21, 21) -WBDC
+C
+C R121
+C have third body
+      RF = EXP(1.274306374750368D2 -1.182D1*TLOG -1.797993153477433D4/T)
+      RFLGDT = -1.182D1/T +1.797993153477433D4/T2
+      G0_SUM = -G0(12) -G0(19) +G0(29)
+      DGDT = -DG(12) -DG(19) +DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT
+      CM = MAX(CM, SMALL)
+      PC = CM
+      PCLGDM = 1.D0/CM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(12)*C(19)
+      WFDT = WF*RFLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(29)
+      WBDT = WB*RBLGDT
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(19, 33) = A(19, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      WFDC = RF*C(19)
+      A(12, 12) = A(12, 12) -WFDC
+      A(19, 12) = A(19, 12) -WFDC
+      A(29, 12) = A(29, 12) +WFDC
+      WFDC = RF*C(12)
+      A(12, 19) = A(12, 19) -WFDC
+      A(19, 19) = A(19, 19) -WFDC
+      A(29, 19) = A(29, 19) +WFDC
+      WBDC = RB
+      A(12, 29) = A(12, 29) +WBDC
+      A(19, 29) = A(19, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      DWDM = WFDM -WBDM
+      DM(12) = DM(12) -DWDM
+      DM(19) = DM(19) -DWDM
+      DM(29) = DM(29) +DWDM
+C
+C R122
+      RF = 1.D14
+      G0_SUM = +G0(19) -G0(20)
+      DGDT = +DG(19) -DG(20)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(20, 33) = A(20, 33) -DWDT
+      WFDC = RF*C(20)
+      A(19, 2) = A(19, 2) +WFDC
+      A(20, 2) = A(20, 2) -WFDC
+      WFDC = RF*C(2)
+      A(19, 20) = A(19, 20) +WFDC
+      A(20, 20) = A(20, 20) -WFDC
+      WBDC = RB*C(19)
+      A(19, 2) = A(19, 2) -WBDC
+      A(20, 2) = A(20, 2) +WBDC
+      WBDC = RB*C(2)
+      A(19, 19) = A(19, 19) -WBDC
+      A(20, 19) = A(20, 19) +WBDC
+C
+C R123
+      RF = 1.D14
+      G0_SUM = -G0(3) +G0(10) +G0(14) -G0(20)
+      DGDT = -DG(3) +DG(10) +DG(14) -DG(20)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(10)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(20, 33) = A(20, 33) -DWDT
+      WFDC = RF*C(20)
+      A(3, 3) = A(3, 3) -WFDC
+      A(10, 3) = A(10, 3) +WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      A(20, 3) = A(20, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 20) = A(3, 20) -WFDC
+      A(10, 20) = A(10, 20) +WFDC
+      A(14, 20) = A(14, 20) +WFDC
+      A(20, 20) = A(20, 20) -WFDC
+      WBDC = RB*C(14)
+      A(3, 10) = A(3, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(14, 10) = A(14, 10) -WBDC
+      A(20, 10) = A(20, 10) +WBDC
+      WBDC = RB*C(10)
+      A(3, 14) = A(3, 14) +WBDC
+      A(10, 14) = A(10, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(20, 14) = A(20, 14) +WBDC
+C
+C R124
+      RF = 2.D13
+      G0_SUM = +G0(2) -G0(5) -G0(20) +G0(26)
+      DGDT = +DG(2) -DG(5) -DG(20) +DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(20, 33) = A(20, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      WFDC = RF*C(20)
+      A(2, 5) = A(2, 5) +WFDC
+      A(5, 5) = A(5, 5) -WFDC
+      A(20, 5) = A(20, 5) -WFDC
+      A(26, 5) = A(26, 5) +WFDC
+      WFDC = RF*C(5)
+      A(2, 20) = A(2, 20) +WFDC
+      A(5, 20) = A(5, 20) -WFDC
+      A(20, 20) = A(20, 20) -WFDC
+      A(26, 20) = A(26, 20) +WFDC
+      WBDC = RB*C(26)
+      A(2, 2) = A(2, 2) -WBDC
+      A(5, 2) = A(5, 2) +WBDC
+      A(20, 2) = A(20, 2) +WBDC
+      A(26, 2) = A(26, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 26) = A(2, 26) -WBDC
+      A(5, 26) = A(5, 26) +WBDC
+      A(20, 26) = A(20, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+C
+C R125
+      RF = 1.D13
+      G0_SUM = -G0(4) +G0(10) +G0(15) -G0(20)
+      DGDT = -DG(4) +DG(10) +DG(15) -DG(20)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(10)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      A(20, 33) = A(20, 33) -DWDT
+      WFDC = RF*C(20)
+      A(4, 4) = A(4, 4) -WFDC
+      A(10, 4) = A(10, 4) +WFDC
+      A(15, 4) = A(15, 4) +WFDC
+      A(20, 4) = A(20, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 20) = A(4, 20) -WFDC
+      A(10, 20) = A(10, 20) +WFDC
+      A(15, 20) = A(15, 20) +WFDC
+      A(20, 20) = A(20, 20) -WFDC
+      WBDC = RB*C(15)
+      A(4, 10) = A(4, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(15, 10) = A(15, 10) -WBDC
+      A(20, 10) = A(20, 10) +WBDC
+      WBDC = RB*C(10)
+      A(4, 15) = A(4, 15) +WBDC
+      A(10, 15) = A(10, 15) -WBDC
+      A(15, 15) = A(15, 15) -WBDC
+      A(20, 15) = A(20, 15) +WBDC
+C
+C R126
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.343011377038908D1 -6.D-2*TLOG -4.277341674939317D3/T)
+      RFLGDT = -6.D-2/T +4.277341674939317D3/T2
+      G0_SUM = -G0(2) -G0(26) +G0(27)
+      DGDT = -DG(2) -DG(26) +DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(9.574098987948821D1 -7.64D0*TLOG -5.988278344915044D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -7.58D0/T +1.710936669975727D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 6.63D-1*EXP(-T/1.707D3)
+      TEMP2 = 3.37D-1*EXP(-T/3.2D3)
+      TEMP3 = EXP(-4.131D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -5.858230814294083D-4*TEMP1 -3.125D-4*TEMP2
+     * +4.131D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(26)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(27)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      A(27, 33) = A(27, 33) +DWDT
+      WFDC = RF*C(26)
+      A(2, 2) = A(2, 2) -WFDC
+      A(26, 2) = A(26, 2) -WFDC
+      A(27, 2) = A(27, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 26) = A(2, 26) -WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      A(27, 26) = A(27, 26) +WFDC
+      WBDC = RB
+      A(2, 27) = A(2, 27) +WBDC
+      A(26, 27) = A(26, 27) +WBDC
+      A(27, 27) = A(27, 27) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(26, 1) = A(26, 1) -DWDM
+      A(26, 6) = A(26, 6) -5.D0*DWDM
+      A(26, 13) = A(26, 13) -DWDM
+      A(26, 14) = A(26, 14) -5.D-1*DWDM
+      A(26, 15) = A(26, 15) -DWDM
+      A(26, 19) = A(26, 19) -2.D0*DWDM
+      A(26, 22) = A(26, 22) -2.D0*DWDM
+      A(26, 24) = A(26, 24) -2.D0*DWDM
+      DM(26) = DM(26) -DWDM
+      A(27, 1) = A(27, 1) +DWDM
+      A(27, 6) = A(27, 6) +5.D0*DWDM
+      A(27, 13) = A(27, 13) +DWDM
+      A(27, 14) = A(27, 14) +5.D-1*DWDM
+      A(27, 15) = A(27, 15) +DWDM
+      A(27, 19) = A(27, 19) +2.D0*DWDM
+      A(27, 22) = A(27, 22) +2.D0*DWDM
+      A(27, 24) = A(27, 24) +2.D0*DWDM
+      DM(27) = DM(27) +DWDM
+C
+C R127
+      RF = EXP(3.154304412135669D1 -4.025733341119358D3/T)
+      RFLGDT = 4.025733341119358D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(25) -G0(26)
+      DGDT = +DG(1) -DG(2) +DG(25) -DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(26)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(25)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(25, 33) = A(25, 33) +DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      WFDC = RF*C(26)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(25, 2) = A(25, 2) +WFDC
+      A(26, 2) = A(26, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 26) = A(1, 26) +WFDC
+      A(2, 26) = A(2, 26) -WFDC
+      A(25, 26) = A(25, 26) +WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      WBDC = RB*C(25)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(25, 1) = A(25, 1) -WBDC
+      A(26, 1) = A(26, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 25) = A(1, 25) -WBDC
+      A(2, 25) = A(2, 25) +WBDC
+      A(25, 25) = A(25, 25) -WBDC
+      A(26, 25) = A(26, 25) +WBDC
+C
+C R128
+      RF = EXP(2.112873094505457D1 +1.43D0*TLOG -1.353652835951384D3/T)
+      RFLGDT = 1.43D0/T +1.353652835951384D3/T2
+      G0_SUM = -G0(2) +G0(12) +G0(14) -G0(26)
+      DGDT = -DG(2) +DG(12) +DG(14) -DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(26)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      WFDC = RF*C(26)
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(14, 2) = A(14, 2) +WFDC
+      A(26, 2) = A(26, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 26) = A(2, 26) -WFDC
+      A(12, 26) = A(12, 26) +WFDC
+      A(14, 26) = A(14, 26) +WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      WBDC = RB*C(14)
+      A(2, 12) = A(2, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(14, 12) = A(14, 12) -WBDC
+      A(26, 12) = A(26, 12) +WBDC
+      WBDC = RB*C(12)
+      A(2, 14) = A(2, 14) +WBDC
+      A(12, 14) = A(12, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(26, 14) = A(26, 14) +WBDC
+C
+C R129
+      RF = EXP(2.993360620892259D1 -4.025733341119358D3/T)
+      RFLGDT = 4.025733341119358D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(25) -G0(26)
+      DGDT = -DG(3) +DG(5) +DG(25) -DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(26)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(25)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(25, 33) = A(25, 33) +DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      WFDC = RF*C(26)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(25, 3) = A(25, 3) +WFDC
+      A(26, 3) = A(26, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 26) = A(3, 26) -WFDC
+      A(5, 26) = A(5, 26) +WFDC
+      A(25, 26) = A(25, 26) +WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      WBDC = RB*C(25)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(25, 5) = A(25, 5) -WBDC
+      A(26, 5) = A(26, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 25) = A(3, 25) +WBDC
+      A(5, 25) = A(5, 25) -WBDC
+      A(25, 25) = A(25, 25) -WBDC
+      A(26, 25) = A(26, 25) +WBDC
+C
+C R130
+      RF = EXP(2.819063690386397D1 -6.793425013138916D2/T)
+      RFLGDT = 6.793425013138916D2/T2
+      G0_SUM = -G0(3) +G0(10) +G0(15) -G0(26)
+      DGDT = -DG(3) +DG(10) +DG(15) -DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(26)
+      WFDT = WF*RFLGDT
+      WB = RB*C(10)*C(15)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(15, 33) = A(15, 33) +DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      WFDC = RF*C(26)
+      A(3, 3) = A(3, 3) -WFDC
+      A(10, 3) = A(10, 3) +WFDC
+      A(15, 3) = A(15, 3) +WFDC
+      A(26, 3) = A(26, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 26) = A(3, 26) -WFDC
+      A(10, 26) = A(10, 26) +WFDC
+      A(15, 26) = A(15, 26) +WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      WBDC = RB*C(15)
+      A(3, 10) = A(3, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(15, 10) = A(15, 10) -WBDC
+      A(26, 10) = A(26, 10) +WBDC
+      WBDC = RB*C(10)
+      A(3, 15) = A(3, 15) +WBDC
+      A(10, 15) = A(10, 15) -WBDC
+      A(15, 15) = A(15, 15) -WBDC
+      A(26, 15) = A(26, 15) +WBDC
+C
+C R131
+      RF = EXP(2.964592413647081D1 -1.006433335279839D3/T)
+      RFLGDT = 1.006433335279839D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(25) -G0(26)
+      DGDT = -DG(5) +DG(6) +DG(25) -DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(26)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(25)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(25, 33) = A(25, 33) +DWDT
+      A(26, 33) = A(26, 33) -DWDT
+      WFDC = RF*C(26)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(25, 5) = A(25, 5) +WFDC
+      A(26, 5) = A(26, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 26) = A(5, 26) -WFDC
+      A(6, 26) = A(6, 26) +WFDC
+      A(25, 26) = A(25, 26) +WFDC
+      A(26, 26) = A(26, 26) -WFDC
+      WBDC = RB*C(25)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(25, 6) = A(25, 6) -WBDC
+      A(26, 6) = A(26, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 25) = A(5, 25) +WBDC
+      A(6, 25) = A(6, 25) -WBDC
+      A(25, 25) = A(25, 25) -WBDC
+      A(26, 25) = A(26, 25) +WBDC
+C
+C R132
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.943602581190662D1 +2.7D-1*TLOG -1.409006669391775D2/T)
+      RFLGDT = 2.7D-1/T +1.409006669391775D2/T2
+      G0_SUM = -G0(2) -G0(21) +G0(22)
+      DGDT = -DG(2) -DG(21) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(6.941402502644259D1 -3.86D0*TLOG -1.670679336564533D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -4.13D0/T +1.529778669625356D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.18D-1*EXP(-T/2.075D2)
+      TEMP2 = 7.82D-1*EXP(-T/2.663D3)
+      TEMP3 = EXP(-6.095D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -4.819277108433735D-3*TEMP1 -3.755163349605708D-4*TEMP2
+     * +6.095D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(21)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(22)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(21)
+      A(2, 2) = A(2, 2) -WFDC
+      A(21, 2) = A(21, 2) -WFDC
+      A(22, 2) = A(22, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 21) = A(2, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(22, 21) = A(22, 21) +WFDC
+      WBDC = RB
+      A(2, 22) = A(2, 22) +WBDC
+      A(21, 22) = A(21, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(21, 1) = A(21, 1) -DWDM
+      A(21, 6) = A(21, 6) -5.D0*DWDM
+      A(21, 13) = A(21, 13) -DWDM
+      A(21, 14) = A(21, 14) -5.D-1*DWDM
+      A(21, 15) = A(21, 15) -DWDM
+      A(21, 19) = A(21, 19) -2.D0*DWDM
+      A(21, 22) = A(21, 22) -2.D0*DWDM
+      A(21, 24) = A(21, 24) -2.D0*DWDM
+      DM(21) = DM(21) -DWDM
+      A(22, 1) = A(22, 1) +DWDM
+      A(22, 6) = A(22, 6) +5.D0*DWDM
+      A(22, 13) = A(22, 13) +DWDM
+      A(22, 14) = A(22, 14) +5.D-1*DWDM
+      A(22, 15) = A(22, 15) +DWDM
+      A(22, 19) = A(22, 19) +2.D0*DWDM
+      A(22, 22) = A(22, 22) +2.D0*DWDM
+      A(22, 24) = A(22, 24) +2.D0*DWDM
+      DM(22) = DM(22) +DWDM
+C
+C R133
+      RF = 3.D13
+      G0_SUM = +G0(1) -G0(2) +G0(19) -G0(21)
+      DGDT = +DG(1) -DG(2) +DG(19) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(19, 2) = A(19, 2) +WFDC
+      A(21, 2) = A(21, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 21) = A(1, 21) +WFDC
+      A(2, 21) = A(2, 21) -WFDC
+      A(19, 21) = A(19, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(19)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(19, 1) = A(19, 1) -WBDC
+      A(21, 1) = A(21, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 19) = A(1, 19) -WBDC
+      A(2, 19) = A(2, 19) +WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(21, 19) = A(21, 19) +WBDC
+C
+C R134
+      RF = 6.D13
+      G0_SUM = +G0(1) -G0(2) +G0(20) -G0(21)
+      DGDT = +DG(1) -DG(2) +DG(20) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(20)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(20, 33) = A(20, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(20, 2) = A(20, 2) +WFDC
+      A(21, 2) = A(21, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 21) = A(1, 21) +WFDC
+      A(2, 21) = A(2, 21) -WFDC
+      A(20, 21) = A(20, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(20)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(20, 1) = A(20, 1) -WBDC
+      A(21, 1) = A(21, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 20) = A(1, 20) -WBDC
+      A(2, 20) = A(2, 20) +WBDC
+      A(20, 20) = A(20, 20) -WBDC
+      A(21, 20) = A(21, 20) +WBDC
+C
+C R135
+      RF = 4.8D13
+      G0_SUM = +G0(2) -G0(3) -G0(21) +G0(26)
+      DGDT = +DG(2) -DG(3) -DG(21) +DG(26)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      WFDC = RF*C(21)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(21, 3) = A(21, 3) -WFDC
+      A(26, 3) = A(26, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 21) = A(2, 21) +WFDC
+      A(3, 21) = A(3, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(26, 21) = A(26, 21) +WFDC
+      WBDC = RB*C(26)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(21, 2) = A(21, 2) +WBDC
+      A(26, 2) = A(26, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 26) = A(2, 26) -WBDC
+      A(3, 26) = A(3, 26) +WBDC
+      A(21, 26) = A(21, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+C
+C R136
+      RF = 4.8D13
+      G0_SUM = -G0(3) +G0(12) +G0(14) -G0(21)
+      DGDT = -DG(3) +DG(12) +DG(14) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(12)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(3, 3) = A(3, 3) -WFDC
+      A(12, 3) = A(12, 3) +WFDC
+      A(14, 3) = A(14, 3) +WFDC
+      A(21, 3) = A(21, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 21) = A(3, 21) -WFDC
+      A(12, 21) = A(12, 21) +WFDC
+      A(14, 21) = A(14, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(14)
+      A(3, 12) = A(3, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(14, 12) = A(14, 12) -WBDC
+      A(21, 12) = A(21, 12) +WBDC
+      WBDC = RB*C(12)
+      A(3, 14) = A(3, 14) +WBDC
+      A(12, 14) = A(12, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(21, 14) = A(21, 14) +WBDC
+C
+C R137
+      RF = 3.011D13
+      G0_SUM = -G0(5) +G0(6) +G0(19) -G0(21)
+      DGDT = -DG(5) +DG(6) +DG(19) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(19, 5) = A(19, 5) +WFDC
+      A(21, 5) = A(21, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 21) = A(5, 21) -WFDC
+      A(6, 21) = A(6, 21) +WFDC
+      A(19, 21) = A(19, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(19)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(19, 6) = A(19, 6) -WBDC
+      A(21, 6) = A(21, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 19) = A(5, 19) +WBDC
+      A(6, 19) = A(6, 19) -WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(21, 19) = A(21, 19) +WBDC
+C
+C R138
+      RF = EXP(1.410818017192709D1 +1.61D0*TLOG +1.929332703731452D2/T)
+      RFLGDT = 1.61D0/T -1.929332703731452D2/T2
+      G0_SUM = -G0(4) +G0(7) +G0(19) -G0(21)
+      DGDT = -DG(4) +DG(7) +DG(19) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(21)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(19, 4) = A(19, 4) +WFDC
+      A(21, 4) = A(21, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 21) = A(4, 21) -WFDC
+      A(7, 21) = A(7, 21) +WFDC
+      A(19, 21) = A(19, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(19)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(19, 7) = A(19, 7) -WBDC
+      A(21, 7) = A(21, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 19) = A(4, 19) +WBDC
+      A(7, 19) = A(7, 19) -WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(21, 19) = A(21, 19) +WBDC
+C
+C R139
+      RF = EXP(2.642704831160261D1 +2.9D-1*TLOG -5.535383344039117D0/T)
+      RFLGDT = 2.9D-1/T +5.535383344039117D0/T2
+      G0_SUM = +G0(3) -G0(4) -G0(21) +G0(27)
+      DGDT = +DG(3) -DG(4) -DG(21) +DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(21)
+      WFDT = WF*RFLGDT
+      WB = RB*C(3)*C(27)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) +DWDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(27, 33) = A(27, 33) +DWDT
+      WFDC = RF*C(21)
+      A(3, 4) = A(3, 4) +WFDC
+      A(4, 4) = A(4, 4) -WFDC
+      A(21, 4) = A(21, 4) -WFDC
+      A(27, 4) = A(27, 4) +WFDC
+      WFDC = RF*C(4)
+      A(3, 21) = A(3, 21) +WFDC
+      A(4, 21) = A(4, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(27, 21) = A(27, 21) +WFDC
+      WBDC = RB*C(27)
+      A(3, 3) = A(3, 3) -WBDC
+      A(4, 3) = A(4, 3) +WBDC
+      A(21, 3) = A(21, 3) +WBDC
+      A(27, 3) = A(27, 3) -WBDC
+      WBDC = RB*C(3)
+      A(3, 27) = A(3, 27) -WBDC
+      A(4, 27) = A(4, 27) +WBDC
+      A(21, 27) = A(21, 27) +WBDC
+      A(27, 27) = A(27, 27) -WBDC
+C
+C R140
+      RF = EXP(3.836741779139978D1 -1.39D0*TLOG -5.082488343163189D2/T)
+      RFLGDT = -1.39D0/T +5.082488343163189D2/T2
+      G0_SUM = -G0(4) +G0(16) +G0(17) -G0(21)
+      DGDT = -DG(4) +DG(16) +DG(17) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(21)
+      WFDT = WF*RFLGDT
+      WB = RB*C(16)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(4, 4) = A(4, 4) -WFDC
+      A(16, 4) = A(16, 4) +WFDC
+      A(17, 4) = A(17, 4) +WFDC
+      A(21, 4) = A(21, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 21) = A(4, 21) -WFDC
+      A(16, 21) = A(16, 21) +WFDC
+      A(17, 21) = A(17, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(17)
+      A(4, 16) = A(4, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(17, 16) = A(17, 16) -WBDC
+      A(21, 16) = A(21, 16) +WBDC
+      WBDC = RB*C(16)
+      A(4, 17) = A(4, 17) +WBDC
+      A(16, 17) = A(16, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(21, 17) = A(21, 17) +WBDC
+C
+C R141
+      RF = 1.D13
+      G0_SUM = +G0(5) -G0(7) -G0(21) +G0(27)
+      DGDT = +DG(5) -DG(7) -DG(21) +DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(27)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(27, 33) = A(27, 33) +DWDT
+      WFDC = RF*C(21)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(21, 7) = A(21, 7) -WFDC
+      A(27, 7) = A(27, 7) +WFDC
+      WFDC = RF*C(7)
+      A(5, 21) = A(5, 21) +WFDC
+      A(7, 21) = A(7, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(27, 21) = A(27, 21) +WFDC
+      WBDC = RB*C(27)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(21, 5) = A(21, 5) +WBDC
+      A(27, 5) = A(27, 5) -WBDC
+      WBDC = RB*C(5)
+      A(5, 27) = A(5, 27) -WBDC
+      A(7, 27) = A(7, 27) +WBDC
+      A(21, 27) = A(21, 27) +WBDC
+      A(27, 27) = A(27, 27) -WBDC
+C
+C R142
+      RF = EXP(2.321647128954911D1 +2.999171339133922D2/T)
+      RFLGDT = -2.999171339133922D2/T2
+      G0_SUM = +G0(7) -G0(8) -G0(21) +G0(22)
+      DGDT = +DG(7) -DG(8) -DG(21) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(8)*C(21)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(21)
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      A(21, 8) = A(21, 8) -WFDC
+      A(22, 8) = A(22, 8) +WFDC
+      WFDC = RF*C(8)
+      A(7, 21) = A(7, 21) +WFDC
+      A(8, 21) = A(8, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(22, 21) = A(22, 21) +WFDC
+      WBDC = RB*C(22)
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+      A(21, 7) = A(21, 7) +WBDC
+      A(22, 7) = A(22, 7) -WBDC
+      WBDC = RB*C(7)
+      A(7, 22) = A(7, 22) -WBDC
+      A(8, 22) = A(8, 22) +WBDC
+      A(21, 22) = A(21, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+C
+C R143
+      RF = 9.033D13
+      G0_SUM = +G0(14) -G0(16) -G0(21) +G0(22)
+      DGDT = +DG(14) -DG(16) -DG(21) +DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      WFDC = RF*C(21)
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(21, 16) = A(21, 16) -WFDC
+      A(22, 16) = A(22, 16) +WFDC
+      WFDC = RF*C(16)
+      A(14, 21) = A(14, 21) +WFDC
+      A(16, 21) = A(16, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(22, 21) = A(22, 21) +WFDC
+      WBDC = RB*C(22)
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      A(21, 14) = A(21, 14) +WBDC
+      A(22, 14) = A(22, 14) -WBDC
+      WBDC = RB*C(14)
+      A(14, 22) = A(14, 22) -WBDC
+      A(16, 22) = A(16, 22) +WBDC
+      A(21, 22) = A(21, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+C
+C R144
+      RF = 3.92D11
+      G0_SUM = -G0(12) +G0(13) +G0(19) -G0(21)
+      DGDT = -DG(12) +DG(13) +DG(19) -DG(21)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(13)*C(19)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(19, 33) = A(19, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      WFDC = RF*C(21)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(19, 12) = A(19, 12) +WFDC
+      A(21, 12) = A(21, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 21) = A(12, 21) -WFDC
+      A(13, 21) = A(13, 21) +WFDC
+      A(19, 21) = A(19, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      WBDC = RB*C(19)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(19, 13) = A(19, 13) -WBDC
+      A(21, 13) = A(21, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 19) = A(12, 19) +WBDC
+      A(13, 19) = A(13, 19) -WBDC
+      A(19, 19) = A(19, 19) -WBDC
+      A(21, 19) = A(21, 19) +WBDC
+C
+C R145
+C have third body
+C falloff: Troe 7-parameters
+      RF = 2.5D13
+      G0_SUM = -G0(12) -G0(21) +G0(30)
+      DGDT = -DG(12) -DG(21) +DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(1.350015492208952D2 -1.194D1*TLOG -4.916326199508487D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -1.194D1/T +4.916326199508487D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 8.25D-1*EXP(-T/1.3406D3)
+      TEMP2 = 1.75D-1*EXP(-T/6.D4)
+      TEMP3 = EXP(-1.01398D4/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -7.459346561241235D-4*TEMP1 -1.666666666666667D-5*TEMP2
+     * +1.01398D4/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(12)*C(21)
+      WFDT = WF*PCLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(30)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      WFDC = RF*C(21)
+      A(12, 12) = A(12, 12) -WFDC
+      A(21, 12) = A(21, 12) -WFDC
+      A(30, 12) = A(30, 12) +WFDC
+      WFDC = RF*C(12)
+      A(12, 21) = A(12, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(30, 21) = A(30, 21) +WFDC
+      WBDC = RB
+      A(12, 30) = A(12, 30) +WBDC
+      A(21, 30) = A(21, 30) +WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      DWDM = WFDM -WBDM
+      A(12, 1) = A(12, 1) -DWDM
+      A(12, 6) = A(12, 6) -5.D0*DWDM
+      A(12, 13) = A(12, 13) -DWDM
+      A(12, 14) = A(12, 14) -5.D-1*DWDM
+      A(12, 15) = A(12, 15) -DWDM
+      A(12, 19) = A(12, 19) -2.D0*DWDM
+      A(12, 22) = A(12, 22) -2.D0*DWDM
+      A(12, 24) = A(12, 24) -2.D0*DWDM
+      DM(12) = DM(12) -DWDM
+      A(21, 1) = A(21, 1) -DWDM
+      A(21, 6) = A(21, 6) -5.D0*DWDM
+      A(21, 13) = A(21, 13) -DWDM
+      A(21, 14) = A(21, 14) -5.D-1*DWDM
+      A(21, 15) = A(21, 15) -DWDM
+      A(21, 19) = A(21, 19) -2.D0*DWDM
+      A(21, 22) = A(21, 22) -2.D0*DWDM
+      A(21, 24) = A(21, 24) -2.D0*DWDM
+      DM(21) = DM(21) -DWDM
+      A(30, 1) = A(30, 1) +DWDM
+      A(30, 6) = A(30, 6) +5.D0*DWDM
+      A(30, 13) = A(30, 13) +DWDM
+      A(30, 14) = A(30, 14) +5.D-1*DWDM
+      A(30, 15) = A(30, 15) +DWDM
+      A(30, 19) = A(30, 19) +2.D0*DWDM
+      A(30, 22) = A(30, 22) +2.D0*DWDM
+      A(30, 24) = A(30, 24) +2.D0*DWDM
+      DM(30) = DM(30) +DWDM
+C
+C R146
+      RF = EXP(5.566750733996526D1 -2.83D0*TLOG -9.368887918120025D3/T)
+      RFLGDT = -2.83D0/T +9.368887918120025D3/T2
+      G0_SUM = +G0(2) -G0(12) -G0(21) +G0(29)
+      DGDT = +DG(2) -DG(12) -DG(21) +DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(21)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      WFDC = RF*C(21)
+      A(2, 12) = A(2, 12) +WFDC
+      A(12, 12) = A(12, 12) -WFDC
+      A(21, 12) = A(21, 12) -WFDC
+      A(29, 12) = A(29, 12) +WFDC
+      WFDC = RF*C(12)
+      A(2, 21) = A(2, 21) +WFDC
+      A(12, 21) = A(12, 21) -WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(29, 21) = A(29, 21) +WFDC
+      WBDC = RB*C(29)
+      A(2, 2) = A(2, 2) -WBDC
+      A(12, 2) = A(12, 2) +WBDC
+      A(21, 2) = A(21, 2) +WBDC
+      A(29, 2) = A(29, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 29) = A(2, 29) -WBDC
+      A(12, 29) = A(12, 29) +WBDC
+      A(21, 29) = A(21, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+C
+C R147
+      RF = EXP(9.64601125464514D1 -9.147D0*TLOG -2.360086171231223D4/T)
+      RFLGDT = -9.147D0/T +2.360086171231223D4/T2
+      G0_SUM = +G0(12) +G0(14) -G0(27)
+      DGDT = +DG(12) +DG(14) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(27)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(14)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF
+      A(12, 27) = A(12, 27) +WFDC
+      A(14, 27) = A(14, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(14)
+      A(12, 12) = A(12, 12) -WBDC
+      A(14, 12) = A(14, 12) -WBDC
+      A(27, 12) = A(27, 12) +WBDC
+      WBDC = RB*C(12)
+      A(12, 14) = A(12, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(27, 14) = A(27, 14) +WBDC
+C
+C R148
+C have third body
+C falloff: Troe 7-parameters
+      RF = 1.D14
+      G0_SUM = -G0(2) -G0(27) +G0(28)
+      DGDT = -DG(2) -DG(27) +DG(28)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(9.144947725235516D1 -7.297D0*TLOG -2.365118337907622D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -7.297D0/T +2.365118337907622D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 4.5D-1*EXP(-T/8.9D3)
+      TEMP2 = 5.5D-1*EXP(-T/4.35D3)
+      TEMP3 = EXP(-7.244D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -1.123595505617978D-4*TEMP1 -2.298850574712644D-4*TEMP2
+     * +7.244D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(27)
+      WFDT = WF*PCLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(28)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      A(28, 33) = A(28, 33) +DWDT
+      WFDC = RF*C(27)
+      A(2, 2) = A(2, 2) -WFDC
+      A(27, 2) = A(27, 2) -WFDC
+      A(28, 2) = A(28, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 27) = A(2, 27) -WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      A(28, 27) = A(28, 27) +WFDC
+      WBDC = RB
+      A(2, 28) = A(2, 28) +WBDC
+      A(27, 28) = A(27, 28) +WBDC
+      A(28, 28) = A(28, 28) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(27, 1) = A(27, 1) -DWDM
+      A(27, 6) = A(27, 6) -5.D0*DWDM
+      A(27, 13) = A(27, 13) -DWDM
+      A(27, 14) = A(27, 14) -5.D-1*DWDM
+      A(27, 15) = A(27, 15) -DWDM
+      A(27, 19) = A(27, 19) -2.D0*DWDM
+      A(27, 22) = A(27, 22) -2.D0*DWDM
+      A(27, 24) = A(27, 24) -2.D0*DWDM
+      DM(27) = DM(27) -DWDM
+      A(28, 1) = A(28, 1) +DWDM
+      A(28, 6) = A(28, 6) +5.D0*DWDM
+      A(28, 13) = A(28, 13) +DWDM
+      A(28, 14) = A(28, 14) +5.D-1*DWDM
+      A(28, 15) = A(28, 15) +DWDM
+      A(28, 19) = A(28, 19) +2.D0*DWDM
+      A(28, 22) = A(28, 22) +2.D0*DWDM
+      A(28, 24) = A(28, 24) +2.D0*DWDM
+      DM(28) = DM(28) +DWDM
+C
+C R149
+      RF = 9.D13
+      G0_SUM = -G0(2) +G0(12) +G0(16) -G0(27)
+      DGDT = -DG(2) +DG(12) +DG(16) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(12)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(16, 2) = A(16, 2) +WFDC
+      A(27, 2) = A(27, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 27) = A(2, 27) -WFDC
+      A(12, 27) = A(12, 27) +WFDC
+      A(16, 27) = A(16, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(16)
+      A(2, 12) = A(2, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(16, 12) = A(16, 12) -WBDC
+      A(27, 12) = A(27, 12) +WBDC
+      WBDC = RB*C(12)
+      A(2, 16) = A(2, 16) +WBDC
+      A(12, 16) = A(12, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(27, 16) = A(27, 16) +WBDC
+C
+C R150
+      RF = EXP(3.062675338948254D1 -2.012866670559679D3/T)
+      RFLGDT = 2.012866670559679D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(26) -G0(27)
+      DGDT = +DG(1) -DG(2) +DG(26) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(27)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(26, 2) = A(26, 2) +WFDC
+      A(27, 2) = A(27, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 27) = A(1, 27) +WFDC
+      A(2, 27) = A(2, 27) -WFDC
+      A(26, 27) = A(26, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(26)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(26, 1) = A(26, 1) -WBDC
+      A(27, 1) = A(27, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 26) = A(1, 26) -WBDC
+      A(2, 26) = A(2, 26) +WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      A(27, 26) = A(27, 26) +WBDC
+C
+C R151
+      RF = EXP(3.062675338948254D1 -2.012866670559679D3/T)
+      RFLGDT = 2.012866670559679D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(26) -G0(27)
+      DGDT = -DG(3) +DG(5) +DG(26) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(27)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(26, 3) = A(26, 3) +WFDC
+      A(27, 3) = A(27, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 27) = A(3, 27) -WFDC
+      A(5, 27) = A(5, 27) +WFDC
+      A(26, 27) = A(26, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(26)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(26, 5) = A(26, 5) -WBDC
+      A(27, 5) = A(27, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 26) = A(3, 26) +WBDC
+      A(5, 26) = A(5, 26) -WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      A(27, 26) = A(27, 26) +WBDC
+C
+C R152
+      RF = EXP(2.993360620892259D1 -1.006433335279839D3/T)
+      RFLGDT = 1.006433335279839D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(26) -G0(27)
+      DGDT = -DG(5) +DG(6) +DG(26) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(27)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(26, 5) = A(26, 5) +WFDC
+      A(27, 5) = A(27, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 27) = A(5, 27) -WFDC
+      A(6, 27) = A(6, 27) +WFDC
+      A(26, 27) = A(26, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(26)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(26, 6) = A(26, 6) -WBDC
+      A(27, 6) = A(27, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 26) = A(5, 26) +WBDC
+      A(6, 26) = A(6, 26) -WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      A(27, 26) = A(27, 26) +WBDC
+C
+C R153
+      RF = 1.4D11
+      G0_SUM = -G0(4) +G0(7) +G0(26) -G0(27)
+      DGDT = -DG(4) +DG(7) +DG(26) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(7)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(26, 4) = A(26, 4) +WFDC
+      A(27, 4) = A(27, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 27) = A(4, 27) -WFDC
+      A(7, 27) = A(7, 27) +WFDC
+      A(26, 27) = A(26, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(26)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(26, 7) = A(26, 7) -WBDC
+      A(27, 7) = A(27, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 26) = A(4, 26) +WBDC
+      A(7, 26) = A(7, 26) -WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      A(27, 26) = A(27, 26) +WBDC
+C
+C R154
+      RF = 1.8D10
+      G0_SUM = -G0(4) +G0(5) +G0(14) +G0(17) -G0(27)
+      DGDT = -DG(4) +DG(5) +DG(14) +DG(17) -DG(27)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(14)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(27, 33) = A(27, 33) -DWDT
+      WFDC = RF*C(27)
+      A(4, 4) = A(4, 4) -WFDC
+      A(5, 4) = A(5, 4) +WFDC
+      A(14, 4) = A(14, 4) +WFDC
+      A(17, 4) = A(17, 4) +WFDC
+      A(27, 4) = A(27, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 27) = A(4, 27) -WFDC
+      A(5, 27) = A(5, 27) +WFDC
+      A(14, 27) = A(14, 27) +WFDC
+      A(17, 27) = A(17, 27) +WFDC
+      A(27, 27) = A(27, 27) -WFDC
+      WBDC = RB*C(14)*C(17)
+      A(4, 5) = A(4, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(14, 5) = A(14, 5) -WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      A(27, 5) = A(27, 5) +WBDC
+      WBDC = RB*C(5)*C(17)
+      A(4, 14) = A(4, 14) +WBDC
+      A(5, 14) = A(5, 14) -WBDC
+      A(14, 14) = A(14, 14) -WBDC
+      A(17, 14) = A(17, 14) -WBDC
+      A(27, 14) = A(27, 14) +WBDC
+      WBDC = RB*C(5)*C(14)
+      A(4, 17) = A(4, 17) +WBDC
+      A(5, 17) = A(5, 17) -WBDC
+      A(14, 17) = A(14, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(27, 17) = A(27, 17) +WBDC
+C
+C R155
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.971046265760839D1 +4.4D-1*TLOG -4.467054358639567D4/T)
+      RFLGDT = 4.4D-1/T +4.467054358639567D4/T2
+      G0_SUM = +G0(1) +G0(20) -G0(22)
+      DGDT = +DG(1) +DG(20) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(1.170751647987576D2 -9.31D0*TLOG -5.025121643052238D4/T)
+      PR = RL*CM/RF
+      PRLGDT = -9.75D0/T +5.580672844126711D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.655D-1*EXP(-T/1.8D2)
+      TEMP2 = 7.345D-1*EXP(-T/1.035D3)
+      TEMP3 = EXP(-5.417D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -5.555555555555556D-3*TEMP1 -9.661835748792271D-4*TEMP2
+     * +5.417D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(22)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(1)*C(20)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(20, 33) = A(20, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF
+      A(1, 22) = A(1, 22) +WFDC
+      A(20, 22) = A(20, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(20)
+      A(1, 1) = A(1, 1) -WBDC
+      A(20, 1) = A(20, 1) -WBDC
+      A(22, 1) = A(22, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 20) = A(1, 20) -WBDC
+      A(20, 20) = A(20, 20) -WBDC
+      A(22, 20) = A(22, 20) +WBDC
+      DWDM = WFDM -WBDM
+      A(1, 1) = A(1, 1) +DWDM
+      A(1, 6) = A(1, 6) +5.D0*DWDM
+      A(1, 13) = A(1, 13) +DWDM
+      A(1, 14) = A(1, 14) +5.D-1*DWDM
+      A(1, 15) = A(1, 15) +DWDM
+      A(1, 19) = A(1, 19) +2.D0*DWDM
+      A(1, 22) = A(1, 22) +2.D0*DWDM
+      A(1, 24) = A(1, 24) +2.D0*DWDM
+      DM(1) = DM(1) +DWDM
+      A(20, 1) = A(20, 1) +DWDM
+      A(20, 6) = A(20, 6) +5.D0*DWDM
+      A(20, 13) = A(20, 13) +DWDM
+      A(20, 14) = A(20, 14) +5.D-1*DWDM
+      A(20, 15) = A(20, 15) +DWDM
+      A(20, 19) = A(20, 19) +2.D0*DWDM
+      A(20, 22) = A(20, 22) +2.D0*DWDM
+      A(20, 24) = A(20, 24) +2.D0*DWDM
+      DM(20) = DM(20) +DWDM
+      A(22, 1) = A(22, 1) -DWDM
+      A(22, 6) = A(22, 6) -5.D0*DWDM
+      A(22, 13) = A(22, 13) -DWDM
+      A(22, 14) = A(22, 14) -5.D-1*DWDM
+      A(22, 15) = A(22, 15) -DWDM
+      A(22, 19) = A(22, 19) -2.D0*DWDM
+      A(22, 22) = A(22, 22) -2.D0*DWDM
+      A(22, 24) = A(22, 24) -2.D0*DWDM
+      DM(22) = DM(22) -DWDM
+C
+C R156
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(2.770798215706468D1 +4.54D-1*TLOG -9.158543351046538D2/T)
+      RFLGDT = 4.54D-1/T +9.158543351046538D2/T2
+      G0_SUM = -G0(2) -G0(22) +G0(23)
+      DGDT = -DG(2) -DG(22) +DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(9.689089546254387D1 -7.62D0*TLOG -3.50742017345024D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -8.074D0/T +2.591565838345587D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 2.47D-2*EXP(-T/2.1D2)
+      TEMP2 = 9.753D-1*EXP(-T/9.84D2)
+      TEMP3 = EXP(-4.374D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -4.761904761904762D-3*TEMP1 -1.016260162601626D-3*TEMP2
+     * +4.374D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(22)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(23)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      WFDC = RF*C(22)
+      A(2, 2) = A(2, 2) -WFDC
+      A(22, 2) = A(22, 2) -WFDC
+      A(23, 2) = A(23, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 22) = A(2, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(23, 22) = A(23, 22) +WFDC
+      WBDC = RB
+      A(2, 23) = A(2, 23) +WBDC
+      A(22, 23) = A(22, 23) +WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(22, 1) = A(22, 1) -DWDM
+      A(22, 6) = A(22, 6) -5.D0*DWDM
+      A(22, 13) = A(22, 13) -DWDM
+      A(22, 14) = A(22, 14) -5.D-1*DWDM
+      A(22, 15) = A(22, 15) -DWDM
+      A(22, 19) = A(22, 19) -2.D0*DWDM
+      A(22, 22) = A(22, 22) -2.D0*DWDM
+      A(22, 24) = A(22, 24) -2.D0*DWDM
+      DM(22) = DM(22) -DWDM
+      A(23, 1) = A(23, 1) +DWDM
+      A(23, 6) = A(23, 6) +5.D0*DWDM
+      A(23, 13) = A(23, 13) +DWDM
+      A(23, 14) = A(23, 14) +5.D-1*DWDM
+      A(23, 15) = A(23, 15) +DWDM
+      A(23, 19) = A(23, 19) +2.D0*DWDM
+      A(23, 22) = A(23, 22) +2.D0*DWDM
+      A(23, 24) = A(23, 24) +2.D0*DWDM
+      DM(23) = DM(23) +DWDM
+C
+C R157
+      RF = EXP(1.774143646856141D1 +1.93D0*TLOG -6.51665584593696D3/T)
+      RFLGDT = 1.93D0/T +6.51665584593696D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(21) -G0(22)
+      DGDT = +DG(1) -DG(2) +DG(21) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(21, 2) = A(21, 2) +WFDC
+      A(22, 2) = A(22, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 22) = A(1, 22) +WFDC
+      A(2, 22) = A(2, 22) -WFDC
+      A(21, 22) = A(21, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(21)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(21, 1) = A(21, 1) -WBDC
+      A(22, 1) = A(22, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 21) = A(1, 21) -WBDC
+      A(2, 21) = A(2, 21) +WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(22, 21) = A(22, 21) +WBDC
+C
+C R158
+      RF = EXP(1.653020530178515D1 +1.91D0*TLOG -1.8820303369733D3/T)
+      RFLGDT = 1.91D0/T +1.8820303369733D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(21) -G0(22)
+      DGDT = -DG(3) +DG(5) +DG(21) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(21, 3) = A(21, 3) +WFDC
+      A(22, 3) = A(22, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 22) = A(3, 22) -WFDC
+      A(5, 22) = A(5, 22) +WFDC
+      A(21, 22) = A(21, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(21)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(21, 5) = A(21, 5) -WBDC
+      A(22, 5) = A(22, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 21) = A(3, 21) +WBDC
+      A(5, 21) = A(5, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(22, 21) = A(22, 21) +WBDC
+C
+C R159
+      RF = EXP(1.677042083699801D1 +1.83D0*TLOG -1.107076668807823D2/T)
+      RFLGDT = 1.83D0/T +1.107076668807823D2/T2
+      G0_SUM = -G0(3) +G0(12) +G0(16) -G0(22)
+      DGDT = -DG(3) +DG(12) +DG(16) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(16)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(3, 3) = A(3, 3) -WFDC
+      A(12, 3) = A(12, 3) +WFDC
+      A(16, 3) = A(16, 3) +WFDC
+      A(22, 3) = A(22, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 22) = A(3, 22) -WFDC
+      A(12, 22) = A(12, 22) +WFDC
+      A(16, 22) = A(16, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(16)
+      A(3, 12) = A(3, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(16, 12) = A(16, 12) -WBDC
+      A(22, 12) = A(22, 12) +WBDC
+      WBDC = RB*C(12)
+      A(3, 16) = A(3, 16) +WBDC
+      A(12, 16) = A(12, 16) -WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(22, 16) = A(22, 16) +WBDC
+C
+C R160
+      RF = EXP(1.285839783156986D1 +1.83D0*TLOG -1.107076668807823D2/T)
+      RFLGDT = 1.83D0/T +1.107076668807823D2/T2
+      G0_SUM = -G0(3) +G0(10) +G0(17) -G0(22)
+      DGDT = -DG(3) +DG(10) +DG(17) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(10)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(10, 33) = A(10, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(3, 3) = A(3, 3) -WFDC
+      A(10, 3) = A(10, 3) +WFDC
+      A(17, 3) = A(17, 3) +WFDC
+      A(22, 3) = A(22, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 22) = A(3, 22) -WFDC
+      A(10, 22) = A(10, 22) +WFDC
+      A(17, 22) = A(17, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(17)
+      A(3, 10) = A(3, 10) +WBDC
+      A(10, 10) = A(10, 10) -WBDC
+      A(17, 10) = A(17, 10) -WBDC
+      A(22, 10) = A(22, 10) +WBDC
+      WBDC = RB*C(10)
+      A(3, 17) = A(3, 17) +WBDC
+      A(10, 17) = A(10, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(22, 17) = A(22, 17) +WBDC
+C
+C R161
+      RF = EXP(1.509644440342634D1 +2.D0*TLOG -1.258041669099799D3/T)
+      RFLGDT = 2.D0/T +1.258041669099799D3/T2
+      G0_SUM = -G0(5) +G0(6) +G0(21) -G0(22)
+      DGDT = -DG(5) +DG(6) +DG(21) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(21, 5) = A(21, 5) +WFDC
+      A(22, 5) = A(22, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 22) = A(5, 22) -WFDC
+      A(6, 22) = A(6, 22) +WFDC
+      A(21, 22) = A(21, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(21)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(21, 6) = A(21, 6) -WBDC
+      A(22, 6) = A(22, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 21) = A(5, 21) +WBDC
+      A(6, 21) = A(6, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(22, 21) = A(22, 21) +WBDC
+C
+C R162
+      RF = EXP(3.137344133697052D1 -3.059557339250712D4/T)
+      RFLGDT = 3.059557339250712D4/T2
+      G0_SUM = -G0(4) +G0(7) +G0(21) -G0(22)
+      DGDT = -DG(4) +DG(7) +DG(21) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(4)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(21, 4) = A(21, 4) +WFDC
+      A(22, 4) = A(22, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 22) = A(4, 22) -WFDC
+      A(7, 22) = A(7, 22) +WFDC
+      A(21, 22) = A(21, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(21)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(21, 7) = A(21, 7) -WBDC
+      A(22, 7) = A(22, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 21) = A(4, 21) +WBDC
+      A(7, 21) = A(7, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(22, 21) = A(22, 21) +WBDC
+C
+C R163
+      RF = EXP(2.832416829648849D1 -7.045033346958876D3/T)
+      RFLGDT = 7.045033346958876D3/T2
+      G0_SUM = +G0(5) -G0(7) -G0(22) +G0(28)
+      DGDT = +DG(5) -DG(7) -DG(22) +DG(28)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(28)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(28, 33) = A(28, 33) +DWDT
+      WFDC = RF*C(22)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(22, 7) = A(22, 7) -WFDC
+      A(28, 7) = A(28, 7) +WFDC
+      WFDC = RF*C(7)
+      A(5, 22) = A(5, 22) +WFDC
+      A(7, 22) = A(7, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(28, 22) = A(28, 22) +WFDC
+      WBDC = RB*C(28)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(22, 5) = A(22, 5) +WBDC
+      A(28, 5) = A(28, 5) -WBDC
+      WBDC = RB*C(5)
+      A(5, 28) = A(5, 28) -WBDC
+      A(7, 28) = A(7, 28) +WBDC
+      A(22, 28) = A(22, 28) +WBDC
+      A(28, 28) = A(28, 28) -WBDC
+C
+C R164
+      RF = EXP(1.611809565095832D1 +2.D0*TLOG -4.025733341119358D3/T)
+      RFLGDT = 2.D0/T +4.025733341119358D3/T2
+      G0_SUM = +G0(14) -G0(16) -G0(22) +G0(23)
+      DGDT = +DG(14) -DG(16) -DG(22) +DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(16)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(14)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      WFDC = RF*C(22)
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(22, 16) = A(22, 16) -WFDC
+      A(23, 16) = A(23, 16) +WFDC
+      WFDC = RF*C(16)
+      A(14, 22) = A(14, 22) +WFDC
+      A(16, 22) = A(16, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(23, 22) = A(23, 22) +WFDC
+      WBDC = RB*C(23)
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      A(22, 14) = A(22, 14) +WBDC
+      A(23, 14) = A(23, 14) -WBDC
+      WBDC = RB*C(14)
+      A(14, 23) = A(14, 23) -WBDC
+      A(16, 23) = A(16, 23) +WBDC
+      A(22, 23) = A(22, 23) +WBDC
+      A(23, 23) = A(23, 23) -WBDC
+C
+C R165
+      RF = EXP(3.062675338948254D1 -3.019300005839518D3/T)
+      RFLGDT = 3.019300005839518D3/T2
+      G0_SUM = +G0(2) -G0(10) -G0(22) +G0(29)
+      DGDT = +DG(2) -DG(10) -DG(22) +DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(10)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(10, 33) = A(10, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      WFDC = RF*C(22)
+      A(2, 10) = A(2, 10) +WFDC
+      A(10, 10) = A(10, 10) -WFDC
+      A(22, 10) = A(22, 10) -WFDC
+      A(29, 10) = A(29, 10) +WFDC
+      WFDC = RF*C(10)
+      A(2, 22) = A(2, 22) +WFDC
+      A(10, 22) = A(10, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(29, 22) = A(29, 22) +WFDC
+      WBDC = RB*C(29)
+      A(2, 2) = A(2, 2) -WBDC
+      A(10, 2) = A(10, 2) +WBDC
+      A(22, 2) = A(22, 2) +WBDC
+      A(29, 2) = A(29, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 29) = A(2, 29) -WBDC
+      A(10, 29) = A(10, 29) +WBDC
+      A(22, 29) = A(22, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+C
+C R166
+      RF = 5.D13
+      G0_SUM = -G0(11) +G0(13) +G0(20) -G0(22)
+      DGDT = -DG(11) +DG(13) +DG(20) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(13)*C(20)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(20, 33) = A(20, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(11, 11) = A(11, 11) -WFDC
+      A(13, 11) = A(13, 11) +WFDC
+      A(20, 11) = A(20, 11) +WFDC
+      A(22, 11) = A(22, 11) -WFDC
+      WFDC = RF*C(11)
+      A(11, 22) = A(11, 22) -WFDC
+      A(13, 22) = A(13, 22) +WFDC
+      A(20, 22) = A(20, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(20)
+      A(11, 13) = A(11, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(20, 13) = A(20, 13) -WBDC
+      A(22, 13) = A(22, 13) +WBDC
+      WBDC = RB*C(13)
+      A(11, 20) = A(11, 20) +WBDC
+      A(13, 20) = A(13, 20) -WBDC
+      A(20, 20) = A(20, 20) -WBDC
+      A(22, 20) = A(22, 20) +WBDC
+C
+C R167
+      RF = 5.D13
+      G0_SUM = +G0(2) -G0(11) -G0(22) +G0(29)
+      DGDT = +DG(2) -DG(11) -DG(22) +DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      WFDC = RF*C(22)
+      A(2, 11) = A(2, 11) +WFDC
+      A(11, 11) = A(11, 11) -WFDC
+      A(22, 11) = A(22, 11) -WFDC
+      A(29, 11) = A(29, 11) +WFDC
+      WFDC = RF*C(11)
+      A(2, 22) = A(2, 22) +WFDC
+      A(11, 22) = A(11, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(29, 22) = A(29, 22) +WFDC
+      WBDC = RB*C(29)
+      A(2, 2) = A(2, 2) -WBDC
+      A(11, 2) = A(11, 2) +WBDC
+      A(22, 2) = A(22, 2) +WBDC
+      A(29, 2) = A(29, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 29) = A(2, 29) -WBDC
+      A(11, 29) = A(11, 29) +WBDC
+      A(22, 29) = A(22, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+C
+C R168
+      RF = EXP(1.233270529646354D1 +2.D0*TLOG -4.629593342287261D3/T)
+      RFLGDT = 2.D0/T +4.629593342287261D3/T2
+      G0_SUM = -G0(12) +G0(13) +G0(21) -G0(22)
+      DGDT = -DG(12) +DG(13) +DG(21) -DG(22)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(13)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      WFDC = RF*C(22)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(21, 12) = A(21, 12) +WFDC
+      A(22, 12) = A(22, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 22) = A(12, 22) -WFDC
+      A(13, 22) = A(13, 22) +WFDC
+      A(21, 22) = A(21, 22) +WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      WBDC = RB*C(21)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(21, 13) = A(21, 13) -WBDC
+      A(22, 13) = A(22, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 21) = A(12, 21) +WBDC
+      A(13, 21) = A(13, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(22, 21) = A(22, 21) +WBDC
+C
+C R169
+      RF = EXP(2.652235849140694D1 -3.874768340827382D3/T)
+      RFLGDT = 3.874768340827382D3/T2
+      G0_SUM = -G0(12) -G0(22) +G0(31)
+      DGDT = -DG(12) -DG(22) +DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(22)
+      WFDT = WF*RFLGDT
+      WB = RB*C(31)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(22, 33) = A(22, 33) -DWDT
+      A(31, 33) = A(31, 33) +DWDT
+      WFDC = RF*C(22)
+      A(12, 12) = A(12, 12) -WFDC
+      A(22, 12) = A(22, 12) -WFDC
+      A(31, 12) = A(31, 12) +WFDC
+      WFDC = RF*C(12)
+      A(12, 22) = A(12, 22) -WFDC
+      A(22, 22) = A(22, 22) -WFDC
+      A(31, 22) = A(31, 22) +WFDC
+      WBDC = RB
+      A(12, 31) = A(12, 31) +WBDC
+      A(22, 31) = A(22, 31) +WBDC
+      A(31, 31) = A(31, 31) -WBDC
+C
+C R170
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(4.079452643666405D1 -9.9D-1*TLOG -7.95082334871073D2/T)
+      RFLGDT = -9.9D-1/T +7.95082334871073D2/T2
+      G0_SUM = -G0(2) -G0(23) +G0(24)
+      DGDT = -DG(2) -DG(23) +DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(9.509412345149228D1 -7.08D0*TLOG -3.364003423172863D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -6.09D0/T +2.56892108830179D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 1.578D-1*EXP(-T/1.25D2)
+      TEMP2 = 8.422D-1*EXP(-T/2.219D3)
+      TEMP3 = EXP(-6.882D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -8.D-3*TEMP1 -4.506534474988734D-4*TEMP2
+     * +6.882D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(23)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(24)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(24, 33) = A(24, 33) +DWDT
+      WFDC = RF*C(23)
+      A(2, 2) = A(2, 2) -WFDC
+      A(23, 2) = A(23, 2) -WFDC
+      A(24, 2) = A(24, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 23) = A(2, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(24, 23) = A(24, 23) +WFDC
+      WBDC = RB
+      A(2, 24) = A(2, 24) +WBDC
+      A(23, 24) = A(23, 24) +WBDC
+      A(24, 24) = A(24, 24) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(23, 1) = A(23, 1) -DWDM
+      A(23, 6) = A(23, 6) -5.D0*DWDM
+      A(23, 13) = A(23, 13) -DWDM
+      A(23, 14) = A(23, 14) -5.D-1*DWDM
+      A(23, 15) = A(23, 15) -DWDM
+      A(23, 19) = A(23, 19) -2.D0*DWDM
+      A(23, 22) = A(23, 22) -2.D0*DWDM
+      A(23, 24) = A(23, 24) -2.D0*DWDM
+      DM(23) = DM(23) -DWDM
+      A(24, 1) = A(24, 1) +DWDM
+      A(24, 6) = A(24, 6) +5.D0*DWDM
+      A(24, 13) = A(24, 13) +DWDM
+      A(24, 14) = A(24, 14) +5.D-1*DWDM
+      A(24, 15) = A(24, 15) +DWDM
+      A(24, 19) = A(24, 19) +2.D0*DWDM
+      A(24, 22) = A(24, 22) +2.D0*DWDM
+      A(24, 24) = A(24, 24) +2.D0*DWDM
+      DM(24) = DM(24) +DWDM
+C
+C R171
+      RF = 2.D12
+      G0_SUM = +G0(1) -G0(2) +G0(22) -G0(23)
+      DGDT = +DG(1) -DG(2) +DG(22) -DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      WFDC = RF*C(23)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(22, 2) = A(22, 2) +WFDC
+      A(23, 2) = A(23, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 23) = A(1, 23) +WFDC
+      A(2, 23) = A(2, 23) -WFDC
+      A(22, 23) = A(22, 23) +WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      WBDC = RB*C(22)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(22, 1) = A(22, 1) -WBDC
+      A(23, 1) = A(23, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 22) = A(1, 22) -WBDC
+      A(2, 22) = A(2, 22) +WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      A(23, 22) = A(23, 22) +WBDC
+C
+C R172
+      RF = 1.604D13
+      G0_SUM = -G0(3) +G0(12) +G0(17) -G0(23)
+      DGDT = -DG(3) +DG(12) +DG(17) -DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(12)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      WFDC = RF*C(23)
+      A(3, 3) = A(3, 3) -WFDC
+      A(12, 3) = A(12, 3) +WFDC
+      A(17, 3) = A(17, 3) +WFDC
+      A(23, 3) = A(23, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 23) = A(3, 23) -WFDC
+      A(12, 23) = A(12, 23) +WFDC
+      A(17, 23) = A(17, 23) +WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      WBDC = RB*C(17)
+      A(3, 12) = A(3, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(17, 12) = A(17, 12) -WBDC
+      A(23, 12) = A(23, 12) +WBDC
+      WBDC = RB*C(12)
+      A(3, 17) = A(3, 17) +WBDC
+      A(12, 17) = A(12, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(23, 17) = A(23, 17) +WBDC
+C
+C R173
+      RF = 8.02D13
+      G0_SUM = +G0(2) -G0(3) -G0(23) +G0(28)
+      DGDT = +DG(2) -DG(3) -DG(23) +DG(28)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(2)*C(28)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(28, 33) = A(28, 33) +DWDT
+      WFDC = RF*C(23)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(23, 3) = A(23, 3) -WFDC
+      A(28, 3) = A(28, 3) +WFDC
+      WFDC = RF*C(3)
+      A(2, 23) = A(2, 23) +WFDC
+      A(3, 23) = A(3, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(28, 23) = A(28, 23) +WFDC
+      WBDC = RB*C(28)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(23, 2) = A(23, 2) +WBDC
+      A(28, 2) = A(28, 2) -WBDC
+      WBDC = RB*C(2)
+      A(2, 28) = A(2, 28) -WBDC
+      A(3, 28) = A(3, 28) +WBDC
+      A(23, 28) = A(23, 28) +WBDC
+      A(28, 28) = A(28, 28) -WBDC
+C
+C R174
+      RF = 2.D10
+      G0_SUM = -G0(4) +G0(7) +G0(22) -G0(23)
+      DGDT = -DG(4) +DG(7) +DG(22) -DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(7)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      WFDC = RF*C(23)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(22, 4) = A(22, 4) +WFDC
+      A(23, 4) = A(23, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 23) = A(4, 23) -WFDC
+      A(7, 23) = A(7, 23) +WFDC
+      A(22, 23) = A(22, 23) +WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      WBDC = RB*C(22)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(22, 7) = A(22, 7) -WBDC
+      A(23, 7) = A(23, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 22) = A(4, 22) +WBDC
+      A(7, 22) = A(7, 22) -WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      A(23, 22) = A(23, 22) +WBDC
+C
+C R175
+      RF = 3.D11
+      G0_SUM = +G0(4) -G0(7) -G0(23) +G0(24)
+      DGDT = +DG(4) -DG(7) -DG(23) +DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(4)*C(24)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(24, 33) = A(24, 33) +DWDT
+      WFDC = RF*C(23)
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(23, 7) = A(23, 7) -WFDC
+      A(24, 7) = A(24, 7) +WFDC
+      WFDC = RF*C(7)
+      A(4, 23) = A(4, 23) +WFDC
+      A(7, 23) = A(7, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(24, 23) = A(24, 23) +WFDC
+      WBDC = RB*C(24)
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+      A(23, 4) = A(23, 4) +WBDC
+      A(24, 4) = A(24, 4) -WBDC
+      WBDC = RB*C(4)
+      A(4, 24) = A(4, 24) -WBDC
+      A(7, 24) = A(7, 24) +WBDC
+      A(23, 24) = A(23, 24) +WBDC
+      A(24, 24) = A(24, 24) -WBDC
+C
+C R176
+      RF = 3.D11
+      G0_SUM = -G0(7) +G0(8) +G0(22) -G0(23)
+      DGDT = -DG(7) +DG(8) +DG(22) -DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(8)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      WFDC = RF*C(23)
+      A(7, 7) = A(7, 7) -WFDC
+      A(8, 7) = A(8, 7) +WFDC
+      A(22, 7) = A(22, 7) +WFDC
+      A(23, 7) = A(23, 7) -WFDC
+      WFDC = RF*C(7)
+      A(7, 23) = A(7, 23) -WFDC
+      A(8, 23) = A(8, 23) +WFDC
+      A(22, 23) = A(22, 23) +WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      WBDC = RB*C(22)
+      A(7, 8) = A(7, 8) +WBDC
+      A(8, 8) = A(8, 8) -WBDC
+      A(22, 8) = A(22, 8) -WBDC
+      A(23, 8) = A(23, 8) +WBDC
+      WBDC = RB*C(8)
+      A(7, 22) = A(7, 22) +WBDC
+      A(8, 22) = A(8, 22) -WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      A(23, 22) = A(23, 22) +WBDC
+C
+C R177
+      RF = 2.4D13
+      G0_SUM = +G0(5) -G0(7) +G0(12) +G0(17) -G0(23)
+      DGDT = +DG(5) -DG(7) +DG(12) +DG(17) -DG(23)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(12)*C(17)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      WFDC = RF*C(23)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(12, 7) = A(12, 7) +WFDC
+      A(17, 7) = A(17, 7) +WFDC
+      A(23, 7) = A(23, 7) -WFDC
+      WFDC = RF*C(7)
+      A(5, 23) = A(5, 23) +WFDC
+      A(7, 23) = A(7, 23) -WFDC
+      A(12, 23) = A(12, 23) +WFDC
+      A(17, 23) = A(17, 23) +WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      WBDC = RB*C(12)*C(17)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(12, 5) = A(12, 5) -WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      A(23, 5) = A(23, 5) +WBDC
+      WBDC = RB*C(5)*C(17)
+      A(5, 12) = A(5, 12) -WBDC
+      A(7, 12) = A(7, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(17, 12) = A(17, 12) -WBDC
+      A(23, 12) = A(23, 12) +WBDC
+      WBDC = RB*C(5)*C(12)
+      A(5, 17) = A(5, 17) -WBDC
+      A(7, 17) = A(7, 17) +WBDC
+      A(12, 17) = A(12, 17) -WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(23, 17) = A(23, 17) +WBDC
+C
+C R178
+      RF = EXP(2.288658886260695D1 -4.901330342812818D2/T)
+      RFLGDT = 4.901330342812818D2/T2
+      G0_SUM = +G0(7) -G0(8) -G0(23) +G0(24)
+      DGDT = +DG(7) -DG(8) -DG(23) +DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(8)*C(23)
+      WFDT = WF*RFLGDT
+      WB = RB*C(7)*C(24)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(8, 33) = A(8, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(24, 33) = A(24, 33) +DWDT
+      WFDC = RF*C(23)
+      A(7, 8) = A(7, 8) +WFDC
+      A(8, 8) = A(8, 8) -WFDC
+      A(23, 8) = A(23, 8) -WFDC
+      A(24, 8) = A(24, 8) +WFDC
+      WFDC = RF*C(8)
+      A(7, 23) = A(7, 23) +WFDC
+      A(8, 23) = A(8, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(24, 23) = A(24, 23) +WFDC
+      WBDC = RB*C(24)
+      A(7, 7) = A(7, 7) -WBDC
+      A(8, 7) = A(8, 7) +WBDC
+      A(23, 7) = A(23, 7) +WBDC
+      A(24, 7) = A(24, 7) -WBDC
+      WBDC = RB*C(7)
+      A(7, 24) = A(7, 24) -WBDC
+      A(8, 24) = A(8, 24) +WBDC
+      A(23, 24) = A(23, 24) +WBDC
+      A(24, 24) = A(24, 24) -WBDC
+C
+C R179
+      RF = 1.2D14
+      G0_SUM = +G0(14) -G0(16) -G0(23) +G0(24)
+      DGDT = +DG(14) -DG(16) -DG(23) +DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(24)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(24, 33) = A(24, 33) +DWDT
+      WFDC = RF*C(23)
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(23, 16) = A(23, 16) -WFDC
+      A(24, 16) = A(24, 16) +WFDC
+      WFDC = RF*C(16)
+      A(14, 23) = A(14, 23) +WFDC
+      A(16, 23) = A(16, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(24, 23) = A(24, 23) +WFDC
+      WBDC = RB*C(24)
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      A(23, 14) = A(23, 14) +WBDC
+      A(24, 14) = A(24, 14) -WBDC
+      WBDC = RB*C(14)
+      A(14, 24) = A(14, 24) -WBDC
+      A(16, 24) = A(16, 24) +WBDC
+      A(23, 24) = A(23, 24) +WBDC
+      A(24, 24) = A(24, 24) -WBDC
+C
+C R180
+      RF = EXP(1.856044268632752D1 +1.9D0*TLOG -3.789221507328595D3/T)
+      RFLGDT = 1.9D0/T +3.789221507328595D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(23) -G0(24)
+      DGDT = +DG(1) -DG(2) +DG(23) -DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(24)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(24, 33) = A(24, 33) -DWDT
+      WFDC = RF*C(24)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(23, 2) = A(23, 2) +WFDC
+      A(24, 2) = A(24, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 24) = A(1, 24) +WFDC
+      A(2, 24) = A(2, 24) -WFDC
+      A(23, 24) = A(23, 24) +WFDC
+      A(24, 24) = A(24, 24) -WFDC
+      WBDC = RB*C(23)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(23, 1) = A(23, 1) -WBDC
+      A(24, 1) = A(24, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 23) = A(1, 23) -WBDC
+      A(2, 23) = A(2, 23) +WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(24, 23) = A(24, 23) +WBDC
+C
+C R181
+      RF = EXP(1.831309553327243D1 +1.92D0*TLOG -2.863302838871143D3/T)
+      RFLGDT = 1.92D0/T +2.863302838871143D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(23) -G0(24)
+      DGDT = -DG(3) +DG(5) +DG(23) -DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(24)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(24, 33) = A(24, 33) -DWDT
+      WFDC = RF*C(24)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(23, 3) = A(23, 3) +WFDC
+      A(24, 3) = A(24, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 24) = A(3, 24) -WFDC
+      A(5, 24) = A(5, 24) +WFDC
+      A(23, 24) = A(23, 24) +WFDC
+      A(24, 24) = A(24, 24) -WFDC
+      WBDC = RB*C(23)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(23, 5) = A(23, 5) -WBDC
+      A(24, 5) = A(24, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 23) = A(3, 23) +WBDC
+      A(5, 23) = A(5, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(24, 23) = A(24, 23) +WBDC
+C
+C R182
+      RF = EXP(1.507963728510996D1 +2.12D0*TLOG -4.377985008467301D2/T)
+      RFLGDT = 2.12D0/T +4.377985008467301D2/T2
+      G0_SUM = -G0(5) +G0(6) +G0(23) -G0(24)
+      DGDT = -DG(5) +DG(6) +DG(23) -DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(24)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(24, 33) = A(24, 33) -DWDT
+      WFDC = RF*C(24)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(23, 5) = A(23, 5) +WFDC
+      A(24, 5) = A(24, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 24) = A(5, 24) -WFDC
+      A(6, 24) = A(6, 24) +WFDC
+      A(23, 24) = A(23, 24) +WFDC
+      A(24, 24) = A(24, 24) -WFDC
+      WBDC = RB*C(23)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(23, 6) = A(23, 6) -WBDC
+      A(24, 6) = A(24, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 23) = A(5, 23) +WBDC
+      A(6, 23) = A(6, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(24, 23) = A(24, 23) +WBDC
+C
+C R183
+      RF = EXP(3.131990057004249D1 +2.767691672019558D2/T)
+      RFLGDT = -2.767691672019558D2/T2
+      G0_SUM = -G0(11) +G0(12) +G0(23) -G0(24)
+      DGDT = -DG(11) +DG(12) +DG(23) -DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(11)*C(24)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(11, 33) = A(11, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(24, 33) = A(24, 33) -DWDT
+      WFDC = RF*C(24)
+      A(11, 11) = A(11, 11) -WFDC
+      A(12, 11) = A(12, 11) +WFDC
+      A(23, 11) = A(23, 11) +WFDC
+      A(24, 11) = A(24, 11) -WFDC
+      WFDC = RF*C(11)
+      A(11, 24) = A(11, 24) -WFDC
+      A(12, 24) = A(12, 24) +WFDC
+      A(23, 24) = A(23, 24) +WFDC
+      A(24, 24) = A(24, 24) -WFDC
+      WBDC = RB*C(23)
+      A(11, 12) = A(11, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(23, 12) = A(23, 12) -WBDC
+      A(24, 12) = A(24, 12) +WBDC
+      WBDC = RB*C(12)
+      A(11, 23) = A(11, 23) +WBDC
+      A(12, 23) = A(12, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(24, 23) = A(24, 23) +WBDC
+C
+C R184
+      RF = EXP(1.563033530012333D1 +1.74D0*TLOG -5.258614176837161D3/T)
+      RFLGDT = 1.74D0/T +5.258614176837161D3/T2
+      G0_SUM = -G0(12) +G0(13) +G0(23) -G0(24)
+      DGDT = -DG(12) +DG(13) +DG(23) -DG(24)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(24)
+      WFDT = WF*RFLGDT
+      WB = RB*C(13)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(24, 33) = A(24, 33) -DWDT
+      WFDC = RF*C(24)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(23, 12) = A(23, 12) +WFDC
+      A(24, 12) = A(24, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 24) = A(12, 24) -WFDC
+      A(13, 24) = A(13, 24) +WFDC
+      A(23, 24) = A(23, 24) +WFDC
+      A(24, 24) = A(24, 24) -WFDC
+      WBDC = RB*C(23)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(23, 13) = A(23, 13) -WBDC
+      A(24, 13) = A(24, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 23) = A(12, 23) +WBDC
+      A(13, 23) = A(13, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(24, 23) = A(24, 23) +WBDC
+C
+C R185
+C have third body
+C falloff: Troe 7-parameters
+      RF = 2.D14
+      G0_SUM = -G0(2) -G0(29) +G0(30)
+      DGDT = -DG(2) -DG(29) +DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(19)
+     * +2.D0*C(22) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(1.384402845218764D2 -1.2D1*TLOG -3.003096429141513D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -1.2D1/T +3.003096429141513D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP1 = 9.8D-1*EXP(-T/1.0966D3)
+      TEMP2 = 2.D-2*EXP(-T/1.0966D3)
+      TEMP3 = EXP(-6.8595D3/T)
+      FCENT = TEMP1 +TEMP2 +TEMP3
+      FCNTDT = -9.119095385737737D-4*TEMP1 -9.119095385737737D-4*TEMP2
+     * +6.8595D3/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(29)
+      WFDT = WF*PCLGDT
+      WFDM = WF*PCLGDM
+      WB = RB*C(30)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(29, 33) = A(29, 33) -DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      WFDC = RF*C(29)
+      A(2, 2) = A(2, 2) -WFDC
+      A(29, 2) = A(29, 2) -WFDC
+      A(30, 2) = A(30, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 29) = A(2, 29) -WFDC
+      A(29, 29) = A(29, 29) -WFDC
+      A(30, 29) = A(30, 29) +WFDC
+      WBDC = RB
+      A(2, 30) = A(2, 30) +WBDC
+      A(29, 30) = A(29, 30) +WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 19) = A(2, 19) -2.D0*DWDM
+      A(2, 22) = A(2, 22) -2.D0*DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(29, 1) = A(29, 1) -DWDM
+      A(29, 6) = A(29, 6) -5.D0*DWDM
+      A(29, 13) = A(29, 13) -DWDM
+      A(29, 14) = A(29, 14) -5.D-1*DWDM
+      A(29, 15) = A(29, 15) -DWDM
+      A(29, 19) = A(29, 19) -2.D0*DWDM
+      A(29, 22) = A(29, 22) -2.D0*DWDM
+      A(29, 24) = A(29, 24) -2.D0*DWDM
+      DM(29) = DM(29) -DWDM
+      A(30, 1) = A(30, 1) +DWDM
+      A(30, 6) = A(30, 6) +5.D0*DWDM
+      A(30, 13) = A(30, 13) +DWDM
+      A(30, 14) = A(30, 14) +5.D-1*DWDM
+      A(30, 15) = A(30, 15) +DWDM
+      A(30, 19) = A(30, 19) +2.D0*DWDM
+      A(30, 22) = A(30, 22) +2.D0*DWDM
+      A(30, 24) = A(30, 24) +2.D0*DWDM
+      DM(30) = DM(30) +DWDM
+C
+C R186
+      RF = EXP(3.062675338948254D1 -1.006433335279839D3/T)
+      RFLGDT = 1.006433335279839D3/T2
+      G0_SUM = -G0(2) +G0(13) +G0(20) -G0(29)
+      DGDT = -DG(2) +DG(13) +DG(20) -DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(29)
+      WFDT = WF*RFLGDT
+      WB = RB*C(13)*C(20)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(20, 33) = A(20, 33) +DWDT
+      A(29, 33) = A(29, 33) -DWDT
+      WFDC = RF*C(29)
+      A(2, 2) = A(2, 2) -WFDC
+      A(13, 2) = A(13, 2) +WFDC
+      A(20, 2) = A(20, 2) +WFDC
+      A(29, 2) = A(29, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 29) = A(2, 29) -WFDC
+      A(13, 29) = A(13, 29) +WFDC
+      A(20, 29) = A(20, 29) +WFDC
+      A(29, 29) = A(29, 29) -WFDC
+      WBDC = RB*C(20)
+      A(2, 13) = A(2, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(20, 13) = A(20, 13) -WBDC
+      A(29, 13) = A(29, 13) +WBDC
+      WBDC = RB*C(13)
+      A(2, 20) = A(2, 20) +WBDC
+      A(13, 20) = A(13, 20) -WBDC
+      A(20, 20) = A(20, 20) -WBDC
+      A(29, 20) = A(29, 20) +WBDC
+C
+C R187
+      RF = 2.66D12
+      G0_SUM = +G0(4) -G0(7) -G0(29) +G0(30)
+      DGDT = +DG(4) -DG(7) -DG(29) +DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(4)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(29, 33) = A(29, 33) -DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      WFDC = RF*C(29)
+      A(4, 7) = A(4, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(29, 7) = A(29, 7) -WFDC
+      A(30, 7) = A(30, 7) +WFDC
+      WFDC = RF*C(7)
+      A(4, 29) = A(4, 29) +WFDC
+      A(7, 29) = A(7, 29) -WFDC
+      A(29, 29) = A(29, 29) -WFDC
+      A(30, 29) = A(30, 29) +WFDC
+      WBDC = RB*C(30)
+      A(4, 4) = A(4, 4) -WBDC
+      A(7, 4) = A(7, 4) +WBDC
+      A(29, 4) = A(29, 4) +WBDC
+      A(30, 4) = A(30, 4) -WBDC
+      WBDC = RB*C(4)
+      A(4, 30) = A(4, 30) -WBDC
+      A(7, 30) = A(7, 30) +WBDC
+      A(29, 30) = A(29, 30) +WBDC
+      A(30, 30) = A(30, 30) -WBDC
+C
+C R188
+      RF = 6.6D12
+      G0_SUM = +G0(5) -G0(7) +G0(17) +G0(21) -G0(29)
+      DGDT = +DG(5) -DG(7) +DG(17) +DG(21) -DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(17)*C(21)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(21, 33) = A(21, 33) +DWDT
+      A(29, 33) = A(29, 33) -DWDT
+      WFDC = RF*C(29)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(17, 7) = A(17, 7) +WFDC
+      A(21, 7) = A(21, 7) +WFDC
+      A(29, 7) = A(29, 7) -WFDC
+      WFDC = RF*C(7)
+      A(5, 29) = A(5, 29) +WFDC
+      A(7, 29) = A(7, 29) -WFDC
+      A(17, 29) = A(17, 29) +WFDC
+      A(21, 29) = A(21, 29) +WFDC
+      A(29, 29) = A(29, 29) -WFDC
+      WBDC = RB*C(17)*C(21)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      A(21, 5) = A(21, 5) -WBDC
+      A(29, 5) = A(29, 5) +WBDC
+      WBDC = RB*C(5)*C(21)
+      A(5, 17) = A(5, 17) -WBDC
+      A(7, 17) = A(7, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(21, 17) = A(21, 17) -WBDC
+      A(29, 17) = A(29, 17) +WBDC
+      WBDC = RB*C(5)*C(17)
+      A(5, 21) = A(5, 21) -WBDC
+      A(7, 21) = A(7, 21) +WBDC
+      A(17, 21) = A(17, 21) -WBDC
+      A(21, 21) = A(21, 21) -WBDC
+      A(29, 21) = A(29, 21) +WBDC
+C
+C R189
+      RF = 6.D13
+      G0_SUM = +G0(14) -G0(16) -G0(29) +G0(30)
+      DGDT = +DG(14) -DG(16) -DG(29) +DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(14)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(14, 33) = A(14, 33) +DWDT
+      A(16, 33) = A(16, 33) -DWDT
+      A(29, 33) = A(29, 33) -DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      WFDC = RF*C(29)
+      A(14, 16) = A(14, 16) +WFDC
+      A(16, 16) = A(16, 16) -WFDC
+      A(29, 16) = A(29, 16) -WFDC
+      A(30, 16) = A(30, 16) +WFDC
+      WFDC = RF*C(16)
+      A(14, 29) = A(14, 29) +WFDC
+      A(16, 29) = A(16, 29) -WFDC
+      A(29, 29) = A(29, 29) -WFDC
+      A(30, 29) = A(30, 29) +WFDC
+      WBDC = RB*C(30)
+      A(14, 14) = A(14, 14) -WBDC
+      A(16, 14) = A(16, 14) +WBDC
+      A(29, 14) = A(29, 14) +WBDC
+      A(30, 14) = A(30, 14) -WBDC
+      WBDC = RB*C(14)
+      A(14, 30) = A(14, 30) -WBDC
+      A(16, 30) = A(16, 30) +WBDC
+      A(29, 30) = A(29, 30) +WBDC
+      A(30, 30) = A(30, 30) -WBDC
+C
+C R190
+C have third body
+C falloff: Troe 7-parameters
+      RF = EXP(3.021878515115626D1 -1.640838588173486D3/T)
+      RFLGDT = 1.640838588173486D3/T2
+      G0_SUM = -G0(2) -G0(30) +G0(31)
+      DGDT = -DG(2) -DG(30) +DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV*PFAC
+      DGDT = DGDT - TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      CM = CTOT +C(1) +5.D0*C(6) +C(13) +5.D-1*C(14) +C(15) +2.D0*C(24)
+      CM = MAX(CM, SMALL)
+      RL = EXP(8.933241371888576D1 -6.66D0*TLOG -3.522516673479438D3/T)
+      PR = RL*CM/RF
+      PRLGDT = -6.66D0/T +1.881678085305952D3/T2
+      PRLGDM = 1.D0/CM
+      TEMP1 = 1.D0 +PR
+      PC = PR/TEMP1
+      PCLGDT = PRLGDT/TEMP1
+      PCLGDM = PRLGDM/TEMP1
+      PRLG = LOG(MAX(PR, SMALL))
+      TEMP2 = 1.D0*EXP(-T/1.31D3)
+      TEMP3 = EXP(-4.8097D4/T)
+      FCENT = TEMP2 +TEMP3
+      FCNTDT = -7.633587786259542D-4*TEMP2 +4.8097D4/T2*TEMP3
+      FTLGDT = FCNTDT/MAX(FCENT, SMALL)
+      FTLG = LOG(MAX(FCENT, SMALL))
+      TEMP1 = -9.210340371976185D-1 +PRLG -6.7D-1*FTLG
+      TEMP2 = 1.855883584953201D0 -1.4D-1*PRLG -1.1762D0*FTLG
+      XP = TEMP1/TEMP2
+      TEMP3 = 1.D0 +1.4D-1*XP
+      XPDT = (TEMP3*PRLGDT +(1.1762D0*XP -6.7D-1)*FTLGDT)/TEMP2
+      XPDM = TEMP3*PRLGDM/TEMP2
+      TEMP1 = 1.D0 +XP*XP
+      FCLG = FTLG/TEMP1
+      FC = EXP(FCLG)
+      TEMP2 = FCLG*(XP +XP)
+      FCLGDT = (FTLGDT -TEMP2*XPDT)/TEMP1
+      FCLGDM = -TEMP2*XPDM/TEMP1
+      PC = PC*FC
+      PCLGDT = PCLGDT +FCLGDT
+      PCLGDM = PCLGDM +FCLGDM
+      RF = RF*PC
+      RB = RB*PC
+C
+      WF = RF*C(2)*C(30)
+      WFDT = WF*(RFLGDT +PCLGDT)
+      WFDM = WF*PCLGDM
+      WB = RB*C(31)
+      WBDT = WB*(RBLGDT +PCLGDT)
+      WBDM = WB*PCLGDM
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      A(31, 33) = A(31, 33) +DWDT
+      WFDC = RF*C(30)
+      A(2, 2) = A(2, 2) -WFDC
+      A(30, 2) = A(30, 2) -WFDC
+      A(31, 2) = A(31, 2) +WFDC
+      WFDC = RF*C(2)
+      A(2, 30) = A(2, 30) -WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      A(31, 30) = A(31, 30) +WFDC
+      WBDC = RB
+      A(2, 31) = A(2, 31) +WBDC
+      A(30, 31) = A(30, 31) +WBDC
+      A(31, 31) = A(31, 31) -WBDC
+      DWDM = WFDM -WBDM
+      A(2, 1) = A(2, 1) -DWDM
+      A(2, 6) = A(2, 6) -5.D0*DWDM
+      A(2, 13) = A(2, 13) -DWDM
+      A(2, 14) = A(2, 14) -5.D-1*DWDM
+      A(2, 15) = A(2, 15) -DWDM
+      A(2, 24) = A(2, 24) -2.D0*DWDM
+      DM(2) = DM(2) -DWDM
+      A(30, 1) = A(30, 1) -DWDM
+      A(30, 6) = A(30, 6) -5.D0*DWDM
+      A(30, 13) = A(30, 13) -DWDM
+      A(30, 14) = A(30, 14) -5.D-1*DWDM
+      A(30, 15) = A(30, 15) -DWDM
+      A(30, 24) = A(30, 24) -2.D0*DWDM
+      DM(30) = DM(30) -DWDM
+      A(31, 1) = A(31, 1) +DWDM
+      A(31, 6) = A(31, 6) +5.D0*DWDM
+      A(31, 13) = A(31, 13) +DWDM
+      A(31, 14) = A(31, 14) +5.D-1*DWDM
+      A(31, 15) = A(31, 15) +DWDM
+      A(31, 24) = A(31, 24) +2.D0*DWDM
+      DM(31) = DM(31) +DWDM
+C
+C R191
+      RF = EXP(5.112687567511474D1 -2.39D0*TLOG -5.625962344214302D3/T)
+      RFLGDT = -2.39D0/T +5.625962344214302D3/T2
+      G0_SUM = -G0(2) +G0(12) +G0(22) -G0(30)
+      DGDT = -DG(2) +DG(12) +DG(22) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(22)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(22, 33) = A(22, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(22, 2) = A(22, 2) +WFDC
+      A(30, 2) = A(30, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 30) = A(2, 30) -WFDC
+      A(12, 30) = A(12, 30) +WFDC
+      A(22, 30) = A(22, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(22)
+      A(2, 12) = A(2, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(22, 12) = A(22, 12) -WBDC
+      A(30, 12) = A(30, 12) +WBDC
+      WBDC = RB*C(12)
+      A(2, 22) = A(2, 22) +WBDC
+      A(12, 22) = A(12, 22) -WBDC
+      A(22, 22) = A(22, 22) -WBDC
+      A(30, 22) = A(30, 22) +WBDC
+C
+C R192
+      RF = EXP(1.20435537160324D1 +2.5D0*TLOG -1.2530095024234D3/T)
+      RFLGDT = 2.5D0/T +1.2530095024234D3/T2
+      G0_SUM = +G0(1) -G0(2) +G0(29) -G0(30)
+      DGDT = +DG(1) -DG(2) +DG(29) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(1)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(29, 2) = A(29, 2) +WFDC
+      A(30, 2) = A(30, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 30) = A(1, 30) +WFDC
+      A(2, 30) = A(2, 30) -WFDC
+      A(29, 30) = A(29, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(29)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(29, 1) = A(29, 1) -WBDC
+      A(30, 1) = A(30, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 29) = A(1, 29) -WBDC
+      A(2, 29) = A(2, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      A(30, 29) = A(30, 29) +WBDC
+C
+C R193
+      RF = EXP(1.860300230074632D1 +1.65D0*TLOG -1.645518503182537D2/T)
+      RFLGDT = 1.65D0/T +1.645518503182537D2/T2
+      G0_SUM = +G0(2) -G0(3) +G0(12) +G0(26) -G0(30)
+      DGDT = +DG(2) -DG(3) +DG(12) +DG(26) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(2)*C(12)*C(26)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) +DWDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(26, 33) = A(26, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(2, 3) = A(2, 3) +WFDC
+      A(3, 3) = A(3, 3) -WFDC
+      A(12, 3) = A(12, 3) +WFDC
+      A(26, 3) = A(26, 3) +WFDC
+      A(30, 3) = A(30, 3) -WFDC
+      WFDC = RF*C(3)
+      A(2, 30) = A(2, 30) +WFDC
+      A(3, 30) = A(3, 30) -WFDC
+      A(12, 30) = A(12, 30) +WFDC
+      A(26, 30) = A(26, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(12)*C(26)
+      A(2, 2) = A(2, 2) -WBDC
+      A(3, 2) = A(3, 2) +WBDC
+      A(12, 2) = A(12, 2) -WBDC
+      A(26, 2) = A(26, 2) -WBDC
+      A(30, 2) = A(30, 2) +WBDC
+      WBDC = RB*C(2)*C(26)
+      A(2, 12) = A(2, 12) -WBDC
+      A(3, 12) = A(3, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(26, 12) = A(26, 12) -WBDC
+      A(30, 12) = A(30, 12) +WBDC
+      WBDC = RB*C(2)*C(12)
+      A(2, 26) = A(2, 26) -WBDC
+      A(3, 26) = A(3, 26) +WBDC
+      A(12, 26) = A(12, 26) -WBDC
+      A(26, 26) = A(26, 26) -WBDC
+      A(30, 26) = A(30, 26) +WBDC
+C
+C R194
+      RF = EXP(1.737085861945369D1 +1.65D0*TLOG +4.891266009460019D2/T)
+      RFLGDT = 1.65D0/T -4.891266009460019D2/T2
+      G0_SUM = -G0(3) +G0(16) +G0(23) -G0(30)
+      DGDT = -DG(3) +DG(16) +DG(23) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(16)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(16, 33) = A(16, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(3, 3) = A(3, 3) -WFDC
+      A(16, 3) = A(16, 3) +WFDC
+      A(23, 3) = A(23, 3) +WFDC
+      A(30, 3) = A(30, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 30) = A(3, 30) -WFDC
+      A(16, 30) = A(16, 30) +WFDC
+      A(23, 30) = A(23, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(23)
+      A(3, 16) = A(3, 16) +WBDC
+      A(16, 16) = A(16, 16) -WBDC
+      A(23, 16) = A(23, 16) -WBDC
+      A(30, 16) = A(30, 16) +WBDC
+      WBDC = RB*C(16)
+      A(3, 23) = A(3, 23) +WBDC
+      A(16, 23) = A(16, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(30, 23) = A(30, 23) +WBDC
+C
+C R195
+      RF = EXP(2.591622268783662D1 +7.D-1*TLOG -2.958914005722728D3/T)
+      RFLGDT = 7.D-1/T +2.958914005722728D3/T2
+      G0_SUM = -G0(3) +G0(5) +G0(29) -G0(30)
+      DGDT = -DG(3) +DG(5) +DG(29) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(3)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(5)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(3, 3) = A(3, 3) -WFDC
+      A(5, 3) = A(5, 3) +WFDC
+      A(29, 3) = A(29, 3) +WFDC
+      A(30, 3) = A(30, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 30) = A(3, 30) -WFDC
+      A(5, 30) = A(5, 30) +WFDC
+      A(29, 30) = A(29, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(29)
+      A(3, 5) = A(3, 5) +WBDC
+      A(5, 5) = A(5, 5) -WBDC
+      A(29, 5) = A(29, 5) -WBDC
+      A(30, 5) = A(30, 5) +WBDC
+      WBDC = RB*C(5)
+      A(3, 29) = A(3, 29) +WBDC
+      A(5, 29) = A(5, 29) -WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      A(30, 29) = A(30, 29) +WBDC
+C
+C R196
+      RF = EXP(1.494691266945537D1 +2.D0*TLOG +1.499585669566961D2/T)
+      RFLGDT = 2.D0/T -1.499585669566961D2/T2
+      G0_SUM = -G0(5) +G0(6) +G0(29) -G0(30)
+      DGDT = -DG(5) +DG(6) +DG(29) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(5)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(6)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(29, 5) = A(29, 5) +WFDC
+      A(30, 5) = A(30, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 30) = A(5, 30) -WFDC
+      A(6, 30) = A(6, 30) +WFDC
+      A(29, 30) = A(29, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(29)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(29, 6) = A(29, 6) -WBDC
+      A(30, 6) = A(30, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 29) = A(5, 29) +WBDC
+      A(6, 29) = A(6, 29) -WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      A(30, 29) = A(30, 29) +WBDC
+C
+C R197
+      RF = EXP(9.169518377455928D0 +2.6D0*TLOG -6.999743846871283D3/T)
+      RFLGDT = 2.6D0/T +6.999743846871283D3/T2
+      G0_SUM = -G0(7) +G0(8) +G0(29) -G0(30)
+      DGDT = -DG(7) +DG(8) +DG(29) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(7)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(8)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(8, 33) = A(8, 33) +DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(7, 7) = A(7, 7) -WFDC
+      A(8, 7) = A(8, 7) +WFDC
+      A(29, 7) = A(29, 7) +WFDC
+      A(30, 7) = A(30, 7) -WFDC
+      WFDC = RF*C(7)
+      A(7, 30) = A(7, 30) -WFDC
+      A(8, 30) = A(8, 30) +WFDC
+      A(29, 30) = A(29, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(29)
+      A(7, 8) = A(7, 8) +WBDC
+      A(8, 8) = A(8, 8) -WBDC
+      A(29, 8) = A(29, 8) -WBDC
+      A(30, 8) = A(30, 8) +WBDC
+      WBDC = RB*C(8)
+      A(7, 29) = A(7, 29) +WBDC
+      A(8, 29) = A(8, 29) -WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      A(30, 29) = A(30, 29) +WBDC
+C
+C R198
+      RF = EXP(7.884573603642703D-1 +3.5D0*TLOG -2.855754588856544D3/T)
+      RFLGDT = 3.5D0/T +2.855754588856544D3/T2
+      G0_SUM = -G0(12) +G0(13) +G0(29) -G0(30)
+      DGDT = -DG(12) +DG(13) +DG(29) -DG(30)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(12)*C(30)
+      WFDT = WF*RFLGDT
+      WB = RB*C(13)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      A(30, 33) = A(30, 33) -DWDT
+      WFDC = RF*C(30)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(29, 12) = A(29, 12) +WFDC
+      A(30, 12) = A(30, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 30) = A(12, 30) -WFDC
+      A(13, 30) = A(13, 30) +WFDC
+      A(29, 30) = A(29, 30) +WFDC
+      A(30, 30) = A(30, 30) -WFDC
+      WBDC = RB*C(29)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(29, 13) = A(29, 13) -WBDC
+      A(30, 13) = A(30, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 29) = A(12, 29) +WBDC
+      A(13, 29) = A(13, 29) -WBDC
+      A(29, 29) = A(29, 29) -WBDC
+      A(30, 29) = A(30, 29) +WBDC
+C
+C R199
+      RF = EXP(5.657037505150728D1 -2.92D0*TLOG -6.292724428837196D3/T)
+      RFLGDT = -2.92D0/T +6.292724428837196D3/T2
+      G0_SUM = -G0(2) +G0(12) +G0(23) -G0(31)
+      DGDT = -DG(2) +DG(12) +DG(23) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(2)*C(31)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(2, 2) = A(2, 2) -WFDC
+      A(12, 2) = A(12, 2) +WFDC
+      A(23, 2) = A(23, 2) +WFDC
+      A(31, 2) = A(31, 2) -WFDC
+      WFDC = RF*C(2)
+      A(2, 31) = A(2, 31) -WFDC
+      A(12, 31) = A(12, 31) +WFDC
+      A(23, 31) = A(23, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(23)
+      A(2, 12) = A(2, 12) +WBDC
+      A(12, 12) = A(12, 12) -WBDC
+      A(23, 12) = A(23, 12) -WBDC
+      A(31, 12) = A(31, 12) +WBDC
+      WBDC = RB*C(12)
+      A(2, 23) = A(2, 23) +WBDC
+      A(12, 23) = A(12, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(31, 23) = A(31, 23) +WBDC
+C
+C R200
+      RF = 1.8D12
+      G0_SUM = +G0(1) -G0(2) +G0(30) -G0(31)
+      DGDT = +DG(1) -DG(2) +DG(30) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(1)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(1, 33) = A(1, 33) +DWDT
+      A(2, 33) = A(2, 33) -DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(1, 2) = A(1, 2) +WFDC
+      A(2, 2) = A(2, 2) -WFDC
+      A(30, 2) = A(30, 2) +WFDC
+      A(31, 2) = A(31, 2) -WFDC
+      WFDC = RF*C(2)
+      A(1, 31) = A(1, 31) +WFDC
+      A(2, 31) = A(2, 31) -WFDC
+      A(30, 31) = A(30, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(30)
+      A(1, 1) = A(1, 1) -WBDC
+      A(2, 1) = A(2, 1) +WBDC
+      A(30, 1) = A(30, 1) -WBDC
+      A(31, 1) = A(31, 1) +WBDC
+      WBDC = RB*C(1)
+      A(1, 30) = A(1, 30) -WBDC
+      A(2, 30) = A(2, 30) +WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      A(31, 30) = A(31, 30) +WBDC
+C
+      END
+C
+C
+C
+      SUBROUTINE AJ3(T, C, A, LDA, G0, DG, DM, CTOT, P, PL)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      PARAMETER (EXPARG=690.776, SMALL=1.D-300)
+      DIMENSION C(*), A(LDA,*), G0(*), DG(*), DM(*)
+C
+      T2 = T*T
+      TLOG = LOG(T)
+      TI = 1.D0/T
+      TI2 = TI/T
+      PFAC = 1.218652692702276D-2/T
+      PFAC2 = PFAC*PFAC
+C
+C R201
+      RF = 9.6D13
+      G0_SUM = -G0(3) +G0(17) +G0(23) -G0(31)
+      DGDT = -DG(3) +DG(17) +DG(23) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(17)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(3, 33) = A(3, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(3, 3) = A(3, 3) -WFDC
+      A(17, 3) = A(17, 3) +WFDC
+      A(23, 3) = A(23, 3) +WFDC
+      A(31, 3) = A(31, 3) -WFDC
+      WFDC = RF*C(3)
+      A(3, 31) = A(3, 31) -WFDC
+      A(17, 31) = A(17, 31) +WFDC
+      A(23, 31) = A(23, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(23)
+      A(3, 17) = A(3, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(23, 17) = A(23, 17) -WBDC
+      A(31, 17) = A(31, 17) +WBDC
+      WBDC = RB*C(17)
+      A(3, 23) = A(3, 23) +WBDC
+      A(17, 23) = A(17, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(31, 23) = A(31, 23) +WBDC
+C
+C R202
+      RF = 2.4D13
+      G0_SUM = -G0(5) +G0(6) +G0(30) -G0(31)
+      DGDT = -DG(5) +DG(6) +DG(30) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(6)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) -DWDT
+      A(6, 33) = A(6, 33) +DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(5, 5) = A(5, 5) -WFDC
+      A(6, 5) = A(6, 5) +WFDC
+      A(30, 5) = A(30, 5) +WFDC
+      A(31, 5) = A(31, 5) -WFDC
+      WFDC = RF*C(5)
+      A(5, 31) = A(5, 31) -WFDC
+      A(6, 31) = A(6, 31) +WFDC
+      A(30, 31) = A(30, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(30)
+      A(5, 6) = A(5, 6) +WBDC
+      A(6, 6) = A(6, 6) -WBDC
+      A(30, 6) = A(30, 6) -WBDC
+      A(31, 6) = A(31, 6) +WBDC
+      WBDC = RB*C(6)
+      A(5, 30) = A(5, 30) +WBDC
+      A(6, 30) = A(6, 30) -WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      A(31, 30) = A(31, 30) +WBDC
+C
+C R203
+      RF = 9.D10
+      G0_SUM = -G0(4) +G0(7) +G0(30) -G0(31)
+      DGDT = -DG(4) +DG(7) +DG(30) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(7)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(4, 33) = A(4, 33) -DWDT
+      A(7, 33) = A(7, 33) +DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(4, 4) = A(4, 4) -WFDC
+      A(7, 4) = A(7, 4) +WFDC
+      A(30, 4) = A(30, 4) +WFDC
+      A(31, 4) = A(31, 4) -WFDC
+      WFDC = RF*C(4)
+      A(4, 31) = A(4, 31) -WFDC
+      A(7, 31) = A(7, 31) +WFDC
+      A(30, 31) = A(30, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(30)
+      A(4, 7) = A(4, 7) +WBDC
+      A(7, 7) = A(7, 7) -WBDC
+      A(30, 7) = A(30, 7) -WBDC
+      A(31, 7) = A(31, 7) +WBDC
+      WBDC = RB*C(7)
+      A(4, 30) = A(4, 30) +WBDC
+      A(7, 30) = A(7, 30) -WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      A(31, 30) = A(31, 30) +WBDC
+C
+C R204
+      RF = 2.4D13
+      G0_SUM = +G0(5) -G0(7) +G0(17) +G0(23) -G0(31)
+      DGDT = +DG(5) -DG(7) +DG(17) +DG(23) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      EQINV = EQINV/PFAC
+      DGDT = DGDT + TI
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(5)*C(17)*C(23)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(5, 33) = A(5, 33) +DWDT
+      A(7, 33) = A(7, 33) -DWDT
+      A(17, 33) = A(17, 33) +DWDT
+      A(23, 33) = A(23, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(5, 7) = A(5, 7) +WFDC
+      A(7, 7) = A(7, 7) -WFDC
+      A(17, 7) = A(17, 7) +WFDC
+      A(23, 7) = A(23, 7) +WFDC
+      A(31, 7) = A(31, 7) -WFDC
+      WFDC = RF*C(7)
+      A(5, 31) = A(5, 31) +WFDC
+      A(7, 31) = A(7, 31) -WFDC
+      A(17, 31) = A(17, 31) +WFDC
+      A(23, 31) = A(23, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(17)*C(23)
+      A(5, 5) = A(5, 5) -WBDC
+      A(7, 5) = A(7, 5) +WBDC
+      A(17, 5) = A(17, 5) -WBDC
+      A(23, 5) = A(23, 5) -WBDC
+      A(31, 5) = A(31, 5) +WBDC
+      WBDC = RB*C(5)*C(23)
+      A(5, 17) = A(5, 17) -WBDC
+      A(7, 17) = A(7, 17) +WBDC
+      A(17, 17) = A(17, 17) -WBDC
+      A(23, 17) = A(23, 17) -WBDC
+      A(31, 17) = A(31, 17) +WBDC
+      WBDC = RB*C(5)*C(17)
+      A(5, 23) = A(5, 23) -WBDC
+      A(7, 23) = A(7, 23) +WBDC
+      A(17, 23) = A(17, 23) -WBDC
+      A(23, 23) = A(23, 23) -WBDC
+      A(31, 23) = A(31, 23) +WBDC
+C
+C R205
+      RF = 1.1D13
+      G0_SUM = -G0(12) +G0(13) +G0(30) -G0(31)
+      DGDT = -DG(12) +DG(13) +DG(30) -DG(31)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = DGDT
+C
+      WB = RB*C(13)*C(30)
+      WBDT = WB*RBLGDT
+      DWDT = -WBDT
+      A(12, 33) = A(12, 33) -DWDT
+      A(13, 33) = A(13, 33) +DWDT
+      A(30, 33) = A(30, 33) +DWDT
+      A(31, 33) = A(31, 33) -DWDT
+      WFDC = RF*C(31)
+      A(12, 12) = A(12, 12) -WFDC
+      A(13, 12) = A(13, 12) +WFDC
+      A(30, 12) = A(30, 12) +WFDC
+      A(31, 12) = A(31, 12) -WFDC
+      WFDC = RF*C(12)
+      A(12, 31) = A(12, 31) -WFDC
+      A(13, 31) = A(13, 31) +WFDC
+      A(30, 31) = A(30, 31) +WFDC
+      A(31, 31) = A(31, 31) -WFDC
+      WBDC = RB*C(30)
+      A(12, 13) = A(12, 13) +WBDC
+      A(13, 13) = A(13, 13) -WBDC
+      A(30, 13) = A(30, 13) -WBDC
+      A(31, 13) = A(31, 13) +WBDC
+      WBDC = RB*C(13)
+      A(12, 30) = A(12, 30) +WBDC
+      A(13, 30) = A(13, 30) -WBDC
+      A(30, 30) = A(30, 30) -WBDC
+      A(31, 30) = A(31, 30) +WBDC
+C
+C R206
+      RF = EXP(7.504369952894507D1 -5.22D0*TLOG -9.937019535885494D3/T)
+      RFLGDT = -5.22D0/T +9.937019535885494D3/T2
+      G0_SUM = +G0(12) -G0(21) -G0(23) +G0(29)
+      DGDT = +DG(12) -DG(21) -DG(23) +DG(29)
+      EQINV = EXP(MIN(G0_SUM, EXPARG))
+      RB = RF*EQINV
+      RBLGDT = RFLGDT +DGDT
+C
+      WF = RF*C(21)*C(23)
+      WFDT = WF*RFLGDT
+      WB = RB*C(12)*C(29)
+      WBDT = WB*RBLGDT
+      DWDT = WFDT -WBDT
+      A(12, 33) = A(12, 33) +DWDT
+      A(21, 33) = A(21, 33) -DWDT
+      A(23, 33) = A(23, 33) -DWDT
+      A(29, 33) = A(29, 33) +DWDT
+      WFDC = RF*C(23)
+      A(12, 21) = A(12, 21) +WFDC
+      A(21, 21) = A(21, 21) -WFDC
+      A(23, 21) = A(23, 21) -WFDC
+      A(29, 21) = A(29, 21) +WFDC
+      WFDC = RF*C(21)
+      A(12, 23) = A(12, 23) +WFDC
+      A(21, 23) = A(21, 23) -WFDC
+      A(23, 23) = A(23, 23) -WFDC
+      A(29, 23) = A(29, 23) +WFDC
+      WBDC = RB*C(29)
+      A(12, 12) = A(12, 12) -WBDC
+      A(21, 12) = A(21, 12) +WBDC
+      A(23, 12) = A(23, 12) +WBDC
+      A(29, 12) = A(29, 12) -WBDC
+      WBDC = RB*C(12)
+      A(12, 29) = A(12, 29) -WBDC
+      A(21, 29) = A(21, 29) +WBDC
+      A(23, 29) = A(23, 29) +WBDC
+      A(29, 29) = A(29, 29) -WBDC
+C
+      END
+C
+C
+C------ contribution of third bodies
+C
+      SUBROUTINE DMDC(A, LDA, DM)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      DIMENSION A(LDA,*), DM(*)
+C
+      DO N=1,32
+      A(1, N) = A(1, N) + DM(1)
+      A(2, N) = A(2, N) + DM(2)
+      A(3, N) = A(3, N) + DM(3)
+      A(4, N) = A(4, N) + DM(4)
+      A(5, N) = A(5, N) + DM(5)
+      A(6, N) = A(6, N) + DM(6)
+      A(7, N) = A(7, N) + DM(7)
+      A(8, N) = A(8, N) + DM(8)
+      A(9, N) = A(9, N) + DM(9)
+      A(10, N) = A(10, N) + DM(10)
+      A(12, N) = A(12, N) + DM(12)
+      A(13, N) = A(13, N) + DM(13)
+      A(14, N) = A(14, N) + DM(14)
+      A(15, N) = A(15, N) + DM(15)
+      A(16, N) = A(16, N) + DM(16)
+      A(17, N) = A(17, N) + DM(17)
+      A(18, N) = A(18, N) + DM(18)
+      A(19, N) = A(19, N) + DM(19)
+      A(20, N) = A(20, N) + DM(20)
+      A(21, N) = A(21, N) + DM(21)
+      A(22, N) = A(22, N) + DM(22)
+      A(23, N) = A(23, N) + DM(23)
+      A(24, N) = A(24, N) + DM(24)
+      A(25, N) = A(25, N) + DM(25)
+      A(26, N) = A(26, N) + DM(26)
+      A(27, N) = A(27, N) + DM(27)
+      A(28, N) = A(28, N) + DM(28)
+      A(29, N) = A(29, N) + DM(29)
+      A(30, N) = A(30, N) + DM(30)
+      A(31, N) = A(31, N) + DM(31)
+      ENDDO
+C
+      END

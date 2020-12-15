@@ -13,12 +13,34 @@
 # Import the required libraries:
 import numpy as np
 import matplotlib.pyplot as plt
-# matplotlib.use("TkAgg")
+#matplotlib.use("TkAgg")
 from sklearn import linear_model
+import os
+
+# Function to pull data from the LEM output file
+def extract_file_data(fileToRead):
+    
+    with open(fileToRead, 'r', encoding='utf-8') as infile:
+        line = infile.readline()     
+    infile.close()  
+
+    return line
+
+
+# change directory to Somesh Roy flame data
+changeDir = '/Users/Joesqueo/OneDrive - University of Connecticut/RESEARCH/Machine_learning/SomeshRoy_premixData/Results'
+os.chdir(changeDir)
+
+file = '2EQ-JW1.69-DLR-SNCCN-sp.dat'
+line1 = extract_file_data(file)
+print(line1)
 
 # Read the data file:
-data = np.loadtxt( './Results/2EQ-JW1.69-DLR-SNCCN-sp.dat',skiprows=1)
-#print(data[0,1])
+data = np.loadtxt( '2EQ-JW1.69-DLR-SNCCN-sp.dat',skiprows=1,encoding='utf-8')
+#data = np.loadtxt( '2EQ-JW1.69-DLR-SNCCN-sp.dat',dtype='str',encoding='utf-8')
+
+
+x = data[:,0]
 T = data[:,1]
 Y_C2H2 = data[:,7]
 Y_C3H6 = data[:,11]

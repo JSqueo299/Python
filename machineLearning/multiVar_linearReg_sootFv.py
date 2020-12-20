@@ -22,6 +22,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+from sklearn.model_selection import train_test_split
 import os
 
 # Function read .csv files
@@ -39,50 +40,66 @@ os.chdir(changeDir)
 file = '2EQ-JW1.69-abf31-SNCCN-sp.csv'
 data = readFile(file)
 
-# Consider features we want to work on:
-X = data[['T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']]
+# Feature and targer space:
+X = data[['X','T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']]
 Y = data['Fv']
 
-# Generating training and testing data from our data:
-# We are using 80% data for training.
-train = data[:(int((len(data)*0.8)))]
-test = data[(int((len(data)*0.8))):]
+# Test/train data split using cross-validation
+X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.3)
+X_train_orig = X_train
+X_test_orig = X_test
 
-# Modeling:
-# Use sklearn package to model data :
+# PRINCIPLE COMPONENT ANALYSIS:
+# 1. Import standarizing and PCA libraries
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+scaler = StandardScaler()
+
+# 2. Standardizing the features
+# Fit on training dataset only
+scaler.fit(X_train)
+# Apply transform to both the training set and the test set.
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+# 3. Principle component analysis on feature space 
+pca = PCA(.98) #PCA(n_components=5)
+pca.fit(X_train)
+X_train = pca.transform(X_train)
+X_test = pca.transform(X_test)
+columns = ['principal comp. 1:  ', 'principal comp. 2:  ','principal comp. 3:   ','principal comp. 4:   ','principal comp. 5:   ']
+
+#principalComponents = pca.fit_transform(X_train)
+#principalDf = pd.DataFrame(data = principalComponents, columns = ['principal comp. 1', 'principal comp. 2','principal comp. 3','principal comp. 4','principal comp. 5'])
+#print(principalDf)
+#print(pca.explained_variance_ratio_)
+
+# Regression fit:
 regr = linear_model.LinearRegression()
 
-train_X = np.array(train[['T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']])
-train_Y = np.array(train['Fv'])
-
-regr.fit(train_X,train_Y)
-
-test_X = np.array(test[['T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']])
-test_Y = np.array(test['Fv'])
-
-# Print the coefficient values:
-coeff_data = pd.DataFrame(regr.coef_ , X.columns , columns=['Coefficients'])
+# Train the model, print the coefficient values:
+regr.fit(X_train,Y_train)
+coeff_data = pd.DataFrame(regr.coef_ , columns[0:len(X_train[0,:])] , columns=['Coefficients'])
 print(coeff_data)
 
 # Now let’s do prediction of data:
-Y_pred = regr.predict(test_X)
+Y_pred = regr.predict(X_test)
 
 # Check accuracy:
 from sklearn.metrics import r2_score
-R = r2_score(test_Y , Y_pred)
+R = r2_score(Y_test , Y_pred)
 print ('R² :',R)
-
 print('\n')
-x = np.array(test['X'])
-Fv_test = np.array(test['Fv'])
-#dataID = list(range(1,len(Fv_test)+1))
+
+xTrain = np.array(X_train_orig['X'])
+xTest = np.array(X_test_orig['X'])
+yTrain = np.array(Y_train)
 
 # Plotting the regression line:
-plt.scatter(x, Fv_test*(1e6), color='blue',label="testing data")
-plt.scatter(x, Y_pred*(1e6), color='red',label="prediction")
+plt.scatter(xTrain, yTrain*(1e6), color='blue',label="training data")
+plt.scatter(xTest, Y_pred*(1e6), color='red',label="prediction")
 plt.xlabel("distance (m)")
 plt.ylabel("soot Fv (ppm)")
 plt.title("Linear MultiVar Regression")
 plt.legend()
 plt.show()
-

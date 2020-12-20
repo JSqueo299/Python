@@ -1,5 +1,5 @@
 #################################################################################
-# Machine Learning Multi-Var Non-Linear Regression for Soot Fv prediction
+# Machine Learning Multi-Var Linear Regression for Soot Fv prediction
 # Joseph N. Squeo
 # joseph.squeo@uconn.edu
 # 12-9-2020
@@ -22,11 +22,6 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LassoCV
-from sklearn.pipeline import make_pipeline
 import os
 
 # Function read .csv files

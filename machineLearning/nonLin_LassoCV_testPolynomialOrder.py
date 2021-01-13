@@ -1,5 +1,5 @@
 #################################################################################
-# Machine Learning Multi-Var Linear Regression for Soot Fv prediction
+# Machine Learning Multi-Var Non-Linear Regression for Soot Fv prediction
 # Joseph N. Squeo
 # joseph.squeo@uconn.edu
 # 12-9-2020
@@ -23,14 +23,19 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LassoCV
+from sklearn.linear_model import Lasso
+from sklearn.pipeline import make_pipeline
 import os
 
+# ===== FUNCTIONS =====
 # Function read .csv files
 def readFile(fileToRead):
     fileData = pd.read_csv(fileToRead)
     fileData.head()
     return fileData
-
 
 # Change directory to Somesh Roy flame data
 changeDir = '/Users/Joesqueo/OneDrive - University of Connecticut/RESEARCH/Machine_learning/SomeshRoy_premixData/results_commaSepVar'
@@ -41,14 +46,14 @@ file = '2EQ-JW1.69-abf31-SNCCN-sp.csv'
 data = readFile(file)
 
 # Feature and target space:
-X = data[['X','T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']]
+X = data[['T','C2H4','C2H2','O2','O','OH','H2O','CO','CO2','H','H2']]
 Y = data['Fv']
 
 # Test/train data split using cross-validation
 X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.3)
 X_train_orig = X_train
 X_test_orig = X_test
-
+'''
 # PRINCIPLE COMPONENT ANALYSIS:
 # 1. Import standarizing and PCA libraries
 from sklearn.preprocessing import StandardScaler
@@ -67,39 +72,39 @@ pca = PCA(.98) #PCA(n_components=5)
 pca.fit(X_train)
 X_train = pca.transform(X_train)
 X_test = pca.transform(X_test)
-columns = ['principal comp. 1:  ', 'principal comp. 2:  ','principal comp. 3:   ','principal comp. 4:   ','principal comp. 5:   ']
-
-#principalComponents = pca.fit_transform(X_train)
-#principalDf = pd.DataFrame(data = principalComponents, columns = ['principal comp. 1', 'principal comp. 2','principal comp. 3','principal comp. 4','principal comp. 5'])
-#print(principalDf)
+columns = ['principal comp. 1:  ', 'principal comp. 2:  ','principal comp. 3:   ','principal comp. 4:   ','principal comp. 5:   ','principal comp. 6:   ','principal comp. 7:   ','principal comp. 8:   ']
 #print(pca.explained_variance_ratio_)
+'''
 
-# Regression fit:
-regr = linear_model.LinearRegression()
+# ========= TEST POLYNOMIAL DEGREE =========
+# Alpha (regularization strength) of LASSO regression
+lasso_eps = 0.001             # eps = alpha_min/alpha_max 
+lasso_nalpha = 20           # number of alphas to test
+lasso_iter = 5000           # the maximum number of iterations
 
-# Train the model, print the coefficient values:
-regr.fit(X_train,Y_train)
-coeff_data = pd.DataFrame(regr.coef_ , columns[0:len(X_train[0,:])] , columns=['Coefficients'])
-print(coeff_data)
+# Min and max degree of polynomials features to consider
+degree_min = 2
+degree_max = 8
 
-# Now let’s do prediction of data:
-Y_pred = regr.predict(X_test)
+# Make a pipeline model with polynomial transformation and LASSO regression with cross-validation, run it for increasing degree of polynomial (complexity of the model)
+for degree in range(degree_min,degree_max+1):
+    model = make_pipeline(PolynomialFeatures(degree, interaction_only=False), LassoCV(eps=lasso_eps,n_alphas=lasso_nalpha,max_iter=lasso_iter,normalize=True,cv=5))
+    model.fit(X_train,Y_train)
+    test_pred = np.array(model.predict(X_test))
+    RMSE = np.sqrt(np.sum(np.square( (test_pred-Y_test)*(1e6) )))     # sum[ (y_test - y_pred)^2 ]
+    test_score = model.score(X_test,Y_test)                 # R^2 coefficient of the model
+    
+    # Plot R^2 vs. polynomial degree:
+    plt.subplot(121)
+    plt.scatter(degree, test_score, color='blue',label="training data")
+    plt.xlabel("model complexity (degree of polynomial)")
+    plt.ylabel("R^2 coefficient")
 
-# Check accuracy:
-from sklearn.metrics import r2_score
-R = r2_score(Y_test , Y_pred)
-print ('R² :',R)
-print('\n')
-
-xTrain = np.array(X_train_orig['X'])
-xTest = np.array(X_test_orig['X'])
-yTrain = np.array(Y_train)
-
-# Plotting the regression line:
-plt.scatter(xTrain, yTrain*(1e6), color='blue',label="training data")
-plt.scatter(xTest, Y_pred*(1e6), color='red',label="prediction")
-plt.xlabel("distance (m)")
-plt.ylabel("soot Fv (ppm)")
-plt.title("Linear MultiVar Regression")
-plt.legend()
+    # Plot RMSE vs. polynomial degree:
+    plt.subplot(122)
+    plt.scatter(degree, RMSE, color='red',label="prediction")
+    plt.xlabel("model complexity (degree of polynomial)")
+    plt.ylabel("RMSE (fv, ppm)")
+    
 plt.show()
+
